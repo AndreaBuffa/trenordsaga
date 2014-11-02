@@ -1,0 +1,5 @@
+cron:
+- description: daily summary job
+  url: /batch/s9saga
+  schedule: every 10 minutes from 09:50 to 10:10
+  timezone: Europa/Rome
