@@ -5,7 +5,7 @@ api_version: 1
 threadsafe: true
 
 handlers:
-- url: /.*
-  script: stats.application
-- url: /task
-  script: batch/s9saga.py
+- url: /
+  script: stats.app
+- url: /batch
+  script: croneTabPage.app
