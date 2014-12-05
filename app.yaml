@@ -6,6 +6,6 @@ threadsafe: true
 
 handlers:
 - url: /
-  script: stats.app
+  script: croneTabPage.app
 - url: /batch
   script: croneTabPage.app

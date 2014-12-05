@@ -1,4 +1,4 @@
-from dataProvider import DataProvider
+from dataProvider import *
 
 class DataProviderFactory: 
 	""" follows the abstract class patterns """
