@@ -8,4 +8,4 @@ handlers:
 - url: /
   script: croneTabPage.app
 - url: /batch
-  script: croneTabPage.app
+  script: croneTabPage.app"
