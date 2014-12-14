@@ -13,3 +13,7 @@ class Validator(DataProviderFactory):
 	def createDataProvider(self):
 		return StoredData()
 
+class FrontEnd(DataProviderFactory):
+	def createDataProvider(self):
+		return StoredData()
+

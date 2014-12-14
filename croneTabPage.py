@@ -1,24 +1,21 @@
 import webapp2
 from dataProviderFactory import DataProviderFactory,ChroneTab
-from scheduleParser import ScheduleParser
+from s9 import S9
 
 class CroneTabPage(webapp2.RequestHandler):
 	def get(self):
 		self.response.headers['Content-Type'] = 'text/plain'
-		self.response.write('Hello, chornetab!')
+		self.response.write('Working...')
 		myFactory = ChroneTab()
 		myData = myFactory.createDataProvider()
-		#HTTPException
 		buffer = myData.RetrieveSourcePage()
-
-		if buffer != None:
-			myParser = ScheduleParser(buffer)
-				#print myParser.GetTimings()
-			self.response.write(myParser.GetTimings())
-		self.response.write(buffer)
-
+		if buffer:
+			timeSchedule = S9()
+			timeSchedule.timings = buffer
+			timeSchedule.put()
+		self.response.write('Done!')
 
 app = webapp2.WSGIApplication([
-    ('/', CroneTabPage),
+    ('/batch', CroneTabPage),
 ], debug=True)
 

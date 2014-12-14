@@ -5,7 +5,8 @@ api_version: 1
 threadsafe: true
 
 handlers:
-- url: /
-  script: croneTabPage.app
 - url: /batch
-  script: croneTabPage.app"
+  script: croneTabPage.app
+  login: admin
+- url: /
+  script: stats.app
