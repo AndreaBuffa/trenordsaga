@@ -21,7 +21,7 @@ class ScheduleParser:
 		tokenList = self.theString.split('<')
 		for token in tokenList:
 			if not stationName:
-				pattern = re.compile('\<h2\>([a-zA-Z ]+)\<\/h2\>')
+				pattern = re.compile('h2>(.+)')
 				stationMatch = pattern.search(token)
 				if stationMatch:
 					stationName = stationMatch.group(1)
@@ -34,7 +34,7 @@ class ScheduleParser:
 				idx = token.find(self.SCHEDULED_ARR_TOK)
 				if idx != -1:
 					if lookForTime:
-						buffer = "%s (%s)%s%02d:%02d" % (buffer, stationName, "-" if delay < 0 else "" , abs(delay) / 60, abs(delay) % 60)
+						buffer = "%s|(%s)=%s%02d:%02d" % (buffer, stationName, "-" if delay < 0 else "" , abs(delay) / 60, abs(delay) % 60)
 						stationName = ""
 					expectedTime = 0
 					lookForTime = True
@@ -48,7 +48,7 @@ class ScheduleParser:
 						lookForTime = False
 						currentTime = int(time.group(1)) * 60 + int(time.group(2))
 						delay = currentTime - expectedTime
-						buffer = "%s %s%s%02d:%02d" % (buffer, stationName, "-" if currentTime < expectedTime else "" , abs(delay) / 60, abs(delay) % 60)
+						buffer = "%s|%s=%s%02d:%02d" % (buffer, stationName, "-" if currentTime < expectedTime else "" , abs(delay) / 60, abs(delay) % 60)
 						stationName = ""
 						expectedTime = 0
 		return buffer

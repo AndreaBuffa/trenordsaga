@@ -1,7 +1,6 @@
 import urllib
 from s9 import S9
-import datetime
-import time
+from datetime import date
 
 class DataProvider:
 	""" This the product of an abstract factory """
@@ -24,7 +23,8 @@ class StoredData(DataProvider):
 
 	def RetrieveSourcePage(self):
 		""" use a NoSQL store """
-		query = S9.query(S9.date==datetime.date.fromtimestamp(time.mktime(time.strptime("2014-12-14", "%Y-%m-%d"))))
+		#time.strptime("2014-12-15", "%Y-%m-%d")
+		query = S9.query(S9.date==date.today())
 		
 		tmp = query.get()
 		if tmp:

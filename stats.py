@@ -13,33 +13,13 @@ PAGE_TEMPLATE = """\
 			function drawChart() {
 				var data = google.visualization.arrayToDataTable([
 					['Stazione',  'Delay'],
-					['Albairate Vermezzo', 8.4],
-					['GAGGIANO',     6.9],
-					['TREZZANO S.N.',        6.5],
-					['CESANO BOSCONE',      4.4],
-					['CORSICO',      4.4],
-					['MILANO S. CRISTOFORO',      4.4],
-					['MILANO ROMOLO',      4.4],
-					['MILANO PORTA ROMANA',      4.4],
-					['MILANO LAMBRATE',      4.4],
-					['MILANO GRECO PIRELLI',      4.4],
-					['SESTO S. GIOVANNI',      4.4],
-					['MONZA',      4.4],
-					['LISSONE-MUGGIO`',      4.4],
-					['DESIO',      4.4],
-					['SEREGNO',      4.4],
-					['BARRUCCANA',      4.4],
-					['CESANO MADERNO',      4.4],
-					['GROANE',      4.4],
-					['CERLANO LAGHETTO',      4.4],
-					['SARONNO SUD',      4.4],
-					['SARONNO',      4.4]
+					['Albairate Vermezzo', new Date(2014,12,15,0,5,0)],
+					['GAGGIANO', new Date(2014,12,15,0,-2,0)],
 					]);
 			
 				var options = {
 					title: 'The decline of ',
-					vAxis: {title: 'Accumulated Delay'},
-					isStacked: true
+					vAxis: {title: 'Accumulated Delay', maxValue: new Date(2014,12,15,1,0,0)},
 				};
 			
 				var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
