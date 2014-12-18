@@ -46,7 +46,9 @@ class MainPage(webapp2.RequestHandler):
 		if buffer != None:
 			myParser = ScheduleParser(buffer)
 			myFormatter = Formatter(myParser.GetTimings())
-			self.response.write(myFormatter.ToGChartsDataTable())
+			chartData = myFormatter.ToGChartsDataTable()
+			if chartData:
+				self.response.write(chartData)
 		self.response.write(PAGE_TEMPLATE_2)
 		#self.response.write(buffer)
 

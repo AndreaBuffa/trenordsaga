@@ -31,7 +31,7 @@ class ScheduleParser:
 		delay = 0
 		stationName = ""
 		for token in self.theString.split('<'):
-			print "(%s)" % (token)
+			#print "(%s)" % (token)
 			pattern = re.compile('^h2>(.+)')
 			stationMatch = pattern.search(token)
 			if stationMatch != None:
