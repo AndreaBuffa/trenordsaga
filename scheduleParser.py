@@ -25,6 +25,7 @@ class ScheduleParser:
 		#print station
 
 	def GetTimings(self):
+		self.stations = []
 		lookForTime = 0
 		expectedTime = 0
 		currentTime = 0
