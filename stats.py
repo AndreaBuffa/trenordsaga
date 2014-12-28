@@ -5,7 +5,9 @@ from scheduleParser import ScheduleParser
 from formatter import Formatter
 
 PAGE_TEMPLATE_1 = """\
-<html>
+<html>"""
+
+JS_TPL_H = """\
 	<head>
 		<script type="text/Javascript" src="https://www.google.com/jsapi"></script>
 		<script type="text/Javascript">
@@ -16,25 +18,27 @@ PAGE_TEMPLATE_1 = """\
 					['Stazione',  'Previsto', 'Ritardo'],
 """
 
-PAGE_TEMPLATE_2 = """\
-					]);
-
-				var options = {
-					title: 'Tabella dei tempi S9 di oggi',
-					vAxis: {title: ''}
-				};
-			
-				var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
-			
-				chart.draw(data, options);
-			}
-		</script>
+JS_TPL_F = """\
+	]);
+	
+	var options = {
+	title: 'Tabella dei tempi S9 di oggi',
+	vAxis: {title: ''}
+	};
+	
+	var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+	
+	chart.draw(data, options);
+	}
+	</script>
 	</head>
+"""
+
+PAGE_TEMPLATE_2 = """\
 	<body>
 		<div id="chart_div" style="height: 500px;"></div>
 	</body>
-</html>
-"""
+</html>"""
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -43,14 +47,16 @@ class MainPage(webapp2.RequestHandler):
 		myFactory = FrontEnd()
 		myData = myFactory.createDataProvider()
 		buffer = myData.RetrieveSourcePage()
-		if buffer != None:
+		if buffer:
 			myParser = ScheduleParser(buffer)
 			myFormatter = Formatter(myParser.GetTimings())
 			chartData = myFormatter.ToGChartsDataTable()
 			if chartData:
+				self.response.write(JS_TPL_H)
 				self.response.write(chartData)
+				self.response.write(JS_TPL_F)
 		self.response.write(PAGE_TEMPLATE_2)
-		#self.response.write(buffer)
+#self.response.write(buffer)
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),

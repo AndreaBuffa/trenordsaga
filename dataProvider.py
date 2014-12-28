@@ -11,8 +11,9 @@ class DataProvider:
 class OnLineData(DataProvider):
 	url = ""
 
-	def __init__(self, url="http://mobile.my-link.it/mylink/mobile/scheda?dettaglio=visualizza&numeroTreno=24114&codLocOrig=S01059&tipoRicerca=numero&lang=IT"):
+	def __init__(self, url="http://mobile.my-link.it/mylink/mobile/scheda?dettaglio=visualizza&numeroTreno=24114"):
 		self.url = url
+	#codLocOrig=S01059&tipoRicerca=numero&lang=IT
 
 	def RetrieveSourcePage(self):
 		#@todo manage HTTPException
