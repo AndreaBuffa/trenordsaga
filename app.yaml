@@ -8,5 +8,5 @@ handlers:
 - url: /batch
   script: croneTabPage.app
   login: admin
-- url: /
+- url: /.*
   script: stats.app

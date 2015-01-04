@@ -9,8 +9,8 @@ class Formatter:
 	def ToGChartsDataTable(self):
 		buffer = ""
 		for entry in self.timeSchedule:
-			print entry
-			buffer = "%s%s ['%s', new Date(%s,%d,%d,0), new Date(%s,%d,%d,0)]" % \
+			#print entry
+			buffer = "%s%s [\"%s\", new Date(%s,%d,%d,0), new Date(%s,%d,%d,0)]" % \
 				(buffer,
 				',' if len(buffer) else '',
 				entry['name'],
