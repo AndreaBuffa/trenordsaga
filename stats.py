@@ -9,10 +9,6 @@ from google.appengine.ext.webapp import template
 class MainPage(webapp2.RequestHandler):
     def get(self, year="", month="", day=""):
 		self.response.headers['Content-Type'] = 'text/html;'
-
-		print year
-		print month
-		print day
 		myFactory = FrontEnd()
 		myData = myFactory.createDataProvider()
 		buffer = myData.RetrieveSourcePage(year, month, day)
