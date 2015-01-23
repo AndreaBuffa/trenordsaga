@@ -1,6 +1,6 @@
 import webapp2
-from dataProviderFactory import DataProviderFactory,ChroneTab
-from s9 import S9
+from model.dataProviderFactory import *
+import model.s9
 
 class CroneTabPage(webapp2.RequestHandler):
 	def get(self):

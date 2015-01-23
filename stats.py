@@ -1,23 +1,14 @@
 import webapp2
-import dataProvider
-from dataProviderFactory import DataProviderFactory,FrontEnd
-from scheduleParser import ScheduleParser
-from formatter import Formatter
-import os
-from google.appengine.ext.webapp import template
+from model.dataProviderFactory import *
+from view.trenordSagaFrontEnd import *
 
 class MainPage(webapp2.RequestHandler):
     def get(self, year="", month="", day=""):
 		self.response.headers['Content-Type'] = 'text/html;'
 		myFactory = FrontEnd()
-		myData = myFactory.createDataProvider()
-		buffer = myData.RetrieveSourcePage(year, month, day)
-		if buffer:
-			myParser = ScheduleParser(buffer)
-			myFormatter = Formatter(myParser.GetTimings())
-			chartData = myFormatter.ToGChartsDataTable()
-			path = os.path.join(os.path.dirname(__file__), 'stats.html')
-			self.response.out.write(template.render(path, {'stations': chartData}))
+		myDataModel = myFactory.createDataProvider()
+		myView = StatsView(myDataModel)
+		self.response.out.write(myView.Render(year, month, day))
 
 #self.response.write(buffer)
 

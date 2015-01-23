@@ -1,6 +1,6 @@
 from dataProvider import *
 
-class DataProviderFactory: 
+class DataProviderFactory:
 	""" follows the abstract class patterns """
 	def createDataProvider(self):
 		return
