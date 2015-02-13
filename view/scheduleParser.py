@@ -8,19 +8,20 @@ class ScheduleParser:
 	def __init__(self, stringToParse=""):
 		self.theString = stringToParse
 
-	def AddStation(self, name, noticed, expectedTime, currentTime, delay):
+	def AddStation(self, name, certainty, expectedTime, currentTime, delay):
 		station = {}
-		#print "%s, %d, %d, %d, %d" % (name, noticed, expectedTime, currentTime, delay)
-		station['name'] = name if noticed else ("(%s)" % name)
-		station['noticed'] = noticed
+		#print "%s, %d, %d, %d, %d" % (name, certainty, expectedTime, currentTime, delay)
+		station['name'] = name.title()
+		station['certainty'] = certainty
 		station['sched_h'] = int(expectedTime / 60)
 		station['sched_m'] = expectedTime % 60
-		if noticed:
+		if certainty:
 			station['real_h'] = int(currentTime / 60)
 			station['real_m'] = currentTime % 60
 		else:
 			station['real_h'] = int(expectedTime / 60) + (delay / 60)
 			station['real_m'] = expectedTime % 60 + (delay % 60)
+		station['delay_m'] = delay
 		self.stations.append(station.copy())
 		#print station
 

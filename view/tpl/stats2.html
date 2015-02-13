@@ -1,0 +1,29 @@
+<html>
+	<head>
+{% if stations %}
+		<script type="text/Javascript" src="https://www.google.com/jsapi"></script>
+{% endif %}
+		<script type="text/Javascript">
+{% if stations %}
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawChart);
+{% endif %}
+			function drawChart() {
+				var data = new google.visualization.DataTable({{ stations|safe|escape }});
+
+				var options = {
+					title: 'Tabella dei tempi del treno 24114 (linea S9) del {{ date|safe|escape }}',
+					vAxis: { ticks: [[08, 0, 0, 0],[08, 05, 0, 0],[08, 10, 0, 0],[08, 15, 0, 0],[08, 20, 0, 0],[08, 25, 0, 0],[08, 30, 0, 0],[08, 35, 0, 0],[08, 40, 0, 0],[08, 45, 0, 0],[08, 50, 0, 0],[08, 50, 0, 0],[08, 55, 0, 0],[09, 0, 0, 0],
+						[09, 0, 0, 0],[09, 05, 0, 0],[09, 10, 0, 0],[09, 15, 0, 0],[09, 20, 0, 0],[09, 25, 0, 0],[09, 30, 0, 0],[09, 35, 0, 0],[09, 40, 0, 0],[09, 45, 0, 0],[09, 50, 0, 0],[09,50, 0, 0],[09, 55, 0, 0],[10, 0, 0, 0]] }
+				};
+
+				var chart = new google.visualization.LineChart(document.getElementById('today_chart'));
+				chart.draw(data, options);
+			}
+		</script>
+	</head>
+	<body>
+		<div id="today_chart" style="height: 500px;"></div>
+	</body>
+</html>
+

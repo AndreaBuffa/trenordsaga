@@ -22,9 +22,9 @@ class StatsView(TrenordSagaFrontEnd):
 		if buffer:
 			myParser = ScheduleParser(buffer)
 			myFormatter = Formatter(myParser.GetTimings())
-			chartData = myFormatter.ToGChartsDataTable()
-			path = os.path.join(os.path.dirname(__file__), 'tpl/stats.html')
-			return template.render(path, {'stations': chartData});
+			chartData = myFormatter.ToGChartJSon()
+			path = os.path.join(os.path.dirname(__file__), 'tpl/stats2.html')
+			return template.render(path, {'stations': chartData, 'date': date.today()});
 
 class ScheduleValidator(TrenordSagaFrontEnd):
 	def Render(self, year="", month="", day=""):
