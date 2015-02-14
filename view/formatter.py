@@ -1,14 +1,10 @@
 import time
 from datetime import date
 class Formatter:
-	timeSchedule = []
 
-	def __init__(self, scheduleList):
-		self.timeSchedule = scheduleList
-
-	def ToGChartsDataTable(self):
+	def ToGChartsDataTable(self, timeSchedule):
 		buffer = ""
-		for entry in self.timeSchedule:
+		for entry in timeSchedule:
 			buffer = "%s%s [\"%s\", new Date(%s,%d,%d,0), true, new Date(%s,%d,%d,0), false]" % \
 				(buffer,
 				',' if len(buffer) else '',
@@ -21,12 +17,12 @@ class Formatter:
 				entry['real_m'])
 		return buffer
 
-	def ToGChartJSon(self):
+	def ToLineChartJSon(self, timeSchedule):
 		buffer = b""
 		certainty = 1
 		certaintyBuf = b"true"
 		delayBuf = b"";
-		for entry in self.timeSchedule:
+		for entry in timeSchedule:
 			# example
 			# {c: [{v: "ALBAIRATE VERMEZZO", f: null}, {v: [8,8,0,0], f: null}, {v: [8,15,0,0], f: "5 min"}, {v: true, f: null}]},
 			if entry['certainty']:
@@ -65,3 +61,28 @@ class Formatter:
 						{id: "", type: "boolean", p: {"role": "certainty"}}],
 				rows: [%s ]}""" % buffer
 		return ret
+
+	def ToHistogramJSon(self, timeSchedule):
+		myBuffer = b"";
+		for entry in timeSchedule:
+			if entry['delay_m'] >= 10:
+				hexColor = "#FF0000"
+			elif entry['delay_m'] >= 2:
+				hexColor = "#FF8800"
+			else:
+				hexColor = "#FFFF00"
+
+			myBuffer = "%s%s{c: [{v: \"%s\", f: null}, {v: %d, f:null}, {v: 'color: %s', f: null}]}" % \
+				(myBuffer,
+				',' if len(myBuffer) else '',
+				entry['name'],
+				entry['delay_m'],
+				hexColor)
+
+		json = b"""{
+				cols: [
+						{label: "Stazione", pattern: "", type: "string"},
+						{label: "Ritardo", pattern: "", type: "number"},
+						{type: "string", p: {"role": "style"}}],
+				rows: [%s ]}""" % myBuffer
+		return json
