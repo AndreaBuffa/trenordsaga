@@ -26,8 +26,10 @@ class StoredData(DataProvider):
 	def RetrieveSourcePage(self, year="", month="", day=""):
 		""" use a NoSQL store """
 		if year and month and day:
-			myDate = datetime.datetime.strptime(year+"-"+month+"-"+day, "%Y-%m-%d").date()
-			print myDate
+			try:
+				myDate = datetime.datetime.strptime(year+"-"+month+"-"+day, "%Y-%m-%d").date()
+			except:
+				myDate = date.today()
 		else:
 			myDate = date.today()
 
