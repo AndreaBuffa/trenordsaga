@@ -1,3 +1,3 @@
-TrenordSaga has two main intent: 
+TrenordSaga has two main purposes:
 - to trace Trenord S9 line delays
-- to learn Python
+- to improve my Python
