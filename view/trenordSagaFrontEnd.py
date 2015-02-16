@@ -18,7 +18,15 @@ class StatsView(TrenordSagaFrontEnd):
 		self.myModel = aModel
 
 	def Render(self, year="", month="", day=""):
-		buffer = self.myModel.RetrieveSourcePage(year, month, day)
+		if year and month and day:
+			try:
+				theDate = datetime.datetime.strptime(year+"-"+month+"-"+day, "%Y-%m-%d").date()
+			except:
+				theDate = date.today()
+		else:
+			theDate = date.today()
+
+		buffer = self.myModel.RetrieveSourcePage(theDate)
 		if buffer:
 			myParser = ScheduleParser(buffer)
 			timeSchedule = myParser.GetTimings()
@@ -26,12 +34,15 @@ class StatsView(TrenordSagaFrontEnd):
 			chartData = myFormatter.ToLineChartJSon(timeSchedule)
 
 			stationsByDelay = sorted(timeSchedule, key=lambda station: station['delay_m'], reverse=True)
-			stationsByDelayJS = myFormatter.ToHistogramJSon(stationsByDelay)
+			onDelayStations = filter(lambda station: station['delay_m'] > 0, stationsByDelay)
+			onTimeStations = filter(lambda station: station['delay_m'] <= 0, stationsByDelay)
+			stationsByDelayJS = myFormatter.ToHistogramJSon(onDelayStations)
 
 			path = os.path.join(os.path.dirname(__file__), 'tpl/stats2.html')
 			return template.render(path, {'stations': chartData,
-				'date': date.today(),
-				'stationsByDelay': stationsByDelayJS});
+				'date': theDate,
+				'stationsByDelay': stationsByDelayJS,
+				'onTimeStations': onTimeStations});
 
 class ScheduleValidator(TrenordSagaFrontEnd):
 	def Render(self, year="", month="", day=""):

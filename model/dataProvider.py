@@ -23,17 +23,9 @@ class OnLineData(DataProvider):
 
 class StoredData(DataProvider):
 
-	def RetrieveSourcePage(self, year="", month="", day=""):
-		""" use a NoSQL store """
-		if year and month and day:
-			try:
-				myDate = datetime.datetime.strptime(year+"-"+month+"-"+day, "%Y-%m-%d").date()
-			except:
-				myDate = date.today()
-		else:
-			myDate = date.today()
+	def RetrieveSourcePage(self, theDate):
 
-		query = S9.query(S9.date==myDate)
+		query = S9.query(S9.date==theDate)
 		tmp = query.get()
 		if tmp:
 			return tmp.timings
