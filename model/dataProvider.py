@@ -1,7 +1,6 @@
 import urllib
 from s9 import S9
 from datetime import date
-import datetime
 
 class DataProvider:
 	""" This the product of an abstract factory """

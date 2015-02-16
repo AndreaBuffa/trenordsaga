@@ -9,7 +9,7 @@ class TrenordSagaFrontEnd:
 	def __init__(self, aModel):
 		self.myModel = aModel
 
-	def Render(self, year="", month="", day=""):
+	def Render(self, theDate):
 		return ""
 
 class StatsView(TrenordSagaFrontEnd):
@@ -17,14 +17,7 @@ class StatsView(TrenordSagaFrontEnd):
 	def __init__(self, aModel):
 		self.myModel = aModel
 
-	def Render(self, year="", month="", day=""):
-		if year and month and day:
-			try:
-				theDate = datetime.datetime.strptime(year+"-"+month+"-"+day, "%Y-%m-%d").date()
-			except:
-				theDate = date.today()
-		else:
-			theDate = date.today()
+	def Render(self, theDate):
 
 		buffer = self.myModel.RetrieveSourcePage(theDate)
 		if buffer:
@@ -45,6 +38,6 @@ class StatsView(TrenordSagaFrontEnd):
 				'onTimeStations': onTimeStations});
 
 class ScheduleValidator(TrenordSagaFrontEnd):
-	def Render(self, year="", month="", day=""):
+	def Render(self, theDate):
 		return ""
 
