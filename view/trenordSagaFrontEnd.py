@@ -29,13 +29,16 @@ class StatsView(TrenordSagaFrontEnd):
 			stationsByDelay = sorted(timeSchedule, key=lambda station: station['delay_m'], reverse=True)
 			onDelayStations = filter(lambda station: station['delay_m'] > 0, stationsByDelay)
 			onTimeStations = filter(lambda station: station['delay_m'] <= 0, stationsByDelay)
-			stationsByDelayJS = myFormatter.ToHistogramJSon(onDelayStations)
+
+			stationsByDelayJS = myFormatter.ToColumnChartJSon(onDelayStations)
+			pieJS = myFormatter.ToPieChart(stationsByDelay)
 
 			path = os.path.join(os.path.dirname(__file__), 'tpl/stats2.html')
 			return template.render(path, {'stations': chartData,
 				'date': theDate,
 				'stationsByDelay': stationsByDelayJS,
-				'onTimeStations': onTimeStations});
+				'onTimeStations': onTimeStations,
+				'pieChartJS': pieJS});
 
 class ScheduleValidator(TrenordSagaFrontEnd):
 	def Render(self, theDate):

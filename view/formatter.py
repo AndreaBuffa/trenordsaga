@@ -62,21 +62,24 @@ class Formatter:
 				rows: [%s ]}""" % buffer
 		return buffer
 
-	def ToHistogramJSon(self, timeSchedule):
+	def ToColumnChartJSon(self, timeSchedule):
 		myBuffer = b"";
 		for entry in timeSchedule:
 			if entry['delay_m'] >= 10:
 				hexColor = "#FF0000"
+			elif entry['delay_m'] >= 5:
+				hexColor = "#B20000"
 			elif entry['delay_m'] >= 2:
 				hexColor = "#FF8800"
 			else:
 				hexColor = "#FFFF00"
 
-			myBuffer = b"%s%s{c: [{v: \"%s\", f: null}, {v: %d, f:null}, {v: 'color: %s', f: null}]}" % \
+			myBuffer = b"%s%s{c: [{v: \"%s\", f: null}, {v: %d, f:\"%s\"}, {v: 'color: %s', f: null}]}" % \
 				(myBuffer,
 				',' if len(myBuffer) else '',
 				entry['name'],
-				entry['delay_m'], #"1 minuto" if entry['delay_m'] == 1 else "%d minuti" % entry['delay_m'],
+				entry['delay_m'],
+				"1 minuto" if entry['delay_m'] == 1 else "%d minuti" % entry['delay_m'],
 				hexColor)
 
 		myBuffer = b"""{
@@ -84,5 +87,34 @@ class Formatter:
 						{label: "Stazione", pattern: "", type: "string"},
 						{label: "Ritardo", pattern: "", type: "number"},
 						{type: "string", p: {"role": "style"}}],
+				rows: [%s ]}""" % myBuffer
+		return myBuffer
+
+	def ToPieChart(self, timeSchedule):
+		myBuffer = b"";
+		myTable = {}
+		for stop in timeSchedule:
+			if stop['delay_m'] < 0:
+				stop['delay_m'] = 0
+			if myTable.has_key(stop['delay_m']):
+				myTable[stop['delay_m']] += 1
+			else:
+				myTable[stop['delay_m']] = 1
+
+		for key, value in myTable.iteritems():
+			myBuffer = b"%s%s{c: [{v: '%d', f: '%d %s in %s %s'}, {v: %d, f: null}]}" % \
+				(myBuffer,
+				',' if len(myBuffer) else '',
+				key,
+				value,
+				"fermate" if value > 1 else "fermata",
+				"ritarto" if key > 0 else "orario",
+				"di %d min" % key if key > 0 else "",
+				value)
+
+		myBuffer = b"""{
+				cols: [
+						{label: "Num Stazioni", pattern: "", type: "string"},
+						{label: "Ritardo in minuti", pattern: "", type: "number"}],
 				rows: [%s ]}""" % myBuffer
 		return myBuffer

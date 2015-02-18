@@ -32,6 +32,23 @@
 				var stationsByDelay = new google.visualization.DataTable({{ stationsByDelay|safe|escape }});
 				var stationsChart = new google.visualization.ColumnChart(document.getElementById('stationsByDelay'));
 				stationsChart.draw(stationsByDelay, columnChartOpt);
+
+				var pieChartData = new google.visualization.DataTable({{ pieChartJS|safe|escape }});
+				var pieChart = new google.visualization.PieChart(document.getElementById('pieChart'));
+				var numOfSlices = pieChartData.getNumberOfRows();
+				var colors = [];
+				for (var i = 0; i < numOfSlices; ++i) {
+					if (i === 0)
+						colors[i] = "blue"
+					else
+						colors[i] = "#B20000"
+				}
+				pieChart.draw(pieChartData, {
+					title: 'Stazioni raggruppate per ritardo',
+					colors: colors,
+					slices: {  0: {offset: 0.08}},
+					tooltip: {text: 'percentage'}
+					});
 			}
 		</script>
 	</head>
@@ -49,9 +66,9 @@
 	<h3>Nessuna</h3>
 {% endif %}
 		</div>
-		<div id="timings" style="height: 500px;"></div>
-
+		<div id="pieChart"  style="width: 900px; height: 500px;"></div>
 		<div id="stationsByDelay" style="height: 500px;"></div>
+		<div id="timings" style="height: 500px;"></div>
 	</body>
 </html>
 
