@@ -37,16 +37,20 @@
 				var pieChart = new google.visualization.PieChart(document.getElementById('pieChart'));
 				var numOfSlices = pieChartData.getNumberOfRows();
 				var colors = [];
+				var slices = {};
 				for (var i = 0; i < numOfSlices; ++i) {
-					if (i === 0)
-						colors[i] = "blue"
-					else
-						colors[i] = "#B20000"
+					if ((i === 0) && pieChartData.getValue(0,0) == 0) {
+						colors[i] = "blue";
+						slices[i] = {offset: 0.08};
+					} else {
+						colors[i] = "#B20000";
+						slices[i] = {offset: 0};
+					}
 				}
 				pieChart.draw(pieChartData, {
 					title: 'Stazioni raggruppate per ritardo',
 					colors: colors,
-					slices: {  0: {offset: 0.08}},
+					slices: slices,
 					tooltip: {text: 'percentage'}
 					});
 			}

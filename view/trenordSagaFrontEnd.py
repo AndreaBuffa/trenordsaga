@@ -26,12 +26,16 @@ class StatsView(TrenordSagaFrontEnd):
 			myFormatter = Formatter()
 			chartData = myFormatter.ToLineChartJSon(timeSchedule)
 
-			stationsByDelay = sorted(timeSchedule, key=lambda station: station['delay_m'], reverse=True)
-			onDelayStations = filter(lambda station: station['delay_m'] > 0, stationsByDelay)
-			onTimeStations = filter(lambda station: station['delay_m'] <= 0, stationsByDelay)
+			stationsByDelay = sorted(timeSchedule,
+				key=lambda station: station['delay_m'],
+				reverse=True)
+			onDelayStations = filter(lambda station: station['delay_m'] > 0,
+				stationsByDelay)
+			onTimeStations = filter(lambda station: station['delay_m'] <= 0,
+				stationsByDelay)
 
 			stationsByDelayJS = myFormatter.ToColumnChartJSon(onDelayStations)
-			pieJS = myFormatter.ToPieChart(stationsByDelay)
+			pieJS = myFormatter.ToPieChartJSon(stationsByDelay)
 
 			path = os.path.join(os.path.dirname(__file__), 'tpl/stats2.html')
 			return template.render(path, {'stations': chartData,

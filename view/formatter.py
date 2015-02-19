@@ -55,10 +55,10 @@ class Formatter:
 
 		buffer = b"""{
 				cols: [
-						{id: "", label: "Stazione", pattern: "", type: "string"},
-						{id: "", label: "Previsto", pattern: "", type: "timeofday"},
-						{id: "", label: "Ritardo", pattern: "", type: "timeofday"},
-						{id: "", type: "boolean", p: {"role": "certainty"}}],
+						{label: "Stazione", pattern: "", type: "string"},
+						{label: "Previsto", pattern: "", type: "timeofday"},
+						{label: "Ritardo", pattern: "", type: "timeofday"},
+						{type: "boolean", p: {"role": "certainty"}}],
 				rows: [%s ]}""" % buffer
 		return buffer
 
@@ -90,16 +90,17 @@ class Formatter:
 				rows: [%s ]}""" % myBuffer
 		return myBuffer
 
-	def ToPieChart(self, timeSchedule):
+	def ToPieChartJSon(self, timeSchedule):
 		myBuffer = b"";
 		myTable = {}
 		for stop in timeSchedule:
-			if stop['delay_m'] < 0:
-				stop['delay_m'] = 0
-			if myTable.has_key(stop['delay_m']):
-				myTable[stop['delay_m']] += 1
+			delay = stop['delay_m']
+			if delay < 0:
+				delay = 0
+			if myTable.has_key(delay):
+				myTable[delay] += 1
 			else:
-				myTable[stop['delay_m']] = 1
+				myTable[delay] = 1
 
 		for key, value in myTable.iteritems():
 			myBuffer = b"%s%s{c: [{v: '%d', f: '%d %s in %s %s'}, {v: %d, f: null}]}" % \
