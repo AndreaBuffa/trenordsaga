@@ -1,5 +1,7 @@
 import time
 from datetime import date
+from nls import *
+
 class Formatter:
 
 	def ToGChartsDataTable(self, timeSchedule):
@@ -55,11 +57,15 @@ class Formatter:
 
 		buffer = b"""{
 				cols: [
-						{label: "Stazione", pattern: "", type: "string"},
-						{label: "Previsto", pattern: "", type: "timeofday"},
-						{label: "Ritardo", pattern: "", type: "timeofday"},
+						{label: "stop", pattern: "", type: "string"},
+						{label: "%s", pattern: "", type: "timeofday"},
+						{label: "%s", pattern: "", type: "timeofday"},
 						{type: "boolean", p: {"role": "certainty"}}],
-				rows: [%s ]}""" % buffer
+				rows: [%s ]}""" % \
+				(langSupport.get("schedule"),
+				langSupport.get("real"),
+				buffer)
+
 		return buffer
 
 	def ToColumnChartJSon(self, timeSchedule):
@@ -84,10 +90,10 @@ class Formatter:
 
 		myBuffer = b"""{
 				cols: [
-						{label: "Stazione", pattern: "", type: "string"},
-						{label: "Ritardo", pattern: "", type: "number"},
+						{label: "", pattern: "", type: "string"},
+						{label: "%s", pattern: "", type: "number"},
 						{type: "string", p: {"role": "style"}}],
-				rows: [%s ]}""" % myBuffer
+				rows: [%s ]}""" % (langSupport.get("delay"), myBuffer)
 		return myBuffer
 
 	def ToPieChartJSon(self, timeSchedule):

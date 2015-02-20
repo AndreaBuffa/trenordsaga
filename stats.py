@@ -5,6 +5,9 @@ import datetime
 
 class MainPage(webapp2.RequestHandler):
 	def get(self, year="", month="", day=""):
+
+		langSupport.setLang(self.request.headers['Accept-Language'])
+		#langSupport.setLang("en-US")
 		if year and month and day:
 			try:
 				theDate = datetime.datetime.strptime(year+"-"+month+"-"+day, "%Y-%m-%d").date()

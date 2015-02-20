@@ -2,6 +2,7 @@ import os
 from google.appengine.ext.webapp import template
 from formatter import *
 from scheduleParser import *
+from nls import *
 
 class TrenordSagaFrontEnd:
 	myModel = None
@@ -38,7 +39,9 @@ class StatsView(TrenordSagaFrontEnd):
 			pieJS = myFormatter.ToPieChartJSon(stationsByDelay)
 
 			path = os.path.join(os.path.dirname(__file__), 'tpl/stats2.html')
-			return template.render(path, {'stations': chartData,
+			return template.render(path, {
+				'nls': langSupport.getEntries(),
+				'stations': chartData,
 				'date': theDate,
 				'stationsByDelay': stationsByDelayJS,
 				'onTimeStations': onTimeStations,

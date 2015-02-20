@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Trenord Saga</title>
+		<title>{{ nls.title }}</title>
 {% if stations %}
 		<script type="text/Javascript" src="https://www.google.com/jsapi"></script>
 {% endif %}
@@ -22,10 +22,10 @@
 				chart.draw(data, options);
 
 				var columnChartOpt = {
-					title: 'Le stazioni in ordine di ritardo, dalla peggiore alle migliore',
+					title: '{{ nls.ordered_by_delay }}',
 					vAxis: {
 						format: '',
-						title: 'Ritardo in minuti'
+						title: '{{ nls.delay_in_minutes }}'
 					},
 					legend: { position: 'none' }
 				  };
@@ -48,7 +48,6 @@
 					}
 				}
 				pieChart.draw(pieChartData, {
-					title: 'Stazioni raggruppate per ritardo',
 					colors: colors,
 					slices: slices,
 					tooltip: {text: 'percentage'}
@@ -57,9 +56,9 @@
 		</script>
 	</head>
 	<body>
-		<h2>I dati relativi al {{ date|safe|escape }}</h2>
+		<h2>{{ nls.survey }} {{ date|safe|escape }}</h2>
 		<div>
-			<h3>Fermate in orario:</h3>
+			<h3>{{ nls.on_time_stops }}</h3>
 {% if onTimeStations %}
 		<ul>
 {% for station in onTimeStations %}
@@ -67,9 +66,10 @@
 {% endfor %}
 		</ul>
 {% else %}
-	<h3>Nessuna</h3>
+	<h3>{{ nls.none }}</h3>
 {% endif %}
 		</div>
+		<label labelfor="pieChart">{{ nls.grouped_by_delay }}</label>
 		<div id="pieChart"  style="width: 900px; height: 500px;"></div>
 		<div id="stationsByDelay" style="height: 500px;"></div>
 		<div id="timings" style="height: 500px;"></div>
