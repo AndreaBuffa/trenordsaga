@@ -5,9 +5,12 @@ from scheduleParser import *
 
 class TrenordSagaFrontEnd:
 	myModel = None
+	showBanner = 0
 
 	def __init__(self, aModel):
 		self.myModel = aModel
+		self.showBanner = 1
+
 
 	def Render(self, theDate):
 		return ""

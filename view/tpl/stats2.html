@@ -1,6 +1,28 @@
-<html>
+<!DOCTYPE html>
+<!--
+	Interphase by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html lang="en">
 	<head>
+		<meta charset="UTF-8">
 		<title>Trenord Saga</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<!--<script src="js/jquery.min.js"></script>-->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+		<noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-xlarge.css" />
+		</noscript>
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 {% if stations %}
 		<script type="text/Javascript" src="https://www.google.com/jsapi"></script>
 {% endif %}
@@ -35,23 +57,111 @@
 			}
 		</script>
 	</head>
-	<body>
-		<h2>I dati relativi al {{ date|safe|escape }}</h2>
-		<div>
-			<h3>Fermate in orario:</h3>
-{% if onTimeStations %}
-		<ul>
-{% for station in onTimeStations %}
-			<li>{{ station.name }}</li>
-{% endfor %}
-		</ul>
-{% else %}
-	<h3>Nessuna</h3>
-{% endif %}
-		</div>
-		<div id="timings" style="height: 500px;"></div>
+	<body class="landing">
 
-		<div id="stationsByDelay" style="height: 500px;"></div>
+		<!-- Header -->
+			<header id="header">
+				<h1><a href="index.html">Trenord saga</a></h1>
+				<nav id="nav">
+					<ul>
+						<li><a href="/">Home</a></li>
+						<li><a href="survey">Daily</a></li>
+						<li><a href="elements.html">Elements</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Banner -->
+			<section id="banner">
+				<h2>Sempre la stessa storia</h2>
+				<p>Le performarce del treno 24114 Albairate-Saronno delle 8:08</p>
+				<ul class="actions">
+					<li>
+						<a href="#" class="button big">Learn More</a>
+					</li>
+				</ul>
+			</section>
+
+		<!-- One -->
+			<section id="one" class="wrapper style1 align-center">
+				<div class="container">
+					<header>
+						<h2>Consectetur adipisicing elit</h2>
+						<p>Lorem ipsum dolor sit amet adipisicing elit. Delectus consequatur sed tempus.</p>
+					</header>
+					<div class="row 200%">
+						<section class="4u 12u$(small)">
+							<i class="icon big rounded fa-clock-o"></i>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim quam consectetur quibusdam magni minus aut modi aliquid.</p>
+						</section>
+						<section class="4u 12u$(small)">
+							<i class="icon big rounded fa-comments"></i>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium ullam consequatur repellat debitis maxime molestiae.</p>
+						</section>
+						<section class="4u$ 12u$(small)">
+							<i class="icon big rounded fa-user"></i>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque eaque eveniet, nesciunt molestias. Ipsam, voluptate vero.</p>
+						</section>
+					</div>
+				</div>
+			</section>
+		<!-- Two -->
+			<section id="two" class="wrapper style2 align-center">
+				<div class="container">
+					<header>
+						<h2>I dati relativi al {{ date|safe|escape }}</h2>
+					</header>
+					<div class="row">
+						<section class="feature 6u 12u$(small)">
+						<p>Fermate in orario:</p>
+{% if onTimeStations %}
+						<ul>
+{% for station in onTimeStations %}
+							<li>{{ station.name }}</li>
+{% endfor %}
+						</ul>
+{% else %}
+						<p>Nessuna</p>
+{% endif %}
+						</section>
+						<section class="feature 6u$ 12u$(small)">
+							<img class="image fit" src="images/pic02.jpg" alt="" />
+							<h3 class="title">Esse, fugiat, in</h3>
+							<p>Natus perspiciatis fugit illum porro iusto fuga nam voluptas minima voluptates deserunt, veniam reiciendis harum repellat necessitatibus. Animi, adipisci qui. Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+						</section>
+						<section class="feature 6u 12u$(small)">
+							<div id="timings" style="height: 500px;"></div>
+						</section>
+						<section class="feature 6u$ 12u$(small)">
+							<div id="stationsByDelay" style="height: 500px;"></div>
+						</section>
+						<section class="wrapper">
+
+						<header class="major">
+							<h2>test</h2>
+						</header>
+							<p>
+							<div id="timings" style="height: 500px;"></div>
+							</p>
+							<p>
+							<div id="stationsByDelay" style="height: 500px;"></div>
+							</p>
+						</section>
+					</div>
+					<footer>
+						<ul class="actions">
+							<li>
+								<a href="#" class="button alt big">Learn More</a>
+							</li>
+						</ul>
+					</footer>
+				</div>
+			</section>
+
+
+
+
+		
 	</body>
 </html>
 
