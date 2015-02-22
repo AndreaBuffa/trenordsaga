@@ -5,8 +5,28 @@ api_version: 1
 threadsafe: true
 
 handlers:
+- url: /css
+  static_dir: css
+- url: /js
+  static_dir: js
+- url: /fonts
+  static_dir: fonts
+- url: /images
+  static_dir: images
+- url: /.*/css
+  static_dir: css
+- url: /.*/js
+  static_dir: js
+- url: /.*/fonts
+  static_dir: fonts
+- url: /.*/images
+  static_dir: images
 - url: /batch
   script: croneTabPage.app
   login: admin
-- url: /.*
+- url: /survey/.*
   script: stats.app
+- url: /survey
+  script: stats.app
+- url: /.*
+  script: home.app

@@ -1,78 +1,34 @@
-<html>
-	<head>
-		<title>{{ nls.title }}</title>
-{% if stations %}
-		<script type="text/Javascript" src="https://www.google.com/jsapi"></script>
-{% endif %}
-		<script type="text/Javascript">
-{% if stations %}
-			google.load("visualization", "1", {packages:["corechart"]});
-			google.setOnLoadCallback(drawCharts);
-{% endif %}
-			function drawCharts() {
-				var data = new google.visualization.DataTable({{ stations|safe|escape }});
 
-				var options = {
-					title: 'Andamento del ritardo rispetto all\' orario previsto',
-					vAxis: {ticks: [[8, 0, 0, 0],[8, 10, 0, 0],[8, 20, 0, 0],[8, 30, 0, 0],[8, 40, 0, 0],[8, 50, 0, 0],[9, 0, 0, 0],[9, 10, 0, 0],[9, 20, 0, 0],[9, 30, 0, 0],[9, 40, 0, 0],[9, 50, 0, 0],[10, 0, 0, 0]]},
-					legend: { position: 'top' }
-				};
-
-				var chart = new google.visualization.LineChart(document.getElementById('timings'));
-				chart.draw(data, options);
-
-				var columnChartOpt = {
-					title: '{{ nls.ordered_by_delay }}',
-					vAxis: {
-						format: '',
-						title: '{{ nls.delay_in_minutes }}'
-					},
-					legend: { position: 'none' }
-				  };
-				var stationsByDelay = new google.visualization.DataTable({{ stationsByDelay|safe|escape }});
-				var stationsChart = new google.visualization.ColumnChart(document.getElementById('stationsByDelay'));
-				stationsChart.draw(stationsByDelay, columnChartOpt);
-
-				var pieChartData = new google.visualization.DataTable({{ pieChartJS|safe|escape }});
-				var pieChart = new google.visualization.PieChart(document.getElementById('pieChart'));
-				var numOfSlices = pieChartData.getNumberOfRows();
-				var colors = [];
-				var slices = {};
-				for (var i = 0; i < numOfSlices; ++i) {
-					if ((i === 0) && pieChartData.getValue(0,0) == 0) {
-						colors[i] = "blue";
-						slices[i] = {offset: 0.08};
-					} else {
-						colors[i] = "#B20000";
-						slices[i] = {offset: 0};
-					}
-				}
-				pieChart.draw(pieChartData, {
-					colors: colors,
-					slices: slices,
-					tooltip: {text: 'percentage'}
-					});
-			}
-		</script>
-	</head>
-	<body>
-		<h2>{{ nls.survey }} {{ date|safe|escape }}</h2>
-		<div>
-			<h3>{{ nls.on_time_stops }}</h3>
+<section class="wrapper">
+	<section class="container">
+		<section>
+				<h3>{{ nls.survey }} {{ date|safe|escape }}</h3>
+				<div class="row">	
+					<div class="6u 12u(small)">
+						<p>{{ nls.on_time_stops }}</p>
 {% if onTimeStations %}
-		<ul>
-{% for station in onTimeStations %}
-			<li>{{ station.name }}</li>
-{% endfor %}
-		</ul>
+						<ul>
+	{% for station in onTimeStations %}
+							<li>{{ station.name }}</li>
+	{% endfor %}
+						</ul>
 {% else %}
-	<h3>{{ nls.none }}</h3>
+						<u>{{ nls.none }}</u>
 {% endif %}
-		</div>
-		<label labelfor="pieChart">{{ nls.grouped_by_delay }}</label>
-		<div id="pieChart"  style="width: 900px; height: 500px;"></div>
-		<div id="stationsByDelay" style="height: 500px;"></div>
-		<div id="timings" style="height: 500px;"></div>
-	</body>
-</html>
+					</div>
+					<div class="6u 12u(small)">
+						<p>{{ nls.grouped_by_delay }}</p>
+						<div id="pieChart" style="width: 500px; height: 500px;">></div>
+					</div>
+				</div>
+		</section>
+		<section>
+				<div id="stationsByDelay" style="height: 500px;"></div>
+		</section>
+		<section>
+			<div id="timings" style="height: 500px;"></div>
+		</section>
+	</section>
+</section>
+
 

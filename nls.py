@@ -25,7 +25,7 @@ class NLS(object):
 					'it-IT': 'Rilevazione del'}
 		self.entries['none'] = {
 					'en-US': 'None',
-					'it-IT': 'Nessuna'}
+					'it-IT': 'Nessuna!'}
 		self.entries['grouped_by_delay'] = {
 					'en-US': 'Stops grouped by delay:',
 					'it-IT': 'Fermate raggruppate per ritardo:'}
@@ -44,6 +44,16 @@ class NLS(object):
 		self.entries['delay'] = {
 					'en-US': 'Delay',
 					'it-IT': 'Ritardo'}
+		self.entries['banner_title'] = {
+					'en-US': 'This is a saga, but always the same tale',
+					'it-IT': 'una saga, ma &egrave; sempre la stessa storia?'}
+		self.entries['banner_title_sub'] = {
+					'en-US': 'Performance Albairate-Saronno line',
+					'it-IT': 'Le performance del treno Albairate-Saronno delle 8:08'}
+		self.entries['learn_more'] = {
+					'en-US': 'Learn more',
+					'it-IT': 'Per saperne di pi'}
+
 
 	def setLang(self, acceptLang):
 		match = re.compile('it-IT').search(acceptLang)
