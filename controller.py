@@ -9,6 +9,7 @@ class Controller(webapp2.RequestHandler):
 		myFactory = FrontEnd()
 		myDataModel = myFactory.createDataProvider()
 		self.myView = StatsView(myDataModel)
+		langSupport.setLang(self.request.headers['Accept-Language'])
 
 	def get(self):
 		self.build()

@@ -15,6 +15,10 @@ class NLS(object):
 	def __init__(self, lang="en-US"):
 		self.default = lang
 		self.currLang = self.default
+		self.entries['name'] = {
+					'en-US': 'Trenord Saga'}
+		self.entries['home'] = {
+					'en-US': 'Home'}
 		self.entries['title'] = {
 					'en-US': 'Trenord Saga'}
 		self.entries['on_time_stops'] = {
@@ -52,7 +56,19 @@ class NLS(object):
 					'it-IT': 'Le performance del treno Albairate-Saronno delle 8:08'}
 		self.entries['learn_more'] = {
 					'en-US': 'Learn more',
-					'it-IT': 'Per saperne di pi'}
+					'it-IT': 'Per saperne di pi&ugrave;'}
+		self.entries['daily'] = {
+					'en-US': 'Daily',
+					'it-IT': 'Giorno per giorno'}
+		self.entries['statistics'] = {
+					'en-US': 'Statistics',
+					'it-IT': 'Statistiche'}
+		self.entries['about'] = {
+					'en-US': 'About',
+					'it-IT': 'Progetto'}
+		self.entries['aboutme'] = {
+					'en-US': 'About Me',
+					'it-IT': 'Su di me:'}
 
 
 	def setLang(self, acceptLang):
@@ -64,7 +80,7 @@ class NLS(object):
 
 	def get(self, entry):
 		if not entry:
-			return ""
+			return "ERROR-EMPTY-KEY"
 		if self.entries.has_key(entry):
 			if self.entries[entry].has_key(self.currLang):
 				return self.entries[entry][self.currLang]
