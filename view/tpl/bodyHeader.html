@@ -1,5 +1,8 @@
+{% if landingClass %}
 <body class="landing">
-
+{% else %}
+<body>
+{% endif %}
 	<header id="header">
 		<h1><a href="/">{{ nls.name }}</a></h1>
 		<nav id="nav">

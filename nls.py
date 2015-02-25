@@ -69,6 +69,9 @@ class NLS(object):
 		self.entries['aboutme'] = {
 					'en-US': 'About Me',
 					'it-IT': 'Su di me:'}
+		self.entries['nosurvey'] = {
+					'en-US': 'Today survey available after 10:30 pm CET. Past surveys are coming soon.',
+					'it-IT': 'Le rilevazioni di oggi sono disponibili dopo le 10:30. A breve la possibilit&agrave; di visualizzare le rilevazioni per data.'}
 
 
 	def setLang(self, acceptLang):
