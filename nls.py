@@ -72,7 +72,15 @@ class NLS(object):
 		self.entries['nosurvey'] = {
 					'en-US': 'Today survey available after 10:30 pm CET. Past surveys are coming soon.',
 					'it-IT': 'Le rilevazioni di oggi sono disponibili dopo le 10:30. A breve la possibilit&agrave; di visualizzare le rilevazioni per data.'}
-
+		self.entries['trend'] = {
+					'en-US': 'Delay trend:',
+					'it-IT': 'Andamento del ritardo rispetto all\' orario previsto:'}
+		self.entries['datepicker'] = {
+					'en-US': 'Choose the date',
+					'it-IT': 'Scegli un\'altra data'}
+		self.entries['open'] = {
+					'en-US': 'See the survey for this date',
+					'it-IT': 'Guarda la rilevazione'}
 
 	def setLang(self, acceptLang):
 		match = re.compile('it-IT').search(acceptLang)

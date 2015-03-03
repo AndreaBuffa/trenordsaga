@@ -15,6 +15,8 @@
 		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
 		<!--<script src="js/jquery.min.js"></script>-->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
+		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-layers.min.js"></script>
 		<script src="js/init.js"></script>
@@ -36,7 +38,6 @@
 				var data = new google.visualization.DataTable({{ stations|safe|escape }});
 
 				var options = {
-					title: 'Andamento del ritardo rispetto all\' orario previsto',
 					vAxis: {ticks: [[8, 0, 0, 0],[8, 10, 0, 0],[8, 20, 0, 0],[8, 30, 0, 0],[8, 40, 0, 0],[8, 50, 0, 0],[9, 0, 0, 0],[9, 10, 0, 0],[9, 20, 0, 0],[9, 30, 0, 0],[9, 40, 0, 0],[9, 50, 0, 0],[10, 0, 0, 0]]},
 					legend: { position: 'top' }
 				};
@@ -45,7 +46,6 @@
 				chart.draw(data, options);
 
 				var columnChartOpt = {
-					title: '{{ nls.ordered_by_delay }}',
 					vAxis: {
 						format: '',
 						title: '{{ nls.delay_in_minutes }}'
@@ -74,8 +74,15 @@
 					colors: colors,
 					slices: slices,
 					tooltip: {text: 'percentage'},
+					charArea: {left: 0, top: 0, width: 0, height: 0},
 					legend: { position: 'none' }
 					});
 			}
+			$(function() {
+				$( "#datepicker" ).datepicker({
+					minDate: new Date(2014, 12 - 1, 18),
+					maxDate: new Date()});
+			});
+			$('#datepicker').datepicker('show');
 		</script>
 	</head>

@@ -1,4 +1,3 @@
-
 <section class="wrapper">
 	<section class="container">
 		<section>
@@ -23,12 +22,19 @@
 				</div>
 		</section>
 		<section>
+				<p>{{ nls.ordered_by_delay }}</p>
 				<div id="stationsByDelay" style="height: 500px;"></div>
 		</section>
 		<section>
+				<p>{{ nls.trend }}</p>
 			<div id="timings" style="height: 500px;"></div>
+		</section>
+		<section>
+			<p>{{ nls.datepicker }}</p>
+			<form action="survey">
+				<div id="datepicker"></div>
+				<input type="submit" value="{{ nls.open }}"/>
+			</form>
 		</section>
 	</section>
 </section>
-
-
