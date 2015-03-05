@@ -29,4 +29,4 @@ handlers:
 - url: /survey
   script: stats.app
 - url: /.*
-  script: stats.app
+  script: home.app

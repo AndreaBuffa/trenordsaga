@@ -41,12 +41,3 @@ class DayController(Controller):
 		else:
 			theDate = self.getLastDatetime()
 		self.getViewAction(theDate)
-
-	def post(self):
-		try:
-			theDate = datetime.datetime.strptime(self.request.get("datetime"), "%Y-%m-%d").date()
-		except ValueError:
-			theDate = self.getLastDatetime()
-		self.build()
-		self.myView.showBanner = 0;
-		self.getViewAction(theDate)

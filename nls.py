@@ -70,8 +70,8 @@ class NLS(object):
 					'en-US': 'About Me',
 					'it-IT': 'Su di me:'}
 		self.entries['nosurvey'] = {
-					'en-US': 'Ooops.. No survey available..',
-					'it-IT': 'Ops.. niente rilevazioni....Si prega di riprovare.'}
+					'en-US': 'Today survey available after 10:30 pm CET. Past surveys are coming soon.',
+					'it-IT': 'Le rilevazioni di oggi sono disponibili dopo le 10:30. A breve la possibilit&agrave; di visualizzare le rilevazioni per data.'}
 		self.entries['trend'] = {
 					'en-US': 'Delay trend:',
 					'it-IT': 'Andamento del ritardo rispetto all\' orario previsto:'}

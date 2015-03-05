@@ -79,16 +79,10 @@
 					});
 			}
 			$(function() {
-				$("[id^=datepicker]" ).datepicker({
-					dateFormat: "yy-mm-dd",
+				$( "#datepicker" ).datepicker({
 					minDate: new Date(2014, 12 - 1, 18),
-					maxDate: new Date(),
-					defaultDate: "{{ date|safe|escape }}",
-					onSelect: function(selectedDate) {
-							document.form.postBttnBottom.disabled = false;
-							document.form.postBttnTop.disabled = false;
-							document.form.datetime.value = selectedDate;
-						}});
+					maxDate: new Date()});
 			});
+			$('#datepicker').datepicker('show');
 		</script>
 	</head>

@@ -1,14 +1,9 @@
 <section class="wrapper">
-	<form name="form" method="post" action="survey">
 	<section class="container">
 		<section>
-				<div class="row">
+				<h3>{{ nls.survey }} {{ date|safe|escape }}</h3>
+				<div class="row">	
 					<div class="6u 12u(small)">
-						<div id="datepickerTop"></div>
-						<input id="postBttnTop" type="submit" value="{{ nls.open }}" disabled/>
-					</div>
-					<div class="6u 12u(small)">
-						<h3>{{ nls.survey }} {{ date|safe|escape }}</h3>
 						<p>{{ nls.on_time_stops }}</p>
 {% if onTimeStations %}
 						<ul>
@@ -20,12 +15,11 @@
 						<u>{{ nls.none }}</u>
 {% endif %}
 					</div>
-
+					<div class="6u 12u(small)">
+						<p>{{ nls.grouped_by_delay }}</p>
+						<div id="pieChart" style="width: 500px; height: 500px;">></div>
+					</div>
 				</div>
-		</section>
-		<section>
-			<p>{{ nls.grouped_by_delay }}</p>
-			<div id="pieChart" style="width: 500px; height: 500px;">></div>
 		</section>
 		<section>
 				<p>{{ nls.ordered_by_delay }}</p>
@@ -37,10 +31,10 @@
 		</section>
 		<section>
 			<p>{{ nls.datepicker }}</p>
-				<div id="datepickerBottom"></div>
-				<input id="datetime" name="datetime" type="hidden" />
-				<input id="postBttnBottom" type="submit" value="{{ nls.open }}" disabled/>
+			<form action="survey">
+				<div id="datepicker"></div>
+				<input type="submit" value="{{ nls.open }}"/>
+			</form>
 		</section>
 	</section>
-	</form>
 </section>
