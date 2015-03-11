@@ -24,7 +24,7 @@ handlers:
 - url: /batch
   script: croneTabPage.app
   login: admin
-- url: /mean
+- url: /mean/.*
   script: croneTabPage.mean
   login: admin
 - url: /survey/.*
