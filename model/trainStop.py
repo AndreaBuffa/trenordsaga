@@ -1,6 +1,6 @@
 from google.appengine.ext import ndb
 
-class RailwayStation(ndb.Model):
+class TrainStop(ndb.Model):
 	"""Models a generic station"""
 	trainid = ndb.StringProperty(indexed=True)
 	name = ndb.StringProperty(indexed=True)
@@ -8,7 +8,3 @@ class RailwayStation(ndb.Model):
 	delay = ndb.IntegerProperty(indexed=False)
 	startdate = ndb.DateProperty(indexed=False)
 	certainty = ndb.BooleanProperty(indexed=False)
-	
-	
-	
-	
