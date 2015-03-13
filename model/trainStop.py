@@ -13,6 +13,7 @@ class TrainStop(ndb.Model):
 	delaysList = ndb.StructuredProperty(DelayCounter, repeated = True, indexed = False)
 	startdate = ndb.DateProperty(indexed = False)
 	certainty = ndb.BooleanProperty(indexed = False)
+	totDelay = ndb.IntegerProperty(indexed = True)
 
 	def updateDelayCounter(self, _delayInMinutes):
 		entries = filter(lambda delayCounter: delayCounter.delayInMinutes == _delayInMinutes,

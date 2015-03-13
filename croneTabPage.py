@@ -18,11 +18,13 @@ def createTrainStop(timings, stops):
 				station.trainid = '24114'
 				station.startdate = datetime.datetime.strptime('2014-12-18', "%Y-%m-%d")
 				station.numofsurveys = 0
+				station.totDelay = 0
 				station.delaysList = []
 				stops[entry['name']] = station
+			delay = entry['delay_m'] if entry['delay_m'] > 0 else 0
 			stops[entry['name']].numofsurveys += 1
-			if entry['delay_m'] > 0:
-				stops[entry['name']].updateDelayCounter(entry['delay_m'])
+			stops[entry['name']].totDelay += delay
+			stops[entry['name']].updateDelayCounter(delay)
 			stops[entry['name']].certainty = True if entry['certainty'] else False
 
 class CroneTabPage(webapp2.RequestHandler):
