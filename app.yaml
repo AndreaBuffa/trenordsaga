@@ -3,6 +3,8 @@ version: 1
 runtime: python27
 api_version: 1
 threadsafe: true
+builtins:
+- deferred: on
 
 handlers:
 - url: /css
@@ -13,23 +15,17 @@ handlers:
   static_dir: fonts
 - url: /images
   static_dir: images
-- url: /.*/css
-  static_dir: css
-- url: /.*/js
-  static_dir: js
-- url: /.*/fonts
-  static_dir: fonts
-- url: /.*/images
-  static_dir: images
-- url: /batch
-  script: croneTabPage.app
+- url: /retrieve/.*
+  script: utils.cronJob.app
   login: admin
-- url: /mean/.*
-  script: croneTabPage.mean
+- url: /mean
+  script: utils.meanJob.app
   login: admin
 - url: /survey/.*
-  script: stats.app
+  script: main.app
 - url: /survey
-  script: stats.app
+  script: main.app
+- url: /console/.*
+  script: main.app
 - url: /.*
-  script: stats.app
+  script: main.app

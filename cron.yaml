@@ -1,6 +1,6 @@
 cron:
 - description: daily summary job
-  url: /batch
+  url: /retrieve/24114
 #  schedule: every 10 minutes from 09:50 to 10:10
   schedule: every day 10:10
   timezone: Europe/Rome

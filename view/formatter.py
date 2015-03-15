@@ -1,6 +1,6 @@
 import time
 from datetime import date
-from nls import *
+from nls.nls import *
 
 class Formatter:
 

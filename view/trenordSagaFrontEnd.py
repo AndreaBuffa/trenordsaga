@@ -2,7 +2,7 @@ import os
 from google.appengine.ext.webapp import template
 from formatter import *
 from scheduleParser import *
-from nls import *
+from nls.nls import *
 
 class TrenordSagaFrontEnd:
 	myModel = None
