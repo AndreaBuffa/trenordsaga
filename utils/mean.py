@@ -12,7 +12,7 @@ BATCH_SIZE = 30  # ideal batch size
 
 def Mean(cursor=None, num_updated=0):
     stops = {}
-    queryTimeSchedules = S9.query()
+    queryTimeSchedules = S9.query().order(S9.date)
     if cursor:
         query = TrainStop.query(TrainStop.trainid == '24114')
         results = query.fetch()
@@ -30,7 +30,6 @@ def Mean(cursor=None, num_updated=0):
             stop.put()
         num_updated += len(timings)
         deferred.defer(Mean, cursor=cursor, num_updated=num_updated)
+        logging.debug('Computed %d updates!', num_updated)
     else:
         logging.debug('Mediana computation complete with %d updates!', num_updated)
-
-

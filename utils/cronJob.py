@@ -16,8 +16,9 @@ class CroneTabPage(webapp2.RequestHandler):
 			timeSchedule.trainId = trainId
 			timeSchedule.put()
 			stops = {}
-			query = TrainStop.query(TrainStop.trainid == '24114')
+			query = TrainStop.query(TrainStop.trainid == trainId)
 			results = query.fetch()
+			# build a dictionary
 			for record in results:
 				stops[record.name] = record
 			common.createTrainStop([timeSchedule], stops)
