@@ -13,18 +13,17 @@
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
 		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
-		<!--<script src="js/jquery.min.js"></script>-->
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
-		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-		<script src="js/skel.min.js"></script>
-		<script src="js/skel-layers.min.js"></script>
-		<script src="js/init.js"></script>
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
 			<link rel="stylesheet" href="css/style-xlarge.css" />
 		</noscript>
+		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 {% if stations %}
 		<script type="text/Javascript" src="https://www.google.com/jsapi"></script>
@@ -52,10 +51,21 @@
 					},
 					legend: { position: 'none' }
 				  };
-				var stationsByDelay = new google.visualization.DataTable({{ stationsByDelay|safe|escape }});
-				var stationsChart = new google.visualization.ColumnChart(document.getElementById('stationsByDelay'));
-				stationsChart.draw(stationsByDelay, columnChartOpt);
-
+				var columnChartData = new google.visualization.DataTable({{ stationsByDelay|safe|escape }});
+				for (var i = 0; i < columnChartData.getNumberOfRows(); ++i) {
+					if (columnChartData.getValue(i, 1) >= 10) {
+						columnChartData.setValue(i, 2, "#FF0000");
+					} else if (columnChartData.getValue(i, 1) >= 5) {
+						columnChartData.setValue(i, 2, "#B20000");
+					} else if (columnChartData.getValue(i, 1) >= 2) {
+						columnChartData.setValue(i, 2, "#FF8800");
+					} else {
+						columnChartData.setValue(i, 2, "#FFFF00");
+					}
+				}
+				var columnChart = new google.visualization.ColumnChart(document.getElementById('stationsByDelay'));
+				columnChart.draw(columnChartData, columnChartOpt);
+/*
 				var pieChartData = new google.visualization.DataTable({{ pieChartJS|safe|escape }});
 				var pieChart = new google.visualization.PieChart(document.getElementById('pieChart'));
 				var numOfSlices = pieChartData.getNumberOfRows();
@@ -76,7 +86,7 @@
 					tooltip: {text: 'percentage'},
 					charArea: {left: 0, top: 0, width: 0, height: 0},
 					legend: { position: 'none' }
-					});
+					});*/
 			}
 			$(function() {
 				$("[id^=datepicker]" ).datepicker({

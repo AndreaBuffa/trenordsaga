@@ -81,6 +81,18 @@ class NLS(object):
 		self.entries['open'] = {
 					'en-US': 'See the survey for this date',
 					'it-IT': 'Guarda la rilevazione'}
+		self.entries['minute'] = {
+					'en-US': 'minute',
+					'it-IT': 'minuto'}
+		self.entries['minutes'] = {
+					'en-US': 'minutes',
+					'it-IT': 'minuti'}
+		self.entries['early'] = {
+					'en-US': 'early!',
+					'it-IT': 'in anticipo'}
+		self.entries['on_time'] = {
+					'en-US': 'on time!',
+					'it-IT': 'in orario!'}
 
 	def setLang(self, acceptLang):
 		match = re.compile('it-IT').search(acceptLang)

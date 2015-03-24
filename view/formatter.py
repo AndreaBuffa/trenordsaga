@@ -23,26 +23,27 @@ class Formatter:
 		buffer = b""
 		certainty = 1
 		certaintyBuf = b"true"
-		delayBuf = b"";
+		delayBuf = b""
 		for entry in timeSchedule:
 			if entry['certainty']:
 				certainty = 1
 				certaintyBuf = "true"
+			elif certainty:
+				certaintyBuf = "true"
+				certainty = 0
 			else:
-				if certainty:
-					certaintyBuf = "true"
-					certainty = 0
-				else:
-					certaintyBuf = "false"
+				certaintyBuf = "false"
 
+			delayBuf = b"%02d:%02d" % (entry['real_h'], entry['real_m'])
 			if entry['delay_m'] < 0:
-				delayBuf = "in anticipo!"
+				delayBuf = b"%s, %s" % (delayBuf, langSupport.get("early"))
 			elif entry['delay_m'] == 0:
-				delayBuf = "in orario!"
+				delayBuf = b"%s, %s" % (delayBuf, langSupport.get("on_time"))
 			elif entry['delay_m'] == 1:
-				delayBuf = "1 minuto"
+				delayBuf = b"%s (1 %s)" % (delayBuf, langSupport.get("minute"))
 			else:
-				delayBuf = "%d minuti" % entry['delay_m']
+				delayBuf = b"%s (%d %s)" %  (delayBuf, entry['delay_m'],
+					langSupport.get("minutes"))
 
 			buffer = b"%s%s{c: [{v: \"%s\", f: null}, {v: [%d,%d,0,0], f:null}, {v: [%d,%d,0,0], f: \"%s\"}, {v: %s, f: null}]}" % \
 				(buffer,
@@ -71,22 +72,14 @@ class Formatter:
 	def ToColumnChartJSon(self, timeSchedule):
 		myBuffer = b"";
 		for entry in timeSchedule:
-			if entry['delay_m'] >= 10:
-				hexColor = "#FF0000"
-			elif entry['delay_m'] >= 5:
-				hexColor = "#B20000"
-			elif entry['delay_m'] >= 2:
-				hexColor = "#FF8800"
-			else:
-				hexColor = "#FFFF00"
-
-			myBuffer = b"%s%s{c: [{v: \"%s\", f: null}, {v: %d, f:\"%s\"}, {v: 'color: %s', f: null}]}" % \
+			myBuffer = b"%s%s{c: [{v: \"%s\", f: null}, {v: %d, f:\"%s\"}]}" % \
 				(myBuffer,
 				',' if len(myBuffer) else '',
 				entry['name'],
 				entry['delay_m'],
-				"1 minuto" if entry['delay_m'] == 1 else "%d minuti" % entry['delay_m'],
-				hexColor)
+				"1 %s" % langSupport.get("minute") if entry['delay_m'] == 1 else "%d %s" % (entry['delay_m'],
+					langSupport.get("minutes"))
+)
 
 		myBuffer = b"""{
 				cols: [
@@ -94,6 +87,7 @@ class Formatter:
 						{label: "%s", pattern: "", type: "number"},
 						{type: "string", p: {"role": "style"}}],
 				rows: [%s ]}""" % (langSupport.get("delay"), myBuffer)
+
 		return myBuffer
 
 	def ToPieChartJSon(self, timeSchedule):

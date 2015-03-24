@@ -34,7 +34,6 @@ def createTrainStop(timings, stops):
 def isWorkDay(theDate):
 	if theDate.weekday() > 4:
 		return False
-	print theDate
 	for t in (date(theDate.year,  1,  1), "Capodanno"), \
 		(date(theDate.year,  1,  6), "Epifania"), \
 		(date(theDate.year,  4,  6), "Lunedi dell'Angelo"), \
