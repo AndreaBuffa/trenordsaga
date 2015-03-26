@@ -78,8 +78,7 @@ class Formatter:
 				entry['name'],
 				entry['delay_m'],
 				"1 %s" % langSupport.get("minute") if entry['delay_m'] == 1 else "%d %s" % (entry['delay_m'],
-					langSupport.get("minutes"))
-)
+					langSupport.get("minutes")))
 
 		myBuffer = b"""{
 				cols: [

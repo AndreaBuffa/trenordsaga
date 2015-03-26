@@ -1,6 +1,6 @@
 import webapp2
 from model.dataProviderFactory import *
-from view.trenordSagaFrontEnd import *
+from view.view import *
 import datetime
 
 class Controller(webapp2.RequestHandler):
@@ -32,7 +32,7 @@ class DayController(Controller):
 
 	def get(self, year="", month="", day=""):
 		self.build()
-		self.myView.showBanner = 0;
+		self.myView.showBanner = False;
 		if year and month and day:
 			try:
 				theDate = datetime.datetime.strptime(year+"-"+month+"-"+day, "%Y-%m-%d").date()
@@ -49,4 +49,23 @@ class DayController(Controller):
 			theDate = self.getLastDatetime()
 		self.build()
 		self.myView.showBanner = 0;
+		self.getViewAction(theDate)
+
+
+class ConsoleController(Controller):
+
+	def build(self):
+		myFactory = FrontEnd()
+		myDataModel = myFactory.createDataProvider()
+		self.myView = ScheduleValidator(myDataModel)
+
+	def get(self, trainId="", date=""):
+		self.build()
+		if date:
+			try:
+				theDate = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+			except ValueError:
+				theDate = self.getLastDatetime()
+		else:
+			theDate = self.getLastDatetime()
 		self.getViewAction(theDate)

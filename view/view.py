@@ -4,15 +4,15 @@ from formatter import *
 from scheduleParser import *
 from nls.nls import *
 
-class TrenordSagaFrontEnd:
+class View:
 	myModel = None
-	showBanner = 0
+	showBanner = False
 	pageBuffer = b""
 	localPath = ""
 
 	def __init__(self, aModel):
 		self.myModel = aModel
-		self.showBanner = 1
+		self.showBanner = True
 		self.localPath = os.path.dirname(__file__)
 
 	def renderTpl(self, path="", dataToBind={}):
@@ -22,7 +22,7 @@ class TrenordSagaFrontEnd:
 	def render(self, theDate):
 		return ""
 
-class StatsView(TrenordSagaFrontEnd):
+class StatsView(View):
 
 	def render(self, theDate):
 		chartData = []
@@ -45,22 +45,20 @@ class StatsView(TrenordSagaFrontEnd):
 				stationsByDelay)
 
 			stationsByDelayJS = myFormatter.ToColumnChartJSon(onDelayStations)
-			pieJS = myFormatter.ToPieChartJSon(stationsByDelay)
 
 		self.renderTpl('tpl/head.html', {'nls': langSupport.getEntries(),
 			'stations': chartData,
 			'date': theDate,
-			'stationsByDelay': stationsByDelayJS,
-			'pieChartJS': pieJS})
+			'stationsByDelay': stationsByDelayJS})
 
 		self.renderTpl('tpl/bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': self.showBanner})
 
-		if self.showBanner == 1:
+		if self.showBanner:
 			self.renderTpl('tpl/banner.html', {'nls': langSupport.getEntries()})
 
 		if buffer:
-			self.renderTpl('tpl/stats2.html', {'nls': langSupport.getEntries(),
+			self.renderTpl('tpl/survey.html', {'nls': langSupport.getEntries(),
 				'onTimeStations': onTimeStations,
 				'date': theDate});
 		else:
@@ -71,7 +69,8 @@ class StatsView(TrenordSagaFrontEnd):
 
 		return self.pageBuffer
 
-class ScheduleValidator(TrenordSagaFrontEnd):
+class ScheduleValidator(View):
 	def render(self, theDate):
+		buffer = self.myModel.RetrieveSourcePage(theDate)
 		return ""
 
