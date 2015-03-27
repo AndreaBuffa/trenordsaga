@@ -13,14 +13,15 @@ class ScheduleParser:
 		#print "%s, %d, %d, %d, %d" % (name, certainty, expectedTime, currentTime, delay)
 		station['name'] = name.title()
 		station['certainty'] = certainty
-		station['sched_h'] = int(expectedTime / 60)
+		station['sched_h'] = expectedTime / 60
 		station['sched_m'] = expectedTime % 60
 		if certainty:
-			station['real_h'] = int(currentTime / 60)
+			station['real_h'] = currentTime / 60
 			station['real_m'] = currentTime % 60
 		else:
-			station['real_h'] = int(expectedTime / 60) + (delay / 60)
-			station['real_m'] = expectedTime % 60 + (delay % 60)
+			estimation = expectedTime + delay
+			station['real_h'] = estimation / 60
+			station['real_m'] = estimation % 60
 		station['delay_m'] = delay
 		self.stations.append(station.copy())
 		#print station
