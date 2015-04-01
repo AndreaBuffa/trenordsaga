@@ -25,7 +25,7 @@ class Controller(webapp2.RequestHandler):
 		else:
 			#today = datetime.datetime.strptime(datetime.datetime.today(), "%Y-%m-%d")
 			today = datetime.datetime.today()
-			theDate = today.replace(day=today.day - 1)
+			theDate = today - datetime.timedelta(days = 1)
 		return theDate
 
 class DayController(Controller):
