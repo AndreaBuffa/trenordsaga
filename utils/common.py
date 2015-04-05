@@ -11,7 +11,7 @@ def createTrainStop(timings, stops):
 			if not stops.has_key(entry['name']):
 				station = TrainStop()
 				station.name = entry['name']
-				station.trainid = '24114'
+				station.trainid = record.trainId
 				station.startdate = record.date
 				station.workDaySurveys = 0
 				station.dayOffSurveys = 0

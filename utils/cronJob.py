@@ -1,17 +1,17 @@
 import webapp2
 from model.dataProviderFactory import *
-import model.s9
+from model.train import *
 from model.trainStop import *
 import common
 
 
-class CroneTabPage(webapp2.RequestHandler):
+class CronPage(webapp2.RequestHandler):
 	def get(self, trainId):
-		myFactory = ChroneTab()
-		myData = myFactory.createDataProvider()
+		myFactory = CronTab()
+		myData = myFactory.createDataProvider(trainId)
 		buffer = myData.RetrieveSourcePage()
 		if buffer:
-			timeSchedule = S9()
+			timeSchedule = Train()
 			timeSchedule.timings = buffer
 			timeSchedule.trainId = trainId
 			timeSchedule.put()
@@ -28,5 +28,5 @@ class CroneTabPage(webapp2.RequestHandler):
 		self.response.write('....Done!')
 
 app = webapp2.WSGIApplication([
-    ('/retrieve/(\d+)', CroneTabPage),
+    ('/retrieve/(\d+)', CronPage),
 ], debug=True)

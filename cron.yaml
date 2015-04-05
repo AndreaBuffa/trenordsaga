@@ -1,6 +1,11 @@
 cron:
-- description: daily summary job
+- description: S9 20:08
   url: /retrieve/24114
 #  schedule: every 10 minutes from 09:50 to 10:10
   schedule: every day 10:10
+  timezone: Europe/Rome
+
+- description: S1 7:53-09:22
+  url: /retrieve/23222
+  schedule: every day 11:00
   timezone: Europe/Rome

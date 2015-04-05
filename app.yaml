@@ -19,15 +19,19 @@ handlers:
   static_dir: fonts
 - url: /images
   static_dir: images
+# Train timeline retriever
 - url: /retrieve/.*
   script: utils.cronJob.app
   login: admin
-- url: /mean
-  script: utils.meanJob.app
+# Batch tasks
+- url: /batch/(.+)
+  script: utils.batch.batchJob
   login: admin
-- url: /survey
-  script: main.app
+# Console
 - url: /console/.*
+  script: main.app
+# Main WEB site
+- url: /survey
   script: main.app
 - url: /.*
   script: main.app
