@@ -3,14 +3,24 @@ version: 1
 runtime: python27
 api_version: 1
 threadsafe: true
+libraries:
+- name: pycrypto
+  version: latest
+- name: endpoints
+  version: 1.0
 builtins:
 - deferred: on
 
 handlers:
+# API
+- url: /_ah/spi/.*
+  script: api_main.handle
+# Task Queue
 - url: /_ah/queue/deferred
   login: admin
   script: google.appengine.ext.deferred.application
   secure: always
+# Static assets
 - url: /css
   static_dir: css
 - url: /js
