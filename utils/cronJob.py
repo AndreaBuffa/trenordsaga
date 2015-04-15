@@ -8,8 +8,8 @@ import common
 class CronPage(webapp2.RequestHandler):
 	def get(self, trainId):
 		myFactory = CronTab()
-		myData = myFactory.createDataProvider(trainId)
-		buffer = myData.RetrieveSourcePage()
+		myData = myFactory.createDataProvider()
+		buffer = myData.retrieveSourcePage(trainId, "")
 		if buffer:
 			timeSchedule = Train()
 			timeSchedule.timings = buffer

@@ -29,7 +29,7 @@ class StatsView(View):
 		onTimeStations = []
 		stationsByDelayJS = ""
 		pieJS = ""
-		buffer = self.myModel.RetrieveSourcePage(theDate)
+		buffer = self.myModel.retrieveSourcePage('24114', theDate)
 		if buffer:
 			myParser = ScheduleParser(buffer)
 			timeSchedule = myParser.GetTimings()
@@ -71,6 +71,6 @@ class StatsView(View):
 
 class ScheduleValidator(View):
 	def render(self, theDate):
-		buffer = self.myModel.RetrieveSourcePage(theDate)
+		#buffer = self.myModel.retrieveSourcePage('24114', theDate)
 		return ""
 

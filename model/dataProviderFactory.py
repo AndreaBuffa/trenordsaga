@@ -6,14 +6,17 @@ class DataProviderFactory:
 		return
 
 class CronTab(DataProviderFactory):
-	def createDataProvider(self, trainId='24114'):
-		return OnLineData(trainId)
+	def createDataProvider(self):
+		return OnLineData()
 
 class Validator(DataProviderFactory):
-	def createDataProvider(self, trainId='24114'):
-		return StoredData(trainId)
+	def createDataProvider(self):
+		return StoredData()
 
 class FrontEnd(DataProviderFactory):
-	def createDataProvider(self, trainId='24114'):
-		return StoredData(trainId)
+	def createDataProvider(self):
+		return StoredData()
 
+class DataStore(DataProviderFactory):
+	def createDataProvider(self):
+		return StoredData()
