@@ -1,85 +1,11 @@
 cron:
-- description: 1) S11, Chiasso-Milano, 07:46-08:51
-  url: /retrieve/25009
-  schedule: every day 09:69
-  timezone: Europe/Rome
-
-- description: 2) S6, Novara-PIOLTELLO LIMITO, 07:48-09:05
-  url: /retrieve/10619
-  schedule: every day 10:00
-  timezone: Europe/Rome
-
-- description: 3) S13, Pavia - MILANO BOVISA FNM, 08:09-09:05
-  url: /retrieve/23110
-  schedule: every day 10:01
-  timezone: Europe/Rome
-
-- description: 4) S4, CAMNAGO LENTATE - M N CADORNA, 08:24-9:07
-  url: /retrieve/726
-  schedule: every day 10:02
-  timezone: Europe/Rome
-
-- description: 5) S8, Lecco-Milano Porta Garibaldi, 07:37-08:47
-  url: /retrieve/10831
-  schedule: every day 10:03
-  timezone: Europe/Rome
-
-- description: 6) RE, Mantova-Milano Centrale, 06:41-08:40
-  url: /retrieve/2650
-  schedule: every day 10:45
-  timezone: Europe/Rome
-
-- description: 7) S9, Albairate-Saronno, 07:38-09:24
-  url: /retrieve/24112
-  schedule: every day 10:50
-  timezone: Europe/Rome
-
-- description: 8) S1, Lodi-Saronno 7:53-09:22
-  url: /retrieve/23222
-  schedule: every day 10:55
-  timezone: Europe/Rome
-
-- description: 9) S9, Albairate-Saronno, 08:08-09:54
+- description: S9 20:08
   url: /retrieve/24114
+#  schedule: every 10 minutes from 09:50 to 10:10
+  schedule: every day 10:10
+  timezone: Europe/Rome
+
+- description: S1 7:53-09:22
+  url: /retrieve/23222
   schedule: every day 11:00
-  timezone: Europe/Rome
-
-- description: 10) R, Parma-Milano Greco Pirelli, 08.10-09.50
-  url: /retrieve/20416
-  schedule: every day 11:20
-  timezone: Europe/Rome
-
-- description: 11) S13, MILANO BOVISA FNM - Pavia, 17:55-18:51
-  url: /retrieve/23155
-  schedule: every day 20:00
-  timezone: Europe/Rome
-
-- description: 12) S11, Milano Porta Garibaldi-Chiasso, 18:09-19:15
-  url: /retrieve/25232
-  schedule: every day 20:29
-  timezone: Europe/Rome
-
-- description: 13) S8, Lecco-Milano Porta Garibaldi, 18:22-19:23
-  url: /retrieve/10872
-  schedule: every day 20:30
-  timezone: Europe/Rome
-
-- description: 14) RE, Milano Centrale-Mantova, 17:15-19:12
-  url: /retrieve/2659
-  schedule: every day 21:00
-  timezone: Europe/Rome
-
-- description: 15) RE, Milano Cadorna-CAMNAGO LENTATE, 17:53-18:37
-  url: /retrieve/769
-  schedule: every day 21:01
-  timezone: Europe/Rome
-
-- description: 16) S9, Saranno Albairate, 17:35-19:22
-  url: /retrieve/24153
-  schedule: every day 21:02
-  timezone: Europe/Rome
-
-- description: 17) S6, Pioltello-Limito Novara, 17:55-19:12
-  url: /retrieve/10658
-  schedule: every day 21:03
   timezone: Europe/Rome
