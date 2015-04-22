@@ -1,4 +1,5 @@
 from google.appengine.ext import ndb
+import logging
 
 class DelayCounter(ndb.Model):
   delayInMinutes = ndb.IntegerProperty()
