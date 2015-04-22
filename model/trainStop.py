@@ -55,6 +55,7 @@ class TrainStop(ndb.Model):
 		if len(self.workDayDelays) == 0 and len(self.workDayDelays) == 0:
 			return 0.0
 
+		samples = []
 		if (dayOff and workDay):
 			if len(self.workDayDelays) == 0 and len(self.dayOffDelays) > 0:
 				samples = self.dayOffDelays
@@ -65,17 +66,18 @@ class TrainStop(ndb.Model):
 				workDayIndex = 0
 				while True:
 					if self.workDayDelays[workDayIndex].delayInMinutes < self.dayOffDelays[dayOffIndex].delayInMinutes:
-						sample.append(self.workDayDelays[workDayIndex])
+						samples.append(self.workDayDelays[workDayIndex])
 						if workingDayIndex < len(self.workDayDelays):
 							workingDayIndex += 1
 					elif self.workDayDelays[workDayIndex].delayInMinutes > self.dayOffDelays[dayOffIndex].delayInMinutes:
-						sample.append(self.dayOffDelays[dayOffIndex])
+						samples.append(self.dayOffDelays[dayOffIndex])
 						if dayOffIndex < len(self.dayOffDelays):
 							dayOffIndex += 1
 					else:
 						newSample = DelayCounter()
 						newSample.delayInMinutes = self.dayOffDelays[workDayIndex].delayInMinutes
 						newSample.counter = self.dayOffDelays[dayOffIndex].counter + self.workDayDelays[workDayIndex].counter
+						samples.append(newSample)
 					if dayOffIndex >= len(self.workDayDelays) and workDayIndex >= len(self.workDayDelays):
 						break
 
