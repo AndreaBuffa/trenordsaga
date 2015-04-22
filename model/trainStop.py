@@ -50,3 +50,37 @@ class TrainStop(ndb.Model):
 			self.delaysList.append(newEntry)
 		elif len(entries) > 1:
 			logging.debug('Unexpected multiple entries for delay %d', _delayInMinutes)
+
+	def getMediana(self, workDay=True, dayOff=True):
+		if (dayOff and workDay):
+			samples = sorted(self.workDayDelays + self.dayOffDelays)
+			sampleIndex = self.workDaySurveys + self.dayOffSurveys
+			isEven = (sampleIndex % 2 == 0)
+		else:
+			if workDay:
+				samples = self.workDayDelays
+				sampleIndex = self.workDaySurveys
+				isEven = (self.workDaySurveys % 2 == 0)
+			if dayOff:
+				samples = self.dayOffDelays
+				sampleIndex = self.dayOffSurveys
+				isEven = (self.dayOffSurveys % 2 == 0)
+		if isEven:
+			sampleIndex = sampleIndex / 2 - 1
+		else:
+			sampleIndex = (sampleIndex + 1) / 2 - 1
+		#print (samples, sampleIndex, isEven)
+		counter = 0
+		index = 0
+		for sample in samples:
+			if counter >= sampleIndex:
+				if isEven:
+					if sample.counter > 1:
+						return float(sample.delayInMinutes)
+					else:
+						return float((sample.delayInMinutes + samples[index+1].delayInMinutes) / 2)
+				else:
+					return float(sample.delayInMinutes)
+			index += 1
+			counter += sample.counter
+		return 0.0

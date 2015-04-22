@@ -8,7 +8,7 @@ package = 'main_api'
 class Stop(messages.Message):
 	""" Stop class"""
 	stationName = messages.StringField(1)
-	mediana = messages.IntegerField(2)
+	mediana = messages.FloatField(2)
 
 
 class StopCollection(messages.Message):
@@ -22,19 +22,32 @@ class StatisticsApi(remote.Service):
 
 	ID_RESOURCE = endpoints.ResourceContainer(
 		message_types.VoidMessage,
-		trainid=messages.StringField(1, variant=messages.Variant.STRING))
+		trainid=messages.StringField(1, variant=messages.Variant.STRING),
+		dayFilter=messages.StringField(2, variant=messages.Variant.STRING))
 
 	#message_types.VoidMessage
 	@endpoints.method(ID_RESOURCE, StopCollection,
-		path='train_stop_list/{trainid}', http_method='GET',
+		path='train_stop_list/{trainid}/{dayFilter}', http_method='GET',
 		name='trains.listStop')
 	def stop_list(self, request):
 		myFactory = DataStore()
 		myDataModel = myFactory.createDataProvider()
 		results = myDataModel.findAllTrainStopById(request.trainid)
 		ret = StopCollection()
-		for record in results:
-			ret.items.append(Stop(stationName=record.name, mediana=record.workDayTot))
+		if request.dayFilter == "dayOff":
+			dayOff = True
+			workDay = False
+		elif request.dayFilter == "workDay":
+			dayOff = False
+			workDay = True
+		elif request.dayFilter == "all":
+			dayOff = True
+			workDay = True
+		else:
+			return ret
+		for trainStop in results:
+			ret.items.append(Stop(stationName=trainStop.name,
+				mediana=trainStop.getMediana(workDay, dayOff)))
 		return ret
 
 	NAME_RESOURCE = endpoints.ResourceContainer(
