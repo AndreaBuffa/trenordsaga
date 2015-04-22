@@ -63,29 +63,36 @@ class TrainStop(ndb.Model):
 			elif len(self.workDayDelays) > 0 and len(self.dayOffDelays) == 0:
 				samples = self.workDayDelays
 			else:
-				dayOffIndex = 0
-				workDayIndex = 0
-				while (dayOffIndex != len(self.dayOffDelays) or workDayIndex != len(self.workDayDelays)):
+				dayOffIndex = workDayIndex = 0
+				workDayTail = dayOffTail = False
+				while not workDayTail or not dayOffTail:
 					logging.debug('Indices %d %d %d %d', dayOffIndex, len(self.dayOffDelays), workDayIndex, len(self.workDayDelays))
 					if self.workDayDelays[workDayIndex].delayInMinutes < self.dayOffDelays[dayOffIndex].delayInMinutes:
 						samples.append(self.workDayDelays[workDayIndex])
-						if workDayIndex < len(self.workDayDelays):
+						if workDayIndex < len(self.workDayDelays) - 1:
 							workDayIndex += 1
+						else:
+							workDayTail = True
 					elif self.workDayDelays[workDayIndex].delayInMinutes > self.dayOffDelays[dayOffIndex].delayInMinutes:
 						samples.append(self.dayOffDelays[dayOffIndex])
-						if dayOffIndex < len(self.dayOffDelays):
+						if dayOffIndex < len(self.dayOffDelays) - 1:
 							dayOffIndex += 1
+						else:
+							dayOffTail = True
 					else:
 						newSample = DelayCounter()
 						newSample.delayInMinutes = self.dayOffDelays[dayOffIndex].delayInMinutes
 						newSample.counter = self.dayOffDelays[dayOffIndex].counter + self.workDayDelays[workDayIndex].counter
 						samples.append(newSample)
 
-						if workDayIndex < len(self.workDayDelays):
+						if workDayIndex < len(self.workDayDelays) - 1:
 							workDayIndex += 1
-						if dayOffIndex < len(self.dayOffDelays):
+						else:
+							workDayTail = True
+						if dayOffIndex < len(self.dayOffDelays) - 1:
 							dayOffIndex += 1
-
+						else:
+							dayOffTail = True
 			sampleIndex = self.workDaySurveys + self.dayOffSurveys
 			isEven = (sampleIndex % 2 == 0)
 
@@ -103,8 +110,7 @@ class TrainStop(ndb.Model):
 		else:
 			sampleIndex = (sampleIndex + 1) / 2 - 1
 
-		counter = 0
-		index = 0
+		counter = index = 0
 		for sample in samples:
 			if counter >= sampleIndex:
 				if isEven:
