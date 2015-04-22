@@ -52,10 +52,36 @@ class TrainStop(ndb.Model):
 			logging.debug('Unexpected multiple entries for delay %d', _delayInMinutes)
 
 	def getMediana(self, workDay=True, dayOff=True):
+		if len(self.workDayDelays) == 0 and len(self.workDayDelays) == 0:
+			return 0.0
+
 		if (dayOff and workDay):
-			samples = sorted(self.workDayDelays + self.dayOffDelays)
+			if len(self.workDayDelays) == 0 and len(self.dayOffDelays) > 0:
+				samples = self.dayOffDelays
+			elif len(self.workDayDelays) > 0 and len(self.dayOffDelays) == 0:
+				samples = self.workDayDelays
+			else:
+				dayOffIndex = 0
+				workDayIndex = 0
+				while True:
+					if self.workDayDelays[workDayIndex].delayInMinutes < self.dayOffDelays[dayOffIndex].delayInMinutes:
+						sample.append(self.workDayDelays[workDayIndex])
+						if workingDayIndex < len(self.workDayDelays):
+							workingDayIndex += 1
+					elif self.workDayDelays[workDayIndex].delayInMinutes > self.dayOffDelays[dayOffIndex].delayInMinutes:
+						sample.append(self.dayOffDelays[dayOffIndex])
+						if dayOffIndex < len(self.dayOffDelays):
+							dayOffIndex += 1
+					else:
+						newSample = DelayCounter()
+						newSample.delayInMinutes = self.dayOffDelays[workDayIndex].delayInMinutes
+						newSample.counter = self.dayOffDelays[dayOffIndex].counter + self.workDayDelays[workDayIndex].counter
+					if dayOffIndex >= len(self.workDayDelays) and workDayIndex >= len(self.workDayDelays):
+						break
+
 			sampleIndex = self.workDaySurveys + self.dayOffSurveys
 			isEven = (sampleIndex % 2 == 0)
+
 		else:
 			if workDay:
 				samples = self.workDayDelays
@@ -69,7 +95,7 @@ class TrainStop(ndb.Model):
 			sampleIndex = sampleIndex / 2 - 1
 		else:
 			sampleIndex = (sampleIndex + 1) / 2 - 1
-		#print (samples, sampleIndex, isEven)
+
 		counter = 0
 		index = 0
 		for sample in samples:
