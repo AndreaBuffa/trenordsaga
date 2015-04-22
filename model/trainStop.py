@@ -65,6 +65,7 @@ class TrainStop(ndb.Model):
 				dayOffIndex = 0
 				workDayIndex = 0
 				while (dayOffIndex != len(self.dayOffDelays) or workDayIndex != len(self.workDayDelays)):
+					logging.debug('Indices %d %d %d %d', dayOffIndex, len(self.dayOffDelays), workDayIndex, len(self.workDayDelays))
 					if self.workDayDelays[workDayIndex].delayInMinutes < self.dayOffDelays[dayOffIndex].delayInMinutes:
 						samples.append(self.workDayDelays[workDayIndex])
 						if workDayIndex < len(self.workDayDelays):
