@@ -20,7 +20,7 @@ class Controller(webapp2.RequestHandler):
 		self.getViewAction(self.getLastDatetime())
 
 	def getLastDatetime(self):
-		if datetime.datetime.now().time() > datetime.time(10,11,0):
+		if datetime.datetime.now().time() > datetime.time(23,10,0):
 			theDate = date.today()
 		else:
 			#today = datetime.datetime.strptime(datetime.datetime.today(), "%Y-%m-%d")
