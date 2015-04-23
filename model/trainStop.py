@@ -53,62 +53,77 @@ class TrainStop(ndb.Model):
 			logging.debug('Unexpected multiple entries for delay %d', _delayInMinutes)
 
 	def getMediana(self, workDay=True, dayOff=True):
-		if (len(self.workDayDelays) == 0) and (len(self.dayOffDelays) == 0):
+		numWorkDays = len(self.workDayDelays)
+		numDaysOff = len(self.dayOffDelays)
+		if (numWorkDays == 0) and (numDaysOff == 0):
 			return 0.0
 
 		samples = []
 		if (dayOff and workDay):
-			if len(self.workDayDelays) == 0 and len(self.dayOffDelays) > 0:
+			# merge two sorted lists, workDayDelays and dayOffDelays
+			if numWorkDays == 0 and numDaysOff > 0:
 				samples = self.dayOffDelays
-			elif len(self.workDayDelays) > 0 and len(self.dayOffDelays) == 0:
+			elif numWorkDays > 0 and numDaysOff == 0:
 				samples = self.workDayDelays
 			else:
 				dayOffIndex = workDayIndex = 0
 				workDayTail = dayOffTail = False
 				while not workDayTail or not dayOffTail:
-					logging.debug('Indices %d %d %d %d', dayOffIndex, len(self.dayOffDelays), workDayIndex, len(self.workDayDelays))
-					if self.workDayDelays[workDayIndex].delayInMinutes < self.dayOffDelays[dayOffIndex].delayInMinutes:
-						samples.append(self.workDayDelays[workDayIndex])
-						if workDayIndex < len(self.workDayDelays) - 1:
+					logging.debug('Indices %d %d %d %d', dayOffIndex, numDaysOff, workDayIndex, numWorkDays)
+					# one of the two lists's been traversed
+					if workDayTail and not dayOffTail:
+						samples.extend(dayOffDelays[dayOffIndex:])
+						dayOffTail = True
+						break
+					if dayOffTail and not workDayTail:
+						samples.extend(workDayDelays[workDayIndex:])
+						workDayTail = True
+						break
+					# traversing both lists.
+					workDayCounter = self.workDayDelays[workDayIndex]
+					dayOffCounter = self.dayOffDelays[dayOffIndex]
+					if workDayCounter.delayInMinutes < dayOffCounter.delayInMinutes:
+						samples.append(workDayCounter)
+						if workDayIndex < numWorkDays - 1:
 							workDayIndex += 1
 						else:
 							workDayTail = True
-					elif self.workDayDelays[workDayIndex].delayInMinutes > self.dayOffDelays[dayOffIndex].delayInMinutes:
-						samples.append(self.dayOffDelays[dayOffIndex])
-						if dayOffIndex < len(self.dayOffDelays) - 1:
+					elif workDayCounter.delayInMinutes > dayOffCounter.delayInMinutes:
+						samples.append(dayOffCounter)
+						if dayOffIndex < numDaysOff - 1:
 							dayOffIndex += 1
 						else:
 							dayOffTail = True
 					else:
 						newSample = DelayCounter()
-						newSample.delayInMinutes = self.dayOffDelays[dayOffIndex].delayInMinutes
-						newSample.counter = self.dayOffDelays[dayOffIndex].counter + self.workDayDelays[workDayIndex].counter
+						newSample.delayInMinutes = dayOffCounter.delayInMinutes
+						newSample.counter = dayOffCounter.counter + workDayCounter.counter
 						samples.append(newSample)
 
-						if workDayIndex < len(self.workDayDelays) - 1:
+						if workDayIndex < numWorkDays - 1:
 							workDayIndex += 1
 						else:
 							workDayTail = True
-						if dayOffIndex < len(self.dayOffDelays) - 1:
+						if dayOffIndex < numDaysOff - 1:
 							dayOffIndex += 1
 						else:
 							dayOffTail = True
-			sampleIndex = self.workDaySurveys + self.dayOffSurveys
-			isEven = (sampleIndex % 2 == 0)
+			numSamples = self.workDaySurveys + self.dayOffSurveys
+			isEven = (numSamples % 2 == 0)
 
 		else:
 			if workDay:
 				samples = self.workDayDelays
-				sampleIndex = self.workDaySurveys
+				numSamples = self.workDaySurveys
 				isEven = (self.workDaySurveys % 2 == 0)
 			if dayOff:
 				samples = self.dayOffDelays
-				sampleIndex = self.dayOffSurveys
+				numSamples = self.dayOffSurveys
 				isEven = (self.dayOffSurveys % 2 == 0)
 		if isEven:
-			sampleIndex = sampleIndex / 2 - 1
+			sampleIndex = numSamples / 2 - 1
 		else:
-			sampleIndex = (sampleIndex + 1) / 2 - 1
+			sampleIndex = (numSamples + 1) / 2 - 1
 
 		counter = index = 0
 		for sample in samples:
