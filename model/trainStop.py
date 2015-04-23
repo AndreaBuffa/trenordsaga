@@ -128,7 +128,7 @@ class TrainStop(ndb.Model):
 		counter = index = 0
 		for sample in samples:
 			logging.debug('%s: sampleIndex %d counter %d index %d', self.name, sampleIndex, counter, index)
-
+			counter += sample.counter
 			if counter >= sampleIndex:
 				if isEven:
 					if sampleIndex - counter > 1:
@@ -138,5 +138,4 @@ class TrainStop(ndb.Model):
 				else:
 					return float(sample.delayInMinutes)
 			index += 1
-			counter += sample.counter
 		return 0.0
