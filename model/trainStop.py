@@ -69,7 +69,7 @@ class TrainStop(ndb.Model):
 				dayOffIndex = workDayIndex = 0
 				workDayTail = dayOffTail = False
 				while not workDayTail or not dayOffTail:
-					logging.debug('Indices %d %d %d %d', dayOffIndex, numDaysOff, workDayIndex, numWorkDays)
+					#logging.debug('Indices %d %d %d %d', dayOffIndex, numDaysOff, workDayIndex, numWorkDays)
 					# one of the two lists's been traversed
 					if workDayTail and not dayOffTail:
 						samples.extend(self.dayOffDelays[dayOffIndex:])
@@ -129,7 +129,8 @@ class TrainStop(ndb.Model):
 		for sample in samples:
 			if counter >= sampleIndex:
 				if isEven:
-					if sample.counter > 1:
+					logging.debug('sampleIndex %d counter %d index %d', sampleIndex, counter, index)
+					if sampleIndex - counter > 1:
 						return float(sample.delayInMinutes)
 					else:
 						return float((sample.delayInMinutes + samples[index+1].delayInMinutes) / 2)
