@@ -72,11 +72,11 @@ class TrainStop(ndb.Model):
 					logging.debug('Indices %d %d %d %d', dayOffIndex, numDaysOff, workDayIndex, numWorkDays)
 					# one of the two lists's been traversed
 					if workDayTail and not dayOffTail:
-						samples.extend(dayOffDelays[dayOffIndex:])
+						samples.extend(self.dayOffDelays[dayOffIndex:])
 						dayOffTail = True
 						break
 					if dayOffTail and not workDayTail:
-						samples.extend(workDayDelays[workDayIndex:])
+						samples.extend(self.workDayDelays[workDayIndex:])
 						workDayTail = True
 						break
 					# traversing both lists.
