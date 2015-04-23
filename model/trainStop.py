@@ -134,7 +134,7 @@ class TrainStop(ndb.Model):
 					if counter - sampleIndex> 1:
 						return float(sample.delayInMinutes)
 					else:
-						return float((sample.delayInMinutes + samples[index+1].delayInMinutes) / 2)
+						return float(sample.delayInMinutes + samples[index+1].delayInMinutes) / 2
 				else:
 					return float(sample.delayInMinutes)
 			index += 1
