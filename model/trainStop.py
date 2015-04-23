@@ -57,7 +57,7 @@ class TrainStop(ndb.Model):
 		numDaysOff = len(self.dayOffDelays)
 		if (numWorkDays == 0) and (numDaysOff == 0):
 			return 0.0
-
+		# choose the samples, dayOff/ working day/ both
 		samples = []
 		if (dayOff and workDay):
 			# merge two sorted lists, workDayDelays and dayOffDelays
@@ -120,11 +120,12 @@ class TrainStop(ndb.Model):
 				samples = self.dayOffDelays
 				numSamples = self.dayOffSurveys
 				isEven = (self.dayOffSurveys % 2 == 0)
+		# compute median sample index
 		if isEven:
 			sampleIndex = numSamples / 2 - 1
 		else:
 			sampleIndex = (numSamples + 1) / 2 - 1
-
+		# traversing samples list in order to get the median index
 		counter = index = 0
 		for sample in samples:
 			counter += sample.counter
