@@ -4,6 +4,7 @@ import entityMigration
 from google.appengine.ext import deferred
 import webscraper.scraper
 from model.trainDescr import TrainDescr
+#import datetime
 
 class BatchHandler(webapp2.RequestHandler):
 	def get(self, task):
@@ -25,6 +26,7 @@ class BatchHandler(webapp2.RequestHandler):
 			tmp.endStation = "Ballo"
 			tmp.arriveTime = "09:54"
 			tmp.leaveTime = "08:08"
+			#tmp.date = datetime.datetime.today()
 			tmp.put()
 			"""
 			for train in TrainDescr.query().fetch():

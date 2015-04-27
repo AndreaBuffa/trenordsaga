@@ -8,3 +8,4 @@ class TrainDescr(ndb.Model):
 	endStation = ndb.StringProperty(indexed=True)
 	arriveTime = ndb.StringProperty(indexed=True)
 	leaveTime = ndb.StringProperty(indexed=True)
+	date = ndb.DateProperty(indexed=True)
