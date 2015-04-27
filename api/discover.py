@@ -42,4 +42,5 @@ class DicoverApi(remote.Service):
 				arriveTime = trainDescr.arriveTime,
 				leaveTime = trainDescr.leaveTime,
 				surveyedFrom = str(trainDescr.date)))
+
 		return ret
