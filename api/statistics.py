@@ -18,14 +18,13 @@ class StopCollection(messages.Message):
 
 @endpoints.api(name='statistics', version='v1')
 class StatisticsApi(remote.Service):
-	"""Statistics API v1."""
+	"""Statistics API v1. Retrieve statistics such as median delay for
+	a particular train line or station."""
 
 	ID_RESOURCE = endpoints.ResourceContainer(
 		message_types.VoidMessage,
 		trainid=messages.StringField(1, variant=messages.Variant.STRING),
 		dayFilter=messages.StringField(2, variant=messages.Variant.STRING))
-
-	#message_types.VoidMessage
 	@endpoints.method(ID_RESOURCE, StopCollection,
 		path='train_stop_list/{trainid}/{dayFilter}', http_method='GET',
 		name='trains.listStop')

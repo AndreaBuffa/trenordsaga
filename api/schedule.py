@@ -21,15 +21,11 @@ class StopCollection(messages.Message):
 	"""Collection of train Stop."""
 	items = messages.MessageField(Stop, 1, repeated=True)
 
-TMP = StopCollection(items=[
-	Stop(stationName='Barruccana', expected_h=12,  expected_m=39),
-	Stop(stationName='Corsico', expected_h=12,  expected_m=39),
-])
-
 
 @endpoints.api(name='schedule', version='v1')
 class ScheduleApi(remote.Service):
-	"""Statistics API v1."""
+	"""Schedules API v1. Allows to query the time schedule of each train
+	for a particular date"""
 
 	ID_RESOURCE = endpoints.ResourceContainer(
 		message_types.VoidMessage,
@@ -42,7 +38,7 @@ class ScheduleApi(remote.Service):
 	@endpoints.method(ID_RESOURCE, StopCollection,
 		path='train_stop_list/{trainid}/{year}/{month}/{day}', http_method='GET',
 		name='trains.listStop')
-	def schedule(self, request):
+	def get_train_stop_list(self, request):
 		myFactory = DataStore()
 		myDataModel = myFactory.createDataProvider()
 		ret = StopCollection();

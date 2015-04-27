@@ -1,6 +1,7 @@
 import urllib
 from train import Train
 from trainStop import TrainStop
+from trainDescr import TrainDescr
 from datetime import date
 
 HTTP_URL = 'http://mobile.my-link.it/mylink/mobile/scheda?dettaglio=visualizza&numeroTreno='
@@ -40,3 +41,6 @@ class StoredData(DataProvider):
 	def findAllTrainStopById(self, trainId):
 		query = TrainStop.query(TrainStop.trainid == trainId)
 		return query.fetch()
+
+	def findAllTrainDescr(self):
+		return TrainDescr.query().fetch()
