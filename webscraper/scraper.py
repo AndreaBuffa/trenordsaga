@@ -43,8 +43,8 @@ def Scraper(trainId, attemps=MAX_ATTEMPS):
 			for key, stop in stops.iteritems():
 				stop.put()
 		except IOError:
-			# retry if the server doed not respond. @todo Sleep
-			# before trying again?
+			# retry if the server does not respond. 
+			# @todo Sleep before trying again?
 			if attemps > 0:
 				deferred.defer(Scraper,	trainId, attemps=attemps-1)
 			else:
