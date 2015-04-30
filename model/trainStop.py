@@ -1,6 +1,7 @@
 from google.appengine.ext import ndb
 import logging
 
+''' for each delay delayInMinutes, counter is the number of time this delay happend'''
 class DelayCounter(ndb.Model):
   delayInMinutes = ndb.IntegerProperty()
   counter = ndb.IntegerProperty()
@@ -23,13 +24,21 @@ class TrainStop(ndb.Model):
 	"""Models a generic station"""
 	trainid = ndb.StringProperty(indexed = True)
 	name = ndb.StringProperty(indexed = True)
+	"""the number of surveys taken during a weekday """
 	workDaySurveys = ndb.IntegerProperty(indexed = False)
+	"""the number of surveys taken during a weekend or a day off """
 	dayOffSurveys = ndb.IntegerProperty(indexed = False)
+	"""List of DelayConunter, (1 min, 10 times), (2 mins, 14 times).. ordered by delay"""
 	workDayDelays = ndb.StructuredProperty(DelayCounter, repeated = True, indexed = False)
+	"""List of DelayConunter, (1 min, 10 times), (2 mins, 14 times).. ordered by delay"""
 	dayOffDelays = ndb.StructuredProperty(DelayCounter, repeated = True, indexed = False)
+	"""the date of the first survey for this station name and this train id"""
 	startdate = ndb.DateProperty(indexed = False)
+	"""The sum of all the delays during the weekday for this station and this train id"""
 	workDayTot = ndb.IntegerProperty(indexed = True)
+	"""The sum of all the delays during holidays for this station and this train id"""
 	dayOffTot = ndb.IntegerProperty(indexed = True)
+	"""True/false If the datasource provides a certain value for this station or not"""
 	certainty = ndb.BooleanProperty(indexed = False)
 
 	def put(self):
@@ -52,7 +61,7 @@ class TrainStop(ndb.Model):
 		elif len(entries) > 1:
 			logging.debug('Unexpected multiple entries for delay %d', _delayInMinutes)
 
-	def getMediana(self, workDay=True, dayOff=True):
+	def getMedian(self, workDay=True, dayOff=True):
 		numWorkDays = len(self.workDayDelays)
 		numDaysOff = len(self.dayOffDelays)
 		if (numWorkDays == 0) and (numDaysOff == 0):
@@ -95,6 +104,8 @@ class TrainStop(ndb.Model):
 						else:
 							dayOffTail = True
 					else:
+						# merge two elems with the same delayInMinutes. It means
+						# the same delayInMinutes, and the counters summed.
 						newSample = DelayCounter()
 						newSample.delayInMinutes = dayOffCounter.delayInMinutes
 						newSample.counter = dayOffCounter.counter + workDayCounter.counter

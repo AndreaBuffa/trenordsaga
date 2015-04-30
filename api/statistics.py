@@ -8,7 +8,7 @@ package = 'main_api'
 class Stop(messages.Message):
 	""" Stop class"""
 	stationName = messages.StringField(1)
-	mediana = messages.FloatField(2)
+	median = messages.FloatField(2)
 
 
 class StopCollection(messages.Message):
@@ -46,7 +46,7 @@ class StatisticsApi(remote.Service):
 			return ret
 		for trainStop in results:
 			ret.items.append(Stop(stationName=trainStop.name,
-				mediana=trainStop.getMediana(workDay, dayOff)))
+				median=trainStop.getMedian(workDay, dayOff)))
 		return ret
 
 	NAME_RESOURCE = endpoints.ResourceContainer(
