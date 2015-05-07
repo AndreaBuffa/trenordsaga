@@ -3,6 +3,10 @@ from google.appengine.ext.webapp import template
 from formatter import *
 from scheduleParser import *
 from nls.nls import *
+import webapp2
+import re
+
+TPL_PATH = "/tpl/"
 
 class View:
 	myModel = None
@@ -13,23 +17,49 @@ class View:
 	def __init__(self, aModel):
 		self.myModel = aModel
 		self.showBanner = True
-		self.localPath = os.path.dirname(__file__)
+		self.localPath = os.path.dirname(__file__) + TPL_PATH
 
 	def renderTpl(self, path="", dataToBind={}):
-		if path != "":
+		if path:
+			print os.path.join(self.localPath, path)
 			self.pageBuffer += template.render(os.path.join(self.localPath, path), dataToBind)
 
-	def render(self, theDate):
-		return ""
+	def render(self):
+		self.prepare()
+		return self.pageBuffer
+
+	def prepare(self):
+		pass
+
+class SimpleView(View):
+
+	def __init__(self):
+		View.__init__(self, None)
+
+	def prepare(self):
+		self.renderTpl('head.html', {})
+
+		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
+			'landingClass': False})
+
+		self.renderTpl(webapp2.get_request().path[1:] + '_' +
+			langSupport.currLang + '.html',
+			{'nls': langSupport.getEntries(), 'landingClass': self.showBanner})
+
+		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
 class StatsView(View):
+	theDate = None
 
-	def render(self, theDate):
+	def __init__(self, aModel):
+		View.__init__(self, aModel)
+
+	def prepare(self):
 		chartData = []
 		onTimeStations = []
 		stationsByDelayJS = ""
 		pieJS = ""
-		buffer = self.myModel.retrieveSourcePage('24114', theDate)
+		buffer = self.myModel.retrieveSourcePage('24114', self.theDate)
 		if buffer:
 			myParser = ScheduleParser(buffer)
 			timeSchedule = myParser.GetTimings()
@@ -46,31 +76,30 @@ class StatsView(View):
 
 			stationsByDelayJS = myFormatter.ToColumnChartJSon(onDelayStations)
 
-		self.renderTpl('tpl/head.html', {'nls': langSupport.getEntries(),
+		self.renderTpl('surveyHead.html', {'nls': langSupport.getEntries(),
 			'stations': chartData,
-			'date': theDate,
+			'date': self.theDate,
 			'stationsByDelay': stationsByDelayJS})
 
-		self.renderTpl('tpl/bodyHeader.html', {'nls': langSupport.getEntries(),
+		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': self.showBanner})
 
 		if self.showBanner:
-			self.renderTpl('tpl/banner.html', {'nls': langSupport.getEntries()})
+			self.renderTpl('banner.html', {'nls': langSupport.getEntries()})
 
 		if buffer:
-			self.renderTpl('tpl/survey.html', {'nls': langSupport.getEntries(),
+			self.renderTpl('survey.html', {'nls': langSupport.getEntries(),
 				'onTimeStations': onTimeStations,
-				'date': theDate});
+				'date': self.theDate});
 		else:
-			self.renderTpl('tpl/nosurvey.html', {'nls': langSupport.getEntries(),
-				'date': theDate});
+			self.renderTpl('nosurvey.html', {'nls': langSupport.getEntries(),
+				'date': self.theDate});
 
-		self.renderTpl('tpl/footer.html', {'nls': langSupport.getEntries()})
+		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
-		return self.pageBuffer
 
 class ScheduleValidator(View):
-	def render(self, theDate):
+	def render(self):
 		#buffer = self.myModel.retrieveSourcePage('24114', theDate)
 		return ""
 

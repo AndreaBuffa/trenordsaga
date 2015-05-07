@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--
+	Interphase by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html lang="en">
+	<head>
+		<title>{{ nls.title }}</title>
+		<meta charset="UTF-8">
+		<title>Trenord Saga</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+<!-- this graphics requires a lot of javascript to be downloaded first -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-xlarge.css" />
+		</noscript>
+		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+{% if stations %}
+		<script type="text/Javascript" src="https://www.google.com/jsapi"></script>
+{% endif %}
+		<script type="text/Javascript">
+{% if stations %}
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawCharts);
+{% endif %}
+			function drawCharts() {
+				var data = new google.visualization.DataTable({{ stations|safe|escape }});
+
+				var options = {
+					vAxis: {ticks: [[8, 0, 0, 0],[8, 10, 0, 0],[8, 20, 0, 0],[8, 30, 0, 0],[8, 40, 0, 0],[8, 50, 0, 0],[9, 0, 0, 0],[9, 10, 0, 0],[9, 20, 0, 0],[9, 30, 0, 0],[9, 40, 0, 0],[9, 50, 0, 0],[10, 0, 0, 0]]},
+					legend: { position: 'top' }
+				};
+
+				var chart = new google.visualization.LineChart(document.getElementById('timings'));
+				chart.draw(data, options);
+
+				var columnChartOpt = {
+					vAxis: {
+						format: '',
+						title: '{{ nls.delay_in_minutes }}'
+					},
+					legend: { position: 'none' }
+				  };
+				var columnChartData = new google.visualization.DataTable({{ stationsByDelay|safe|escape }});
+				for (var i = 0; i < columnChartData.getNumberOfRows(); ++i) {
+					if (columnChartData.getValue(i, 1) >= 10) {
+						columnChartData.setValue(i, 2, "#FF0000");
+					} else if (columnChartData.getValue(i, 1) >= 5) {
+						columnChartData.setValue(i, 2, "#B20000");
+					} else if (columnChartData.getValue(i, 1) >= 2) {
+						columnChartData.setValue(i, 2, "#FF8800");
+					} else {
+						columnChartData.setValue(i, 2, "#FFFF00");
+					}
+				}
+				var columnChart = new google.visualization.ColumnChart(document.getElementById('stationsByDelay'));
+				columnChart.draw(columnChartData, columnChartOpt);
+/*
+				var pieChartData = new google.visualization.DataTable({{ pieChartJS|safe|escape }});
+				var pieChart = new google.visualization.PieChart(document.getElementById('pieChart'));
+				var numOfSlices = pieChartData.getNumberOfRows();
+				var colors = [];
+				var slices = {};
+				for (var i = 0; i < numOfSlices; ++i) {
+					if ((i === 0) && pieChartData.getValue(0,0) == 0) {
+						colors[i] = "blue";
+						slices[i] = {offset: 0.08};
+					} else {
+						colors[i] = "#B20000";
+						slices[i] = {offset: 0};
+					}
+				}
+				pieChart.draw(pieChartData, {
+					colors: colors,
+					slices: slices,
+					tooltip: {text: 'percentage'},
+					charArea: {left: 0, top: 0, width: 0, height: 0},
+					legend: { position: 'none' }
+					});*/
+			}
+			$(function() {
+				$("[id^=datepicker]" ).datepicker({
+					dateFormat: "yy-mm-dd",
+					minDate: new Date(2014, 12 - 1, 18),
+					maxDate: new Date(),
+					defaultDate: "{{ date|safe|escape }}",
+					onSelect: function(selectedDate) {
+							document.form.postBttnBottom.disabled = false;
+							document.form.postBttnTop.disabled = false;
+							document.form.datetime.value = selectedDate;
+						}});
+			});
+		</script>
+	</head>

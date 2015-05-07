@@ -41,7 +41,5 @@ handlers:
 - url: /console/.*
   script: main.app
 # Main WEB site
-- url: /survey
-  script: main.app
 - url: /.*
   script: main.app

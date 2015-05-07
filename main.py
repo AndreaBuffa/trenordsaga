@@ -5,5 +5,6 @@ app = webapp2.WSGIApplication([
 	(r'/survey/', DayController),
 	(r'/survey', DayController),
 	(r'/console/(\d)+/(\d{4}-\d{1,2}-\d{1,2})', ConsoleController),
-	(r'/', Controller)
+	(r'/about', SimpleController),
+	(r'/', DayController)
 ])

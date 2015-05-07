@@ -4,20 +4,28 @@ from view.view import *
 import datetime
 
 class Controller(webapp2.RequestHandler):
+	myView = None
 
-	def build(self):
+	def __init__(self, request, response):
+		self.initialize(request, response)
+		self.buildView()
+		self.buildNLS()
+
+	def buildView(self):
 		myFactory = FrontEnd()
 		myDataModel = myFactory.createDataProvider()
 		self.myView = StatsView(myDataModel)
+
+	def buildNLS(self):
 		langSupport.setLang(self.request.headers['Accept-Language'])
 
 	def getViewAction(self, theDate):
 		self.response.headers['Content-Type'] = 'text/html;'
-		self.response.out.write(self.myView.render(theDate))
+		self.myView.theDate = theDate
+		self.response.out.write(self.myView.render())
 
 	def get(self):
-		self.build()
-		self.getViewAction(self.getLastDatetime())
+		self.getViewAction()
 
 	def getLastDatetime(self):
 		if datetime.datetime.now().time() > datetime.time(23,05,0):
@@ -28,11 +36,35 @@ class Controller(webapp2.RequestHandler):
 			theDate = today - datetime.timedelta(days = 1)
 		return theDate
 
+class SimpleController(Controller):
+
+	def __init__(self, request, response):
+		super(SimpleController, self).__init__(request, response)
+		#print self.request.path
+		#print webapp2.get_request().path
+
+	def buildView(self):
+		self.myView = SimpleView()
+
+	def getViewAction(self):
+		self.response.headers['Content-Type'] = 'text/html;'
+		self.response.out.write(self.myView.render())
+
+	def get(self):
+		self.getViewAction()
+
 class DayController(Controller):
 
+	def getViewAction(self, theDate):
+		self.response.headers['Content-Type'] = 'text/html;'
+		self.myView.theDate = theDate
+		self.response.out.write(self.myView.render())
+
+	def get(self):
+		self.getViewAction(self.getLastDatetime())
+
 	def get(self, year="", month="", day=""):
-		self.build()
-		self.myView.showBanner = False;
+
 		if year and month and day:
 			try:
 				theDate = datetime.datetime.strptime(year+"-"+month+"-"+day, "%Y-%m-%d").date()
@@ -40,6 +72,10 @@ class DayController(Controller):
 				theDate = self.getLastDatetime()
 		else:
 			theDate = self.getLastDatetime()
+		if re.compile('^\/(\w)+').search(self.request.path):
+			self.myView.showBanner = False;
+		else:
+			self.myView.showBanner = True;
 		self.getViewAction(theDate)
 
 	def post(self):
@@ -47,20 +83,18 @@ class DayController(Controller):
 			theDate = datetime.datetime.strptime(self.request.get("datetime"), "%Y-%m-%d").date()
 		except ValueError:
 			theDate = self.getLastDatetime()
-		self.build()
-		self.myView.showBanner = 0;
+		self.myView.showBanner = False;
 		self.getViewAction(theDate)
 
 
 class ConsoleController(Controller):
 
-	def build(self):
+	def __init__(self):
 		myFactory = FrontEnd()
 		myDataModel = myFactory.createDataProvider()
 		self.myView = ScheduleValidator(myDataModel)
 
 	def get(self, trainId="", date=""):
-		self.build()
 		if date:
 			try:
 				theDate = datetime.datetime.strptime(date, "%Y-%m-%d").date()
