@@ -12,7 +12,7 @@ class Controller(webapp2.RequestHandler):
 		self.buildNLS()
 
 	def buildView(self):
-		myFactory = FrontEnd()
+		myFactory = DataStore()
 		myDataModel = myFactory.createDataProvider()
 		self.myView = StatsView(myDataModel)
 
@@ -90,7 +90,7 @@ class DayController(Controller):
 class ConsoleController(Controller):
 
 	def __init__(self):
-		myFactory = FrontEnd()
+		myFactory = DataStore()
 		myDataModel = myFactory.createDataProvider()
 		self.myView = ScheduleValidator(myDataModel)
 

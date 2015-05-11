@@ -1,10 +1,6 @@
-import urllib
 from train import Train
 from trainStop import TrainStop
 from trainDescr import TrainDescr
-from datetime import date
-
-HTTP_URL = 'http://mobile.my-link.it/mylink/mobile/scheda?dettaglio=visualizza&numeroTreno='
 
 class DataProvider:
 	""" This the product of an abstract factory """
@@ -15,22 +11,9 @@ class DataProvider:
 	def findAllTrainStopById(self, trainId):
 		return ""
 
-class OnLineData(DataProvider):
-	url = ""
 
-	def __init__(self):
-		#codLocOrig=S01059&tipoRicerca=numero&lang=IT
-		self.url = HTTP_URL
-
-	def retrieveSourcePage(self, trainId, theDate):
-		#@todo theDate
-		self.url = self.url + trainId
-		#@todo manage HTTPException
-		return urllib.urlopen(self.url).read()
-
-
-class StoredData(DataProvider):
-
+class GAEDatastore(DataProvider):
+	""" Use a Google App Engine Datastore """
 	def retrieveSourcePage(self, trainId, theDate):
 		query = Train.query(Train.trainId == trainId, Train.date == theDate)
 		tmp = query.get()
