@@ -11,6 +11,8 @@ class DataProvider:
 	def findAllTrainStopById(self, trainId):
 		return ""
 
+	def findAllTrainDescr(self):
+		return ""
 
 class GAEDatastore(DataProvider):
 	""" Use a Google App Engine Datastore """

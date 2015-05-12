@@ -22,7 +22,9 @@ class View:
 	def renderTpl(self, path="", dataToBind={}):
 		if path:
 			print os.path.join(self.localPath, path)
-			self.pageBuffer += template.render(os.path.join(self.localPath, path), dataToBind)
+			self.pageBuffer += template.render(
+				os.path.join(self.localPath, path),
+				dataToBind)
 
 	def render(self):
 		self.prepare()
@@ -31,9 +33,9 @@ class View:
 	def prepare(self):
 		pass
 
-class SimpleView(View):
+class StaticView(View):
 
-	def __init__(self):
+	def __init__(self, aModel):
 		View.__init__(self, None)
 
 	def prepare(self):
@@ -48,7 +50,19 @@ class SimpleView(View):
 
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
-class StatsView(View):
+
+class ContainerView(StaticView):
+
+	def prepare(self):
+		self.renderTpl('head.html', {})
+
+		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
+			'landingClass': False})
+
+		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
+
+
+class ScheduleViewer(View):
 	theDate = None
 
 	def __init__(self, aModel):
