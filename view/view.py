@@ -11,6 +11,7 @@ TPL_PATH = "/tpl/"
 class View:
 	myModel = None
 	showBanner = False
+	renderForMobile = True
 	pageBuffer = b""
 	localPath = ""
 
@@ -26,7 +27,8 @@ class View:
 				os.path.join(self.localPath, path),
 				dataToBind)
 
-	def render(self):
+	def render(self, isMobileClient):
+		self.renderForMobile = isMobileClient
 		self.prepare()
 		return self.pageBuffer
 
@@ -39,7 +41,7 @@ class StaticView(View):
 		View.__init__(self, None)
 
 	def prepare(self):
-		self.renderTpl('head.html', {})
+		self.renderTpl('head.html', {'renderForMobile': self.renderForMobile})
 
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': False})
@@ -54,7 +56,7 @@ class StaticView(View):
 class ContainerView(StaticView):
 
 	def prepare(self):
-		self.renderTpl('head.html', {})
+		self.renderTpl('head.html', {'renderForMobile': self.renderForMobile})
 
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': False})
@@ -93,7 +95,8 @@ class ScheduleViewer(View):
 		self.renderTpl('surveyHead.html', {'nls': langSupport.getEntries(),
 			'stations': chartData,
 			'date': self.theDate,
-			'stationsByDelay': stationsByDelayJS})
+			'stationsByDelay': stationsByDelayJS,
+			'renderForMobile': self.renderForMobile})
 
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': self.showBanner})
