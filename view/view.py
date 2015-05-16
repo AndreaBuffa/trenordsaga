@@ -28,7 +28,7 @@ class View:
 				dataToBind)
 
 	def render(self, isMobileClient):
-		self.renderForMobile = isMobileClient
+		#self.renderForMobile = isMobileClient
 		self.prepare()
 		return self.pageBuffer
 
