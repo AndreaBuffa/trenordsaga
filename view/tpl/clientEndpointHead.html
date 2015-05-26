@@ -1,0 +1,30 @@
+<script type="text/Javascript">
+
+function print(train){
+	var element = document.createElement('div');
+	element.classList.add('row');
+	element.innerHTML = '<p>' + train.leaveStation + ' - ' + train.endStation + ' - ' + train.leaveTime + ' - ' + train.arriveTime + ' - ' + train.type + ' - ' + train.trainId + ' - ' + train.surveyedFrom
+	document.querySelector('#outputLog').appendChild(element);
+}
+function init(apiRoot) {
+	var apisToLoad;
+	var callback = function() {
+		if (--apisToLoad == 0) {
+			gapi.client.discover.trains.listSurveyedTrain().execute(
+				function(resp) {
+					if (!resp.code) {
+						resp.items = resp.items || [];
+						for (var i = 0; i < resp.items.length; i++) {
+							print(resp.items[i]);
+						}
+					}
+				});
+		}
+	}
+	apisToLoad = 1;
+	gapi.client.load('discover', 'v1', callback, 'https://disco-parsec-749.appspot.com/_ah/api');
+	//gapi.client.load('schedule', 'v1', callback, apiRoot);
+	//gapi.client.load('statistics', 'v1', callback, apiRoot);
+}
+</script>
+<script src="https://apis.google.com/js/client.js?onload=init"></script>

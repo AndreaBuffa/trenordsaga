@@ -26,11 +26,11 @@ class FrontEndFactory(AppFactory):
 
 	def create(self, request, response):
 		if re.compile('^\/about').search(request.path):
-			return StaticContent(request, response)
+			return StaticPage(request, response)
 		elif re.compile('^\/stats').search(request.path):
-			return APIform(request, response)
+			return ClientEndpoint(request, response)
 		else:
-			return MyApp(request, response)
+			return DynamicPage(request, response)
 
 class MVC:
 	myView = None
@@ -50,8 +50,8 @@ class MVC:
 	def getModel(self):
 		return
 
-class MyApp(MVC):
-
+class DynamicPage(MVC):
+	""" Provides a common synchronous client/server app """
 	def getController(self):
 		controller = DayController(self.request, self.response)
 		return controller
@@ -65,8 +65,8 @@ class MyApp(MVC):
 		myFactory = DataStore()
 		return myFactory.createDataProvider()
 
-class StaticContent(MVC):
-
+class StaticPage(MVC):
+	""" Provides a static content. Model is None. """
 	def getController(self):
 		controller = DummyController(self.request, self.response)
 		return controller
@@ -79,8 +79,8 @@ class StaticContent(MVC):
 	def getModel(self):
 		return None
 
-class APIform(StaticContent):
-
+class ClientEndpoint(StaticPage):
+	""" Provides a client endpoint for querying the server API"""
 	def getView(self):
 		if not self.myView:
 			self.myView = ContainerView(self.getModel())

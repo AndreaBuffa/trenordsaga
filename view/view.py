@@ -42,7 +42,7 @@ class StaticView(View):
 
 	def prepare(self):
 		self.renderTpl('head.html', {'renderForMobile': self.renderForMobile})
-
+		self.pageBuffer += "</head>"
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': False})
 
@@ -57,10 +57,14 @@ class ContainerView(StaticView):
 
 	def prepare(self):
 		self.renderTpl('head.html', {'renderForMobile': self.renderForMobile})
+		self.renderTpl('clientEndpointHead.html', {})
+		self.pageBuffer += '</head>'
 
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': False})
-
+		self.pageBuffer += '<section class="wrapper"><section class="container">'
+		self.pageBuffer += '<div id="outputLog"></div>'
+		self.pageBuffer += '</section></section>'
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
 
