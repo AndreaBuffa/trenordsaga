@@ -73,7 +73,6 @@ class DummyController(Controller):
 
 	def get(self):
 		self.response.headers['Content-Type'] = 'text/html;'
-		self.myView.renderForMobile = self.isMobileClient()
 		self.response.out.write(self.myView.render(self.isMobileClient()))
 
 class ConsoleController(Controller):

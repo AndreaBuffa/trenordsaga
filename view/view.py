@@ -22,7 +22,6 @@ class View:
 
 	def renderTpl(self, path="", dataToBind={}):
 		if path:
-			print os.path.join(self.localPath, path)
 			self.pageBuffer += template.render(
 				os.path.join(self.localPath, path),
 				dataToBind)
