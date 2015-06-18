@@ -3,7 +3,7 @@
 function print(train){
 	var element = document.createElement('div');
 	element.classList.add('row');
-	element.innerHTML = '<p>' + train.leaveStation + ' - ' + train.endStation + ' - ' + train.leaveTime + ' - ' + train.arriveTime + ' - ' + train.type + ' - ' + train.trainId + ' - ' + train.surveyedFrom
+	element.innerHTML = '<p>' + train.type + ' - ' + train.leaveStation + ' - ' + train.endStation + ' - ' + train.leaveTime + ' - ' + train.arriveTime + ' - '  + train.trainId + ' - ' + train.surveyedFrom
 	document.querySelector('#outputLog').appendChild(element);
 }
 function init(apiRoot) {
