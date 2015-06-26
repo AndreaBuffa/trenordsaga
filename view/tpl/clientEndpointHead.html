@@ -1,30 +1,142 @@
 <script type="text/Javascript">
-// tmp impl.
-function print(train){
-	var element = document.createElement('div');
-	element.classList.add('row');
-	element.innerHTML = '<p>' + train.type + ' - ' + train.leaveStation + ' - ' + train.endStation + ' - ' + train.leaveTime + ' - ' + train.arriveTime + ' - '  + train.trainId + ' - ' + train.surveyedFrom
-	document.querySelector('#outputLog').appendChild(element);
+var MYAPP = MYAPP || {};
+MYAPP.View = {};
+MYAPP.View.TrainSelector = function(aModel, aControl) {
+	this.status = "loading";
+	this.myModel = aModel;
+	this.trainStats = aControl;
 }
-function init(apiRoot) {
+
+MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
+	var container = document.createElement('div');
+	container.setAttribute('id', 'trainSelector');
+	document.querySelector('#outputLog').appendChild(container);
+	var obj = this;
+	for (var i = 0; i < trainList.length; i++) {
+		var train = trainList[i];
+		var element = document.createElement('div');
+		element.classList.add('row');
+		var linkControl = document.createElement('a');
+		linkControl.setAttribute('id', train.trainId);
+		linkControl.addEventListener('click', function(){ obj.onClick(this.id); });
+		linkControl.innerHTML = train.type + ' - ' + train.leaveStation + ' - ' + train.endStation + ' - ' + train.leaveTime + ' - ' + train.arriveTime + ' - '  + train.trainId + ' - ' + train.surveyedFrom;
+		element.appendChild(linkControl);
+		document.querySelector('#trainSelector').appendChild(element);
+	}
+}
+
+MYAPP.View.TrainSelector.prototype.onClick = function(trainId) {
+	this.trainStats.update(trainId);
+}
+
+MYAPP.View.TrainSelector.prototype.update = function() {
+	var obj = this;
+	this.myModel.getTrainList(function(trainList) {
+			trainList = trainList || [];
+			obj.draw(trainList);
+		});
+}
+
+MYAPP.View.TrainStats = function(aModel) {
+	this.status = "loading";
+	this.myModel = aModel;
+}
+
+MYAPP.View.TrainStats.prototype.update = function(trainId) {
+	if (!trainId)
+		return 0;
+	var obj = this;
+	this.myModel.getTrainStats(trainId, function(trainList) {
+			trainList = trainList || [];
+			obj.draw(trainList);
+		});
+}
+
+MYAPP.View.TrainStats.prototype.draw = function(stats) {
+	var container = document.querySelector('#trainStats');
+	if (container) {
+	    while (container.hasChildNodes()) {
+		container.removeChild(container.lastChild);
+	    }
+	} else {
+		container = document.createElement('div');
+		container.setAttribute('id', 'trainStats');
+	}
+	document.querySelector('#outputLog').appendChild(container);
+	var obj = this;
+	for (var i = 0; i < stats.length; i++) {
+		var stop = stats[i];
+		var element = document.createElement('div');
+		element.classList.add('row');
+		element.innerHTML = stop.stationName + ' : ' + stop.median;
+		document.querySelector('#trainStats').appendChild(element);
+	}
+}
+
+MYAPP.Model = function(){
+	this.trainList = [];
+	this.observerList = [];
+}
+
+MYAPP.Model.prototype.ready = function() {
+	console.log("Ready to be queried");
+	for (var i = 0; i < this.observerList.length; i++) {
+		this.observerList[i].update();
+	}
+};
+
+MYAPP.Model.prototype.addObserver = function(obj) {
+	//@todo check if already present.
+	this.observerList.push(obj);
+};
+
+MYAPP.Model.prototype.getTrainList = function(callback) {
+	if (this.trainList.length == 0) {
+	    gapi.client.discover.trains.listSurveyedTrain().execute(
+		function(resp) {
+			if (!resp.code) {
+				resp.items = resp.items || [];
+				this.trainList = resp.items;
+				callback(this.trainList);
+			}
+		});
+	} else {
+		callback(this.trainList);
+	}
+};
+
+MYAPP.Model.prototype.getTrainStats = function(trainId, callback) {
+	gapi.client.statistics.trains.listStop({'trainid': trainId, 'dayFilter': 'all'}).execute(
+		function(resp) {
+			if (!resp.code) {
+				resp.items = resp.items || [];
+				callback(resp.items);
+			}
+	      });
+};
+
+var myModel = new MYAPP.Model();
+
+var trainStats = new MYAPP.View.TrainStats(myModel);
+myModel.addObserver(trainStats);
+
+var trainSelector = new MYAPP.View.TrainSelector(myModel, trainStats);
+myModel.addObserver(trainSelector);
+
+
+
+function init() {
+	apiRoot = 'https://disco-parsec-749.appspot.com/_ah/api';
 	var apisToLoad;
-	var callback = function() {
+	var APIReady = function() {
 		if (--apisToLoad == 0) {
-			gapi.client.discover.trains.listSurveyedTrain().execute(
-				function(resp) {
-					if (!resp.code) {
-						resp.items = resp.items || [];
-						for (var i = 0; i < resp.items.length; i++) {
-							print(resp.items[i]);
-						}
-					}
-				});
+			myModel.ready();
 		}
 	}
-	apisToLoad = 1;
-	gapi.client.load('discover', 'v1', callback, 'https://disco-parsec-749.appspot.com/_ah/api');
+	apisToLoad = 2;
+	gapi.client.load('discover', 'v1', APIReady, apiRoot);
+	gapi.client.load('statistics', 'v1', APIReady, apiRoot);
 	//gapi.client.load('schedule', 'v1', callback, apiRoot);
-	//gapi.client.load('statistics', 'v1', callback, apiRoot);
 }
 </script>
 <script src="https://apis.google.com/js/client.js?onload=init"></script>
