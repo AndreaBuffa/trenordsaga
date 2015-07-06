@@ -55,17 +55,25 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 		container.innerHTML = "Loading....";
 	} else {
 	      var obj = this;
-	      for (var i = 0; i < trainList.length; i++) {
-		      var train = trainList[i];
-		      var element = document.createElement('div');
-		      element.classList.add('row');
-		      var linkControl = document.createElement('a');
-		      linkControl.setAttribute('id', train.trainId);
-		      linkControl.addEventListener('click', function(){ obj.onClick(this.id); });
-		      linkControl.innerHTML = train.type + ' - ' + train.leaveStation + ' - ' + train.endStation + ' - ' + train.leaveTime + ' - ' + train.arriveTime + ' - '  + train.trainId + ' - ' + train.surveyedFrom;
-		      element.appendChild(linkControl);
-		      document.querySelector('#trainSelector').appendChild(element);
-	      }
+		var currRailwayType = '';
+		var rowDiv;
+		for (var i = 0; i < trainList.length; i++) {
+			var train = trainList[i];
+			if (currRailwayType != train.type) {
+				currRailwayType = train.type;
+				rowDiv = document.createElement('div');
+				rowDiv.classList.add('row');
+				var img = document.createElement('img');
+				img.src = 'images/' + currRailwayType + '.jpg';
+				rowDiv.appendChild(img);
+				document.querySelector('#trainSelector').appendChild(rowDiv);
+			}
+			var linkControl = document.createElement('a');
+			linkControl.setAttribute('id', train.trainId);
+			linkControl.addEventListener('click', function(){ obj.onClick(this.id); });
+			linkControl.innerHTML = train.type + ' - ' + train.leaveStation + ' - ' + train.endStation + ' - ' + train.leaveTime + ' - ' + train.arriveTime + ' - '  + train.trainId + ' - ' + train.surveyedFrom;
+			rowDiv.appendChild(linkControl);
+		}
 	}
 }
 
@@ -161,7 +169,7 @@ MYAPP.View.TrainStats.prototype.draw = function(stats) {
 	      for (var i = 0; i < stats.length; i++) {
 			var stop = stats[i];
 			var element = document.createElement('div');
-			element.classList.add('row');
+			//element.classList.add('row');
 			element.innerHTML = stop.stationName + ' : ' + stop.median;
 			statsList.appendChild(element);
 	      }

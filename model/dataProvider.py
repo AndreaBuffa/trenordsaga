@@ -28,4 +28,4 @@ class GAEDatastore(DataProvider):
 		return query.fetch()
 
 	def findAllTrainDescr(self):
-		return TrainDescr.query().fetch()
+		return TrainDescr.query().order(TrainDescr.type).fetch()
