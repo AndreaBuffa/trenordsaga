@@ -33,7 +33,7 @@ ul#tab li.active {
 </style>
 <script type="text/Javascript">
 var MYAPP = MYAPP || {};
-MYAPP.View = {};
+MYAPP.View = MYAPP.View || {};
 MYAPP.View.TrainSelector = function(aModel, aControl) {
 	this.status = "loading";
 	this.myModel = aModel;
@@ -99,7 +99,7 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 			}
 			var linkControl = document.createElement('a');
 			linkControl.setAttribute('id', train.trainId);
-			linkControl.setAttribute('from', train.surveyedFrom);
+			linkControl.setAttribute('surveyedFrom', train.surveyedFrom);
 			linkControl.addEventListener('click', function() {
 					obj.onClick({'trainId': this.id,
 						'dayFilter': 'all',
@@ -276,8 +276,8 @@ $(document).ready(function() {
 });
 
 function init() {
-	apiRoot = 'https://disco-parsec-749.appspot.com/_ah/api';
-	//apiRoot = 'http://localhost:8080/_ah/api';
+	//apiRoot = 'https://disco-parsec-749.appspot.com/_ah/api';
+	apiRoot = 'http://localhost:8080/_ah/api';
 	var apisToLoad;
 	var APIReady = function() {
 		if (--apisToLoad == 0) {
@@ -290,4 +290,4 @@ function init() {
 	//gapi.client.load('schedule', 'v1', callback, apiRoot);
 }
 </script>
-<script src="https://apis.google.com/js/client.js?onload=init"></script>
+<script async src="https://apis.google.com/js/client.js?onload=init"></script>

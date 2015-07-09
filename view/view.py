@@ -7,23 +7,32 @@ import webapp2
 import re
 
 TPL_PATH = "/tpl/"
+JS_PATH = "/../js/client-side-mvc/"
 
 class View:
 	myModel = None
 	showBanner = False
 	renderForMobile = True
 	pageBuffer = b""
-	localPath = ""
+	tplPath = ""
+	jsPath = ""
 
 	def __init__(self, aModel):
 		self.myModel = aModel
 		self.showBanner = True
-		self.localPath = os.path.dirname(__file__) + TPL_PATH
+		self.tplPath = os.path.dirname(__file__) + TPL_PATH
+		self.jsPath = os.path.dirname(__file__) + JS_PATH
 
 	def renderTpl(self, path="", dataToBind={}):
 		if path:
 			self.pageBuffer += template.render(
-				os.path.join(self.localPath, path),
+				os.path.join(self.tplPath, path),
+				dataToBind)
+
+	def embedJS(self, path="", dataToBind={}):
+		if path:
+			self.pageBuffer += template.render(
+				os.path.join(self.jsPath, path),
 				dataToBind)
 
 	def render(self, isMobileClient):
@@ -52,12 +61,18 @@ class StaticView(View):
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
 
-class ContainerView(StaticView):
+class OnePageAppView(StaticView):
 
 	def prepare(self):
 		self.renderTpl('head.html', {'renderForMobile': self.renderForMobile})
-		self.renderTpl('clientEndpointHead.html', {})
-		self.pageBuffer += '</head>'
+
+		self.pageBuffer += '<script type="text/Javascript">'
+		self.embedJS('view-choose-train.js', {})
+		self.embedJS('view-display-stats.js', {})
+		self.embedJS('model.js', {})
+		self.embedJS('stats-app.js', {})
+		self.embedJS('api-endpoint.js', {})
+		self.pageBuffer += '</script>'
 
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': False})

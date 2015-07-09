@@ -83,7 +83,7 @@ class ClientEndpoint(StaticPage):
 	""" Provides a client endpoint for querying the server API"""
 	def getView(self):
 		if not self.myView:
-			self.myView = ContainerView(self.getModel())
+			self.myView = OnePageAppView(None)
 		return self.myView
 
 

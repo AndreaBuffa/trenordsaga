@@ -23,8 +23,8 @@ handlers:
 # Static assets
 - url: /css
   static_dir: css
-- url: /js
-  static_dir: js
+- url: /js/layout
+  static_dir: js/layout
 - url: /fonts
   static_dir: fonts
 - url: /images
