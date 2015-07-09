@@ -1,5 +1,6 @@
 <section class="wrapper">
 	<form name="form" method="post" action="survey">
+	<input type="hidden" name="trainid" value="24114">
 	<section class="container">
 		<section>
 				<div class="row">
@@ -31,6 +32,7 @@
 			<div id="stationsByDelay" style="height: 500px;"></div>
 		</section>
 		<section>
+			<div id="outputLog"></div>
 			<p>{{ nls.datepicker }}</p>
 				<div id="datepickerBottom"></div>
 				<input id="datetime" name="datetime" type="hidden" />

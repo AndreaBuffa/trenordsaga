@@ -1,13 +1,12 @@
 MYAPP.View.TrainSelector.prototype.onClick = function(trainDescriptor) {
-	//@todo
 	if (this.notifyControl) {
-		this.notifyControl.update(trainDescriptor);
+		this.notifyControl.value = trainDescriptor.trainId;
 	}
 }
 
 var myModel = new MYAPP.Model();
 
-var trainSelector = new MYAPP.View.TrainSelector(myModel, null);
+var trainSelector = new MYAPP.View.TrainSelector(myModel, document.querySelector('input[name="trainid"]'));
 myModel.addObserver(trainSelector);
 
 $(document).ready(function() {

@@ -27,9 +27,10 @@ class Controller():
 	def buildNLS(self):
 		langSupport.setLang(self.request.headers['Accept-Language'])
 
-	def getViewAction(self, theDate):
+	def getViewAction(self, theDate, trainId):
 		self.response.headers['Content-Type'] = 'text/html;'
 		self.myView.theDate = theDate
+		self.myView.trainId = trainId
 		self.response.out.write(self.myView.render(self.isMobileClient()))
 
 	def get(self, year="", month="", day=""):
@@ -40,11 +41,12 @@ class Controller():
 				theDate = self.getLastDatetime()
 		else:
 			theDate = self.getLastDatetime()
+
 		if re.compile('^\/(\w)+').search(self.request.path):
 			self.myView.showBanner = False;
 		else:
 			self.myView.showBanner = True;
-		self.getViewAction(theDate)
+		self.getViewAction(theDate, "24114")
 
 	def getLastDatetime(self):
 		if datetime.datetime.now().time() > datetime.time(23,05,0):
@@ -66,8 +68,9 @@ class DayController(Controller):
 			theDate = datetime.datetime.strptime(self.request.get("datetime"), "%Y-%m-%d").date()
 		except ValueError:
 			theDate = self.getLastDatetime()
+		trainId = self.request.get("trainid");
 		self.myView.showBanner = False;
-		self.getViewAction(theDate)
+		self.getViewAction(theDate, trainId)
 
 class DummyController(Controller):
 
@@ -91,5 +94,5 @@ class ConsoleController(Controller):
 				theDate = self.getLastDatetime()
 		else:
 			theDate = self.getLastDatetime()
-		self.getViewAction(theDate)
+		self.getViewAction(theDate, trainId)
 

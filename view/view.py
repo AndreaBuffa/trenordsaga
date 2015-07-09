@@ -83,6 +83,7 @@ class OnePageAppView(StaticView):
 
 
 class ScheduleViewer(View):
+	trainId = None
 	theDate = None
 
 	def __init__(self, aModel):
@@ -93,7 +94,7 @@ class ScheduleViewer(View):
 		onTimeStations = []
 		stationsByDelayJS = ""
 		pieJS = ""
-		buffer = self.myModel.retrieveSourcePage('24114', self.theDate)
+		buffer = self.myModel.retrieveSourcePage(self.trainId, self.theDate)
 		if buffer:
 			myParser = ScheduleParser(buffer)
 			timeSchedule = myParser.GetTimings()
@@ -129,6 +130,13 @@ class ScheduleViewer(View):
 		else:
 			self.renderTpl('nosurvey.html', {'nls': langSupport.getEntries(),
 				'date': self.theDate});
+
+		self.pageBuffer += '<script type="text/Javascript">'
+		self.embedJS('view-choose-train.js', {})
+		self.embedJS('model.js', {})
+		self.embedJS('survey-app.js', {})
+		self.embedJS('api-endpoint.js', {})
+		self.pageBuffer += '</script>'
 
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
