@@ -17,7 +17,7 @@ MYAPP.View.TrainStats.prototype.update = function(params) {
 		this.status = this.trainId !== params.trainId ? "tranIdChanged" : "filterChanged";
 		this.trainId = params.trainId;
 		this.filter = params.dayFilter;
-		this.surveyedFrom
+		this.surveyedFrom = params.surveyedFrom;
 		this.myModel.getTrainStats(params.trainId, params.dayFilter, function(stats) {
 			stats = stats || [];
 			stats.sort(function(a, b) {
@@ -43,15 +43,18 @@ MYAPP.View.TrainStats.prototype.draw = function(stats) {
 			statsList.removeChild(statsList.lastChild);
 		}
 		if (this.status === 'tranIdChanged') {
-		      document.querySelector('#all').classList.add('active');
-		      document.querySelector('#workDay').classList.remove('active');
-		      document.querySelector('#dayOff').classList.remove('active');
+			document.querySelector('#all').classList.add('active');
+			document.querySelector('#workDay').classList.remove('active');
+			document.querySelector('#dayOff').classList.remove('active');
 		}
 	} else {
 		container = document.createElement('div');
 		container.setAttribute('id', 'trainStats');
 		container.innerHTML = '<ul id="tabs"><li id="all" class="active">tutte</li>\
 			<li id="workDay">feriali</li><li id="dayOff">festivi</li></ul>';
+		var paragraph = document.createElement('p');
+		paragraph.innerHTML = 'In rilevazione dal ' + this.surveyedFrom;
+		container.appendChild(paragraph);
 		statsList = document.createElement('div');
 		statsList.setAttribute('id', 'statsList');
 		container.appendChild(statsList);

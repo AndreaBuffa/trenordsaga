@@ -66,11 +66,11 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 			}
 			var linkControl = document.createElement('a');
 			linkControl.setAttribute('id', train.trainId);
-			linkControl.setAttribute('surveyedFrom', train.surveyedFrom);
+			linkControl.setAttribute('data-surveyedfrom', train.surveyedFrom);
 			linkControl.addEventListener('click', function() {
 					obj.onClick({'trainId': this.id,
 						'dayFilter': 'all',
-						'surveyedFrom': this.surveyedFrom});
+						'surveyedFrom': this.dataset.surveyedfrom});
 				});
 			linkControl.innerHTML = train.trainId + ' - ' + train.leaveStation + ' (' + train.leaveTime + ') - ' + train.endStation+ ' (' + train.arriveTime + ')';
 /*			var linkDiv = document.createElement('div');
