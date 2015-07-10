@@ -1,6 +1,6 @@
 <section class="wrapper">
 	<form name="form" method="post" action="survey">
-	<input type="hidden" name="trainid" value="24114">
+	<input type="hidden" name="trainid" value="{{ trainId }}">
 	<section class="container">
 		<section>
 				<div class="row">
@@ -9,7 +9,7 @@
 						<input id="postBttnTop" type="submit" value="{{ nls.open }}" disabled/>
 					</div>
 					<div class="6u 12u(small)">
-						<h3>{{ nls.survey }} {{ date|safe|escape }}</h3>
+						<h3>{{ nls.trainNum }} {{ trainId }}, {{ nls.survey }} {{ date|safe|escape }}</h3>
 						<p>{{ nls.on_time_stops }}</p>
 {% if onTimeStations %}
 						<ul>

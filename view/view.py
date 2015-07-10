@@ -126,7 +126,8 @@ class ScheduleViewer(View):
 		if buffer:
 			self.renderTpl('survey.html', {'nls': langSupport.getEntries(),
 				'onTimeStations': onTimeStations,
-				'date': self.theDate});
+				'date': self.theDate,
+				'trainId': self.trainId});
 		else:
 			self.renderTpl('nosurvey.html', {'nls': langSupport.getEntries(),
 				'date': self.theDate});
