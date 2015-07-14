@@ -135,7 +135,7 @@ class ScheduleViewer(View):
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('view-choose-train.js', {})
 		self.embedJS('model.js', {})
-		self.embedJS('survey-app.js', {})
+		self.embedJS('survey-app.js', {'date': self.theDate})
 		self.embedJS('api-endpoint.js', {})
 		self.pageBuffer += '</script>'
 

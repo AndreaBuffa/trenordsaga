@@ -9,12 +9,12 @@ var myModel = new MYAPP.Model();
 var trainSelector = new MYAPP.View.TrainSelector(myModel, document.querySelector('input[name="trainid"]'));
 myModel.addObserver(trainSelector);
 
-$(document).ready(function() {
+$(window).load(function() {
 	$(function() {
 		$("[id^=datepicker]" ).datepicker({
 			dateFormat: "yy-mm-dd",
 			minDate: new Date(2014, 12 - 1, 18),
-			maxDate: new Date(),
+			maxDate: "{{ date|safe|escape }}",
 			defaultDate: "{{ date|safe|escape }}",
 			onSelect: function(selectedDate) {
 				document.form.postBttnBottom.disabled = false;
