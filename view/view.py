@@ -49,14 +49,17 @@ class StaticView(View):
 		View.__init__(self, None)
 
 	def prepare(self):
-		self.renderTpl('head.html', {'renderForMobile': self.renderForMobile})
+		self.renderTpl('head.html', {
+			'renderForMobile': self.renderForMobile})
 		self.pageBuffer += "</head>"
-		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
+		self.renderTpl('bodyHeader.html', {
+			'nls': langSupport.getEntries(),
 			'landingClass': False})
 
 		self.renderTpl(webapp2.get_request().path[1:] + '_' +
 			langSupport.currLang + '.html',
-			{'nls': langSupport.getEntries(), 'landingClass': self.showBanner})
+			{'nls': langSupport.getEntries(),
+			 'landingClass': self.showBanner})
 
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
@@ -64,7 +67,8 @@ class StaticView(View):
 class OnePageAppView(StaticView):
 
 	def prepare(self):
-		self.renderTpl('head.html', {'renderForMobile': self.renderForMobile})
+		self.renderTpl('head.html', {
+			'renderForMobile': self.renderForMobile})
 
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('view-choose-train.js', {})
@@ -104,38 +108,51 @@ class ScheduleViewer(View):
 			stationsByDelay = sorted(timeSchedule,
 				key=lambda station: station['delay_m'],
 				reverse=True)
-			onDelayStations = filter(lambda station: station['delay_m'] > 0,
+			onDelayStations = filter(
+				lambda station: station['delay_m'] > 0,
 				stationsByDelay)
-			onTimeStations = filter(lambda station: station['delay_m'] <= 0,
+			onTimeStations = filter(
+				lambda station: station['delay_m'] <= 0,
 				stationsByDelay)
 
-			stationsByDelayJS = myFormatter.ToColumnChartJSon(onDelayStations)
+			stationsByDelayJS = myFormatter.ToColumnChartJSon(
+				onDelayStations)
 
-		self.renderTpl('surveyHead.html', {'nls': langSupport.getEntries(),
+		self.renderTpl('surveyHead.html', {
+			'nls': langSupport.getEntries(),
 			'stations': chartData,
 			'date': self.theDate,
 			'stationsByDelay': stationsByDelayJS,
 			'renderForMobile': self.renderForMobile})
 
-		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
+		self.renderTpl('bodyHeader.html', {
+			'nls': langSupport.getEntries(),
 			'landingClass': self.showBanner})
 
 		if self.showBanner:
-			self.renderTpl('banner.html', {'nls': langSupport.getEntries()})
+			self.renderTpl('banner.html', {
+					'nls': langSupport.getEntries()
+				})
 
 		if buffer:
-			self.renderTpl('survey.html', {'nls': langSupport.getEntries(),
+			self.renderTpl('survey.html', {
+				'nls': langSupport.getEntries(),
 				'onTimeStations': onTimeStations,
 				'date': self.theDate,
-				'trainId': self.trainId});
+				'trainId': self.trainId})
 		else:
-			self.renderTpl('nosurvey.html', {'nls': langSupport.getEntries(),
-				'date': self.theDate});
+			self.renderTpl('nosurvey.html', {
+				'nls': langSupport.getEntries(),
+				'date': self.theDate,
+				'trainId': self.trainId})
 
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('view-choose-train.js', {})
 		self.embedJS('model.js', {})
-		self.embedJS('survey-app.js', {'date': self.theDate})
+		self.embedJS('survey-app.js', {
+			'currDate': self.theDate,
+			'minDate': self.myModel.findTrainDescrById(self.trainId).getIsoFormatDate()
+			})
 		self.embedJS('api-endpoint.js', {})
 		self.pageBuffer += '</script>'
 

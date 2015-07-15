@@ -29,3 +29,6 @@ class GAEDatastore(DataProvider):
 
 	def findAllTrainDescr(self):
 		return TrainDescr.query().order(TrainDescr.type).fetch()
+
+	def findTrainDescrById(self, trainId):
+		return TrainDescr.query(TrainDescr.trainId == trainId).get()

@@ -1,8 +1,18 @@
 <section class="wrapper">
+	<form name="form" method="post" action="survey">
+	<input type="hidden" name="trainid" value="{{ trainId }}">
 	<section class="container">
 		<section>
 				<h3>{% autoescape off %} {{ nls.nosurvey }} {% endautoescape %}</h3>
 
 		</section>
+		<section>
+			<div id="outputLog"></div>
+			<p>{{ nls.datepicker }}</p>
+			<div id="datepickerBottom"></div>
+			<input id="datetime" name="datetime" type="hidden" />
+			<input id="postBttnBottom" type="submit" value="{{ nls.open }}" disabled/>
+		</section>
 	</section>
+	</form>
 </section>
