@@ -96,6 +96,18 @@ class NLS(object):
 		self.entries['trainNum'] = {
 					'en-US': 'Train no.',
 					'it-IT': 'N. treno'}
+		self.entries['brief_descr'] = {
+					'en-US': 'TrenordSaga is a project based on data analisys',
+					'it-IT': 'Un progetto basato sui dati e la loro analisi'}
+		self.entries['login'] = {
+					'en-US': 'Log in',
+					'it-IT': 'Accedi'}
+		self.entries['login_brief'] = {
+					'en-US': 'Log in for complete data access',
+					'it-IT': 'Accedi per richiedere di monitorare il tuo treno e per vedere di pi&ugrave;'}
+		self.entries['signup'] = {
+					'en-US': 'Sign Up',
+					'it-IT': 'Registrati'}
 
 	def setLang(self, acceptLang):
 		match = re.compile('it-IT').search(acceptLang)

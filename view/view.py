@@ -149,10 +149,12 @@ class ScheduleViewer(View):
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('view-choose-train.js', {})
 		self.embedJS('model.js', {})
-		self.embedJS('survey-app.js', {
-			'currDate': self.theDate,
-			'minDate': self.myModel.findTrainDescrById(self.trainId).getIsoFormatDate()
-			})
+		trainDescriptor = self.myModel.findTrainDescrById(self.trainId)
+		if trainDescriptor is not None:
+			self.embedJS('survey-app.js', {
+				'currDate': self.theDate,
+				'minDate': trainDescriptor.getIsoFormatDate()
+				})
 		self.embedJS('api-endpoint.js', {})
 		self.pageBuffer += '</script>'
 
@@ -163,4 +165,3 @@ class ScheduleValidator(View):
 	def render(self):
 		#buffer = self.myModel.retrieveSourcePage('24114', theDate)
 		return ""
-

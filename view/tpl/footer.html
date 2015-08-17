@@ -1,19 +1,20 @@
 		<!-- Footer -->
+{% autoescape off %}
 			<footer id="footer">
 				<div class="container">
 					<div class="row">
 						<section class="4u 6u(medium) 12u$(small)">
-							<h3>Lorem ipsum</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, cumque!</p>
+							<h3>{{ nls.about }}</h3>
+							<p>{{ nls.brief_descr }}</p>
 							<ul class="alt">
-								<li><a href="#">Lorem ipsum dolor sit amet.</a></li>
+								<li><a href="about">{{ nls.learn_more }}</a></li>
 							</ul>
 						</section>
 						<section class="4u 6u$(medium) 12u$(small)">
-							<h3>Nostrum, repellat!</h3>
-							<p>Tenetur voluptate exercitationem eius tempora! Obcaecati suscipit, soluta earum blanditiis.</p>
+							<h3>{{ nls.login }}</h3>
+							<p>{{ nls.login_brief }}</p>
 							<ul class="alt">
-								<li><a href="#">Lorem ipsum dolor sit amet.</a></li>
+								<li><a href="#">{{ nls.signup }}</a></li>
 							</ul>
 						</section>
 						<section class="4u$ 12u$(medium) 12u$(small)">
@@ -26,6 +27,7 @@
 						</section>
 					</div>
 					<ul class="copyright">
+						<li>Terms & Conditions</li>
 						<li>&copy; Untitled. All rights reserved.</li>
 						<li>Design: <a href="http://templated.co">TEMPLATED</a></li>
 					</ul>
@@ -33,3 +35,4 @@
 			</footer>
     </body>
 </html>
+{% endautoescape %}

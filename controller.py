@@ -97,4 +97,3 @@ class ConsoleController(Controller):
 		else:
 			theDate = self.getLastDatetime()
 		self.getViewAction(theDate, trainId)
-
