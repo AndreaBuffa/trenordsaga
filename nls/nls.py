@@ -108,6 +108,12 @@ class NLS(object):
 		self.entries['signup'] = {
 					'en-US': 'Sign Up',
 					'it-IT': 'Registrati'}
+		self.entries['query_the_oracle'] = {
+					'en-US': 'Do another query',
+					'it-IT': 'Fai un\'altra query'}
+		self.entries['change_train'] = {
+					'en-US': 'Change train/railway:',
+					'it-IT': 'Scegli un altro treno:'}
 
 	def setLang(self, acceptLang):
 		match = re.compile('it-IT').search(acceptLang)

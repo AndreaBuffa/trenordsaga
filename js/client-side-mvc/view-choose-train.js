@@ -47,22 +47,49 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 	if (this.status === "loading") {
 		container.innerHTML = "Loading....";
 	} else {
-	      var obj = this;
+	  var obj = this;
 		var currRailwayType = '';
-		var rowDiv;
+		var railwayDiv;
+		var trainListDiv;
+		var table;
 		for (var i = 0; i < trainList.length; i++) {
 			var train = trainList[i];
 			if (currRailwayType != train.type) {
 				currRailwayType = train.type;
-				rowDiv = document.createElement('div');
-				rowDiv.classList.add('row');
+				railwayDiv = document.createElement('div');
+				//railwayDiv.classList.add('row');
+				//railwayDiv.classList.add("6u&nbsp;12u(small)");
+				var railwayLink = document.createElement('a');
+				railwayLink.id = currRailwayType;
 				var img = document.createElement('img');
 				img.src = 'images/' + currRailwayType + '.jpg';
-				rowDiv.appendChild(img);
-				document.querySelector('#trainSelector').appendChild(rowDiv);
-				rowDiv = document.createElement('div');
-				rowDiv.classList.add('row');
-				document.querySelector('#trainSelector').appendChild(rowDiv);
+				railwayLink.appendChild(img);
+				railwayLink.addEventListener('click', function() {
+					var trainList = document.querySelectorAll('[id$=trainList]');
+					for(var i=0; i < trainList.length; i++) {
+						if (trainList[i].id === this.id + 'trainList') {
+							trainList[i].style.display = 'block';
+						} else {
+							trainList[i].style.display = 'none';
+						}
+					}
+				});
+				railwayDiv.appendChild(railwayLink);
+				document.querySelector('#trainSelector').appendChild(railwayDiv);
+
+				trainListDiv = document.createElement('div');
+				trainListDiv.id = currRailwayType + 'trainList';
+				trainListDiv.classList.add('table-wrapper');
+				trainListDiv.style.display = 'none';
+				table = document.createElement('table');
+				var thead = document.createElement('thead');
+				var trHead = document.createElement('tr');
+				var th1 = document.createElement('th1');
+				trHead.appendChild(th1);
+				thead.appendChild(trHead);
+				table.appendChild(thead);
+				trainListDiv.appendChild(table);
+				document.querySelector('#trainSelector').appendChild(trainListDiv);
 			}
 			var linkControl = document.createElement('a');
 			linkControl.setAttribute('id', train.trainId);
@@ -76,7 +103,11 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 /*			var linkDiv = document.createElement('div');
 			linkDiv.classList.add('row');
 			linkDiv.appendChild(linkControl);*/
-			rowDiv.appendChild(linkControl);
+			var tr = document.createElement('tr');
+			var td = document.createElement('td');
+			td.appendChild(linkControl);
+			tr.appendChild(td);
+			table.appendChild(tr);
 		}
 	}
 }

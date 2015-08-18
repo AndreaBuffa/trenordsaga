@@ -57,11 +57,12 @@ MYAPP.View.TrainStats.prototype.draw = function(stats) {
 		container.appendChild(paragraph);
 		statsList = document.createElement('div');
 		statsList.setAttribute('id', 'statsList');
+		statsList.classList.add('table-wrapper');
 		container.appendChild(statsList);
 
 		var thisObj = this;
 		var tabClickHandler = function() {
-                        if (thisObj.status !== "ready") {
+			if (thisObj.status !== "ready") {
 				return;
 			}
 			thisObj.update({'trainId': thisObj.trainId,
@@ -89,12 +90,31 @@ MYAPP.View.TrainStats.prototype.draw = function(stats) {
 		element.innerHTML = "Loading...";
 		statsList.appendChild(element);
 	} else {
-	      for (var i = 0; i < stats.length; i++) {
+		table = document.createElement('table');
+		statsList.appendChild(table);
+		var thead = document.createElement('thead');
+		var trHead = document.createElement('tr');
+		var th1 = document.createElement('th');
+		th1.innerHTML = 'Stazione';
+		var th2 = document.createElement('th');
+		th2.innerHTML = 'Ritardo mediano in minuti';
+		trHead.appendChild(th1);
+		trHead.appendChild(th2);
+		thead.appendChild(trHead);
+		table.appendChild(thead);
+		var tbody = document.createElement('tbody');
+		table.appendChild(tbody);
+		for (var i = 0; i < stats.length; i++) {
 			var stop = stats[i];
-			var element = document.createElement('div');
+			var dataTr = document.createElement('tr');
 			//element.classList.add('row');
-			element.innerHTML = stop.stationName + ' : ' + stop.median;
-			statsList.appendChild(element);
-	      }
+			var dataTd1 = document.createElement('td');
+			dataTd1.innerHTML = stop.stationName;
+			var dataTd2 = document.createElement('td');
+			dataTd2.innerHTML = stop.median;
+			dataTr.appendChild(dataTd1);
+			dataTr.appendChild(dataTd2);
+			tbody.appendChild(dataTr);
+		}
 	}
 }

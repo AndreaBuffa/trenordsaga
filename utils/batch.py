@@ -16,19 +16,19 @@ class BatchHandler(webapp2.RequestHandler):
 			deferred.defer(entityMigration.Migrate)
 			msg = 'Schema migration successfully initiated.'
 		elif task == 'retrieve':
-			"""
+			'''
 			tmp = TrainDescr()
 			tmp.trainId = '23222'
-			tmp.type = 'S9'
+			tmp.type = 'S3'
 			#tmp.url = 'http://mobile.my-link.it/mylink/mobile/scheda?dettaglio=visualizza&numeroTreno=24114&codLocOrig=S01059&tipoRicerca=numero&lang=IT'
 			tmp.url = 'http://mobile.my-link.it/mylink/mobile/scheda?dettaglio=visualizza&numeroTreno=23222&codLocOrig=S01825&tipoRicerca=numero&lang=IT'
 			tmp.leaveStation = "Bobo"
 			tmp.endStation = "Ballo"
 			tmp.arriveTime = "09:54"
 			tmp.leaveTime = "08:08"
-			#tmp.date = datetime.datetime.today()
+			tmp.date = datetime.datetime.today()
 			tmp.put()
-			"""
+			'''
 			for train in TrainDescr.query().fetch():
 				print train.trainId
 				deferred.defer(webscraper.scraper.Scraper, train.trainId)
