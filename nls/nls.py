@@ -114,6 +114,9 @@ class NLS(object):
 		self.entries['change_train'] = {
 					'en-US': 'Change train/railway:',
 					'it-IT': 'Scegli un altro treno:'}
+		self.entries['choose_train'] = {
+					'en-US': 'Choose a railway:',
+					'it-IT': 'Scegli la direttrice ed un treno:'}
 
 	def setLang(self, acceptLang):
 		match = re.compile('it-IT').search(acceptLang)

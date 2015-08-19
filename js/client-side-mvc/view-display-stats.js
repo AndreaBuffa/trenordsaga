@@ -53,7 +53,7 @@ MYAPP.View.TrainStats.prototype.draw = function(stats) {
 		container.innerHTML = '<ul id="tabs"><li id="all" class="active">tutte</li>\
 			<li id="workDay">feriali</li><li id="dayOff">festivi</li></ul>';
 		var paragraph = document.createElement('p');
-		paragraph.innerHTML = 'In rilevazione dal ' + this.surveyedFrom;
+		paragraph.innerHTML = 'Ecco le statistiche a partire dal ' + this.surveyedFrom + ':';
 		container.appendChild(paragraph);
 		statsList = document.createElement('div');
 		statsList.setAttribute('id', 'statsList');

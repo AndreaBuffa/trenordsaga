@@ -80,6 +80,10 @@ class OnePageAppView(StaticView):
 
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': False})
+		self.pageBuffer += '<header class="major">'
+		self.pageBuffer += '<h2>' + '</h2>'
+		self.pageBuffer += '<p>' + langSupport.get('choose_train') + '</p>'
+		self.pageBuffer += '</header>'
 		self.pageBuffer += '<section class="wrapper"><section class="container">'
 		self.pageBuffer += '<div id="outputLog"></div>'
 		self.pageBuffer += '</section></section>'
