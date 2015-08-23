@@ -11,4 +11,5 @@ class TrainDescr(ndb.Model):
 	date = ndb.DateProperty(indexed=True)
 
 	def getIsoFormatDate(self):
-		return self.date.isoformat()
+		if self.date:
+			return self.date.isoformat()

@@ -24,11 +24,11 @@
 
 	a {
 		color: #4dac71;
-		text-decoration: underline;
 	}
 
 		a:hover {
 			text-decoration: none;
+			cursor: pointer;
 		}
 
 	strong, b {
