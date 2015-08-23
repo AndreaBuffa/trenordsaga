@@ -142,7 +142,7 @@ class ScheduleViewer(View):
 			self.renderTpl('survey.html', {
 				'nls': langSupport.getEntries(),
 				'onTimeStations': onTimeStations,
-				'date': self.theDate,
+				'date': self.theDate.strftime('%m/%d/%Y'),
 				'trainId': self.trainId})
 		else:
 			self.renderTpl('nosurvey.html', {
