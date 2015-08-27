@@ -1,7 +1,7 @@
 import time
 from datetime import date
 from model.trainStop import *
-from view.scheduleParser import *
+from parser import *
 
 def createTrainStop(timings, stops):
 	for record in timings:

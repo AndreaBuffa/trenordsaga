@@ -5,7 +5,7 @@ from google.appengine.ext import db
 from model.dataProviderFactory import *
 import model.s9
 from model.trainStop import *
-from view.scheduleParser import *
+from parser import ScheduleParser
 import common
 
 BATCH_SIZE = 30  # ideal batch size

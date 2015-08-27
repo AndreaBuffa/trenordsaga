@@ -10,10 +10,10 @@ import datetime
 
 MAX_ATTEMPS = 3
 
-def Scraper(trainId, attemps=MAX_ATTEMPS):
+def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 	trainDescr = TrainDescr.query(TrainDescr.trainId == trainId).get()
 	if not trainDescr:
-		logging.debug('SCRAPER: cannot retrieve Train Descriptor %s!',
+		logging.debug('retrieve_schedule: cannot retrieve Train Descriptor %s!',
 			trainId)
 		return
 
@@ -21,7 +21,7 @@ def Scraper(trainId, attemps=MAX_ATTEMPS):
 		Train.date == datetime.datetime.today()).get()
 
 	if trainExist:
-		logging.debug('SCRAPER: Train %s already stored!',
+		logging.debug('retrieve_schedule: Train %s already stored!',
 			trainDescr.trainId)
 	else:
 		try:
@@ -46,8 +46,22 @@ def Scraper(trainId, attemps=MAX_ATTEMPS):
 			# retry if the server does not respond. 
 			# @todo Sleep before trying again?
 			if attemps > 0:
-				deferred.defer(Scraper,	trainId, attemps=attemps-1)
+				deferred.defer(retrieve_schedule, trainId,
+					       attemps=attemps-1)
 			else:
-				logging.debug('SCRAPER: %d attemps failed for train %s !',
-					MAX_ATTEMPS, trainId)
+				logging.debug('retrieve_schedule: %d attemps failed for train %s !',
+					      MAX_ATTEMPS, trainId)
+
+def scrape_train_List(url, fromStation, toStation):
+
+	#partenza=Lamezia+Terme+Centrale&arrivo=Catanzaro&giorno=27&mese=08&anno=2015&fascia=3&lang=IT
+	params = urllib.urlencode({'stazione': fromStation,
+				   'arrivo': toStation,
+				   'giorno': '27',
+				   'mese': '08',
+				   'anno': '27',
+				   'fascia': '3',
+				   'lang': 'IT'})
+	f = urllib.urlopen(url, params)
+	return f.read()
 

@@ -1,7 +1,7 @@
 import os
 from google.appengine.ext.webapp import template
 from formatter import *
-from scheduleParser import *
+from utils.parser import ScheduleParser
 from nls.nls import *
 import webapp2
 import re

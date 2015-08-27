@@ -4,7 +4,7 @@ from protorpc import message_types
 from protorpc import remote
 from model.dataProviderFactory import DataStore
 from datetime import datetime
-from view.scheduleParser import *
+from utils.parser import ScheduleParser
 package = 'main_api'
 
 class Stop(messages.Message):

@@ -52,9 +52,8 @@ class StatisticsApi(remote.Service):
 	NAME_RESOURCE = endpoints.ResourceContainer(
 		message_types.VoidMessage,
 		name=messages.StringField(1, variant=messages.Variant.STRING))
-	@endpoints.method(NAME_RESOURCE, Stop,
-					path='train_stop_get/{name}', http_method='GET',
-					name='trains.getStop')
+	@endpoints.method(NAME_RESOURCE, Stop, path='train_stop_get/{name}',
+				http_method='GET', name='trains.getStop')
 	def stop_get(self, request):
 		pass
 		#try:

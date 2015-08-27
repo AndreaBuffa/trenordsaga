@@ -59,5 +59,6 @@ class ScheduleParser:
 
 		return self.stations
 
-	def Compress(self):
-		return ""
+def extractDepartures(trainListString):
+	train = []
+

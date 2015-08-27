@@ -20,8 +20,6 @@ class BatchHandler(webapp2.RequestHandler):
 			tmp = TrainDescr()
 			tmp.trainId = '23222'
 			tmp.type = 'S3'
-			#tmp.url = 'http://mobile.my-link.it/mylink/mobile/scheda?dettaglio=visualizza&numeroTreno=24114&codLocOrig=S01059&tipoRicerca=numero&lang=IT'
-			tmp.url = 'http://mobile.my-link.it/mylink/mobile/scheda?dettaglio=visualizza&numeroTreno=23222&codLocOrig=S01825&tipoRicerca=numero&lang=IT'
 			tmp.leaveStation = "Bobo"
 			tmp.endStation = "Ballo"
 			tmp.arriveTime = "09:54"
@@ -31,7 +29,7 @@ class BatchHandler(webapp2.RequestHandler):
 			'''
 			for train in TrainDescr.query().fetch():
 				print train.trainId
-				deferred.defer(webscraper.scraper.Scraper, train.trainId)
+				deferred.defer(webscraper.scraper.retrieve_schedule, train.trainId)
 			msg = 'Web scraping successfully initiated.'
 		else:
 			msg = 'Failed, not existing task'
