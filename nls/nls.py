@@ -74,7 +74,7 @@ class NLS(object):
 					'it-IT': 'Ops.. niente rilevazioni....Si prega di riprovare.'}
 		self.entries['trend'] = {
 					'en-US': 'Delay trend:',
-					'it-IT': 'Andamento del ritardo rispetto all\' orario previsto:'}
+					'it-IT': 'Confronto tra gli orari previsti e quelli effettivi:'}
 		self.entries['datepicker'] = {
 					'en-US': 'Choose the date',
 					'it-IT': 'Scegli un\'altra data'}
@@ -115,8 +115,14 @@ class NLS(object):
 					'en-US': 'Change train/railway:',
 					'it-IT': 'Scegli un altro treno:'}
 		self.entries['choose_train'] = {
-					'en-US': 'Choose a railway:',
-					'it-IT': 'Scegli la direttrice ed un treno:'}
+					'en-US': 'Choose the railway:',
+					'it-IT': 'Scegli la linea e il treno:'}
+		self.entries['for_example'] = {
+					'en-US': 'Here an example:',
+					'it-IT': 'Ecco un esempio:'}
+		self.entries['date_format'] = {
+					'en-US': '%Y/%m/%d',
+					'it-IT': '%d/%m/%Y'}
 
 	def setLang(self, acceptLang):
 		match = re.compile('it-IT').search(acceptLang)
