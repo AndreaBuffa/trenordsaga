@@ -59,6 +59,35 @@ class ScheduleParser:
 
 		return self.stations
 
-def extractDepartures(trainListString):
-	train = []
+def extract_departures(trainListString):
+	departures = []
+	for token in trainListString.split('<'):
+		pattern = re.compile('(\d{1,2})\:(\d{1,2})')
+		if lookForDepartureTime:
+			departureTime = pattern.search(token)
+		elif lookForArrivalTime:
+			arrivalTime = pattern.search(token)
 
+def extract_links(trainListString):
+	hrefList = []
+	for token in trainListString.split('<'):
+		match = re.compile('^a href="').search(token)
+		if not match:
+			continue
+		# check it's the link I need
+		match1 = re.compile('sessionId').search(token)
+		if not match1:
+			continue
+		queryString = re.compile('\?(.+)').search(token)
+		href = token[queryString.start():]
+
+		match2 = re.compile('(.+)"').search(href)
+		if not match2:
+			continue
+		href = match2.group(1)
+
+		hrefList.append(href)
+	return hrefList
+
+def extract_train_details(trainList):
+	return []

@@ -7,6 +7,7 @@ from model.trainStop import *
 import utils.common
 import urllib
 import datetime
+#import time
 
 MAX_ATTEMPS = 3
 
@@ -52,16 +53,37 @@ def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 				logging.debug('retrieve_schedule: %d attemps failed for train %s !',
 					      MAX_ATTEMPS, trainId)
 
-def scrape_train_List(url, fromStation, toStation):
+def get_train_list(url, fromStation, toStation):
 
 	#partenza=Lamezia+Terme+Centrale&arrivo=Catanzaro&giorno=27&mese=08&anno=2015&fascia=3&lang=IT
-	params = urllib.urlencode({'stazione': fromStation,
+	#import cookielib, urllib2
+	#cj = cookielib.CookieJar()
+	#opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+	#r = opener.open("http://mobile.my-link.it/mylink/mobile/programmato")
+	#r.read()
+	#opener.addheaders = [('Origin', 'http://mobile.my-link.it'),
+	#		     ('Referer', 'http://mobile.my-link.it/mylink/mobile/programmato?lang=IT'),
+	#		     ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'),
+	#		     ('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36'),
+	#		    ]
+	#r = opener.open("http://mobile.my-link.it/mylink/mobile/programmato", params)
+	params = urllib.urlencode({'partenza': fromStation,
 				   'arrivo': toStation,
-				   'giorno': '27',
+				   'giorno': '28',
 				   'mese': '08',
-				   'anno': '27',
+				   'anno': '2015',
 				   'fascia': '3',
 				   'lang': 'IT'})
 	f = urllib.urlopen(url, params)
 	return f.read()
+
+def get_train_details(url, hrefList):
+	details = []
+	for href in hrefList:
+		req = urllib.urlopen(url + href)
+		detailsContent = req.read()
+		if detailsContent:
+			details.append(detailsContent)
+		#time.sleep(1)
+	return details
 

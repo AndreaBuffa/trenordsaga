@@ -3,8 +3,8 @@ from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
 from model.dataProviderFactory import DataStore
-from webscraper.scraper import *
-from utils.parser import *
+import webscraper.scraper
+import utils.parser
 package = 'main_api'
 
 class Train(messages.Message):
@@ -94,27 +94,27 @@ class DicoverApi(remote.Service):
 		fromStation=messages.StringField(1, variant=messages.Variant.STRING),
 		toStation=messages.StringField(2, variant=messages.Variant.STRING))
 	@endpoints.method(ID_RESOURCE, StationTrainList,
-		path='get_train_list_by_name/{fromStation}/{toStation}', http_method='GET',
-		name='trains.getTrainListByName')
-	def get_train_by_station_name(self, request):
+		path='search_from_to/{fromStation}/{toStation}', http_method='GET',
+		name='trains.searchFromTo')
+	def search_from_to(self, request):
 		myFactory = DataStore()
 		myDataModel = myFactory.createDataProvider()
-
-		'''
-		from model.service import Service
-		tmp = Service()
-		tmp.name = 'TrainListByStation'
-		tmp.URL = 'http://mobile.my-link.it/mylink/mobile/stazione'
-		tmp.decription = "suca"
-		tmp.put()
-		'''
-		trainListString = scrape_train_List(
-				myDataModel.getServiceURL('TrainListByStation'),
+		# query a third-party server
+                serviceURL = myDataModel.getServiceURL('TrainListByStation')
+		trainListString = webscraper.scraper.get_train_list(
+				serviceURL,
 				request.fromStation,
 				request.toStation)
 
+		hrefList = utils.parser.extract_links(trainListString)
+		trainList = webscraper.scraper.get_train_details(serviceURL,
+								 hrefList)
+
+		detailsList = utils.parser.extract_train_details(trainList)
+
 		trainDescrList = StationTrainList()
-		for trainDescr in myDataModel.findAllTrainDescrByName(request.fromStation):
+		for train in detailsList:
+			trainDescr = myDataModel.findTrainDescrById(train['id'])
 			trainDescrList.items.append(StationTrain(
 					key = trainDescr.trainId,
 					type = trainDescr.type,
