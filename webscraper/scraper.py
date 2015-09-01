@@ -6,8 +6,9 @@ from model.train import Train
 from model.trainStop import *
 import utils.common
 import urllib
-import datetime
-#import time
+from datetime import datetime
+from time import mktime
+import time
 
 MAX_ATTEMPS = 3
 
@@ -19,7 +20,7 @@ def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 		return
 
 	trainExist = Train.query(Train.trainId == trainId,
-		Train.date == datetime.datetime.today()).get()
+		Train.date == datetime.today()).get()
 
 	if trainExist:
 		logging.debug('retrieve_schedule: Train %s already stored!',
@@ -32,7 +33,7 @@ def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 			timeSchedule = Train()
 			timeSchedule.timings = pageBuffer
 			timeSchedule.trainId = trainDescr.trainId
-			timeSchedule.date = datetime.datetime.today()
+			timeSchedule.date = datetime.today()
 			timeSchedule.put()
 
 			stops = {}
@@ -53,7 +54,7 @@ def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 				logging.debug('retrieve_schedule: %d attemps failed for train %s !',
 					      MAX_ATTEMPS, trainId)
 
-def get_train_list(url, fromStation, toStation):
+def get_train_list(url, fromStation, toStation, when, timeRange):
 
 	#partenza=Lamezia+Terme+Centrale&arrivo=Catanzaro&giorno=27&mese=08&anno=2015&fascia=3&lang=IT
 	#import cookielib, urllib2
@@ -67,12 +68,17 @@ def get_train_list(url, fromStation, toStation):
 	#		     ('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36'),
 	#		    ]
 	#r = opener.open("http://mobile.my-link.it/mylink/mobile/programmato", params)
+
+	whenDate = datetime.fromtimestamp(mktime(time.strptime(when, "%Y-%m-%d")))
+	if whenDate < datetime.now():
+		return ""
+
 	params = urllib.urlencode({'partenza': fromStation,
 				   'arrivo': toStation,
-				   'giorno': '28',
-				   'mese': '08',
-				   'anno': '2015',
-				   'fascia': '3',
+				   'giorno': whenDate.day,
+				   'mese': whenDate.month,
+				   'anno': whenDate.year,
+				   'fascia': timeRange,
 				   'lang': 'IT'})
 	f = urllib.urlopen(url, params)
 	return f.read()

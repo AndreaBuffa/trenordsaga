@@ -92,19 +92,24 @@ class DicoverApi(remote.Service):
 	ID_RESOURCE = endpoints.ResourceContainer(
 		message_types.VoidMessage,
 		fromStation=messages.StringField(1, variant=messages.Variant.STRING),
-		toStation=messages.StringField(2, variant=messages.Variant.STRING))
+		toStation=messages.StringField(2, variant=messages.Variant.STRING),
+		when=messages.StringField(3, variant=messages.Variant.STRING),
+		timeRange=messages.StringField(4, variant=messages.Variant.STRING))
+
 	@endpoints.method(ID_RESOURCE, StationTrainList,
-		path='search_from_to/{fromStation}/{toStation}', http_method='GET',
+		path='search_from_to/{fromStation}/{toStation}/{when}/{timeRange}', http_method='GET',
 		name='trains.searchFromTo')
 	def search_from_to(self, request):
+		#@todo validate when and time range
 		myFactory = DataStore()
 		myDataModel = myFactory.createDataProvider()
 		# query a third-party server
                 serviceURL = myDataModel.getServiceURL('TrainListByStation')
-		trainListString = webscraper.scraper.get_train_list(
-				serviceURL,
-				request.fromStation,
-				request.toStation)
+		trainListString = webscraper.scraper.get_train_list(serviceURL,
+							request.fromStation,
+							request.toStation,
+							request.when,
+							request.timeRange)
 
 		hrefList = utils.parser.extract_links(trainListString)
 		trainList = webscraper.scraper.get_train_details(serviceURL,
