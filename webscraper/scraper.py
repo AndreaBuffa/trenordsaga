@@ -6,6 +6,7 @@ from model.train import Train
 from model.trainStop import *
 import utils.common
 import urllib
+import cookielib, urllib2
 from datetime import datetime
 from time import mktime
 import time
@@ -54,23 +55,21 @@ def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 				logging.debug('retrieve_schedule: %d attemps failed for train %s !',
 					      MAX_ATTEMPS, trainId)
 
-def get_train_list(url, fromStation, toStation, when, timeRange):
+def get_http_opener():
+	cj = cookielib.CookieJar()
+	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+	return opener
 
-	#partenza=Lamezia+Terme+Centrale&arrivo=Catanzaro&giorno=27&mese=08&anno=2015&fascia=3&lang=IT
-	#import cookielib, urllib2
-	#cj = cookielib.CookieJar()
-	#opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-	#r = opener.open("http://mobile.my-link.it/mylink/mobile/programmato")
-	#r.read()
-	#opener.addheaders = [('Origin', 'http://mobile.my-link.it'),
-	#		     ('Referer', 'http://mobile.my-link.it/mylink/mobile/programmato?lang=IT'),
-	#		     ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'),
-	#		     ('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36'),
-	#		    ]
-	#r = opener.open("http://mobile.my-link.it/mylink/mobile/programmato", params)
+def get_train_list(opener, url, fromStation, toStation, when, timeRange):
+        try:
+		whenDate = datetime.fromtimestamp(
+					mktime(time.strptime(when, "%Y-%m-%d")))
+	except ValueError:
+		logging.debug('get_train_list: invalid date format')
+		return ""
 
-	whenDate = datetime.fromtimestamp(mktime(time.strptime(when, "%Y-%m-%d")))
-	if whenDate < datetime.now():
+	if whenDate.date() < datetime.now().date():
+		logging.debug('get_train_list: invalid date')
 		return ""
 
 	params = urllib.urlencode({'partenza': fromStation,
@@ -80,16 +79,20 @@ def get_train_list(url, fromStation, toStation, when, timeRange):
 				   'anno': whenDate.year,
 				   'fascia': timeRange,
 				   'lang': 'IT'})
-	f = urllib.urlopen(url, params)
-	return f.read()
 
-def get_train_details(url, hrefList):
+	r = opener.open(url, params)
+
+	return r.read()
+
+def get_train_details(opener, url, hrefList):
 	details = []
+        if not opener:
+		logging.debug('get_train_details: opener is None!')
+		return details
 	for href in hrefList:
-		req = urllib.urlopen(url + href)
+		req = opener.open(url + href)
 		detailsContent = req.read()
 		if detailsContent:
 			details.append(detailsContent)
-		#time.sleep(1)
 	return details
 

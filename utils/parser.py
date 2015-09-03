@@ -90,4 +90,39 @@ def extract_links(trainListString):
 	return hrefList
 
 def extract_train_details(trainList):
-	return []
+	details = []
+	for trainDetail in trainList:
+		detail = {}
+		leaveStation = True
+		trainNum = endStation = False
+		for token in trainDetail.split('>'):
+			if leaveStation:
+				pattern = re.compile('Partenza\:\s(.+)(\d{2,2}\:\d{2,2})')
+				match = pattern.search(token)
+				if not match:
+					continue
+				detail['leave'] = match.group(1).strip()
+				detail['leaveTime'] = match.group(2).strip()
+				leaveStation = False
+				trainNum = True
+				continue
+			if trainNum:
+				pattern = re.compile('(.+)\s(\d+)')
+				typeMatch = pattern.search(token)
+				if not typeMatch:
+					continue
+				detail['type'] = typeMatch.group(1).strip()
+				detail['number'] = typeMatch.group(2)
+				trainNum = False
+				endStation = True
+				continue
+			if endStation:
+				pattern = re.compile('(.+)(\d{2,2}\:\d{2,2})')
+				arrival = pattern.search(token)
+				if not arrival:
+					continue
+				detail['arrival'] = arrival.group(1).strip()
+				detail['arrivalTime'] = arrival.group(2).strip()
+				break
+		details.append(detail)
+	return details

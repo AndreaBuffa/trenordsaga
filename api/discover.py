@@ -5,6 +5,7 @@ from protorpc import remote
 from model.dataProviderFactory import DataStore
 import webscraper.scraper
 import utils.parser
+import logging
 package = 'main_api'
 
 class Train(messages.Message):
@@ -21,7 +22,7 @@ class TrainList(messages.Message):
 	"""Collection of train objects"""
 	items = messages.MessageField(Train, 1, repeated=True)
 
-class StationTrain(messages.Message):
+class TrainLine(messages.Message):
 	key = messages.StringField(1)
 	type = messages.StringField(2)
 	leaveStation = messages.StringField(3)
@@ -31,9 +32,9 @@ class StationTrain(messages.Message):
 	surveyedFrom = messages.StringField(7)
 	isSurveyed = messages.BooleanField(8)
 
-class StationTrainList(messages.Message):
+class TrainLineList(messages.Message):
 	"""Collection of train objects"""
-	items = messages.MessageField(StationTrain, 1, repeated=True)
+	items = messages.MessageField(TrainLine, 1, repeated=True)
 
 class TrainKeyParam(messages.Message):
 	key = messages.StringField(1)
@@ -96,36 +97,61 @@ class DicoverApi(remote.Service):
 		when=messages.StringField(3, variant=messages.Variant.STRING),
 		timeRange=messages.StringField(4, variant=messages.Variant.STRING))
 
-	@endpoints.method(ID_RESOURCE, StationTrainList,
-		path='search_from_to/{fromStation}/{toStation}/{when}/{timeRange}', http_method='GET',
+	@endpoints.method(ID_RESOURCE, TrainLineList,
+		path='search_from_to/{fromStation}/{toStation}/{when}/{timeRange}',
+		http_method='GET',
 		name='trains.searchFromTo')
 	def search_from_to(self, request):
-		#@todo validate when and time range
+
+		trainDescrList = TrainLineList()
+		if (int(request.timeRange) < 1) or (int(request.timeRange) > 5):
+			logging.debug('search_from_to: timeRange out of bound')
+			return trainDescrList
+
 		myFactory = DataStore()
 		myDataModel = myFactory.createDataProvider()
 		# query a third-party server
-                serviceURL = myDataModel.getServiceURL('TrainListByStation')
-		trainListString = webscraper.scraper.get_train_list(serviceURL,
+		serviceURL = myDataModel.getServiceURL('TrainListByStation')
+		if not serviceURL:
+			logging.debug('search_from_to: serviceURL not found!')
+
+		opener = webscraper.scraper.get_http_opener()
+
+		trainListString = webscraper.scraper.get_train_list(opener,
+							serviceURL,
 							request.fromStation,
 							request.toStation,
 							request.when,
 							request.timeRange)
 
 		hrefList = utils.parser.extract_links(trainListString)
-		trainList = webscraper.scraper.get_train_details(serviceURL,
+
+		trainList = webscraper.scraper.get_train_details(opener,
+								 serviceURL,
 								 hrefList)
 
 		detailsList = utils.parser.extract_train_details(trainList)
 
-		trainDescrList = StationTrainList()
 		for train in detailsList:
-			trainDescr = myDataModel.findTrainDescrById(train['id'])
-			trainDescrList.items.append(StationTrain(
+			trainDescr = myDataModel.findTrainDescrById(train['number'])
+			if trainDescr:
+				trainDescrList.items.append(TrainLine(
 					key = trainDescr.trainId,
 					type = trainDescr.type,
 					leaveStation = trainDescr.leaveStation,
 					endStation = trainDescr.endStation,
 					arriveTime = trainDescr.arriveTime,
 					leaveTime = trainDescr.leaveTime,
-					surveyedFrom = str(trainDescr.date)))
+					surveyedFrom = str(trainDescr.date),
+					isSurveyed = True))
+			else:
+				trainDescrList.items.append(TrainLine(
+					key = train['number'],
+					type = train['type'],
+					leaveStation = train['leave'],
+					endStation = train['arrival'],
+					arriveTime = train['arrivalTime'],
+					leaveTime = train['leaveTime'],
+					surveyedFrom = '',
+					isSurveyed = False))
 		return trainDescrList
