@@ -83,7 +83,7 @@ MYAPP.View.TrainStats.prototype.draw = function(stats) {
 		var tmp = container.querySelector('#workDay');
 		tmp.addEventListener('click', tabClickHandler);
 	}
-	document.querySelector('#outputLog').appendChild(container);
+	document.querySelector('#container').appendChild(container);
 	if (this.status !== "ready") {
 		var element = document.createElement('div');
 		element.classList.add('row');

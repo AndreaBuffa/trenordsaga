@@ -3,12 +3,19 @@
 	<input type="hidden" name="trainid" value="{{ trainId }}">
 	<section class="container">
 		<section>
-				<h3>{% autoescape off %} {{ nls.nosurvey }} {% endautoescape %}</h3>
-
+			<header class="major">
+			<p>{% autoescape off %} {{ nls.nosurvey }} {% endautoescape %}</p>
+			</header>
 		</section>
 		<section>
-			<div id="outputLog"></div>
+			<header class="major">
+				<h2>{{ nls.query_the_oracle }}</h2>
+			<p>{{ nls.change_train }}</p>
+			</header>
+			<div id="container"></div>
+			<header class="major" style="clear: left">
 			<p>{{ nls.datepicker }}</p>
+			</header>
 			<div id="datepickerBottom"></div>
 			<input id="datetime" name="datetime" type="hidden" />
 			<input id="postBttnBottom" type="submit" value="{{ nls.open }}" disabled/>

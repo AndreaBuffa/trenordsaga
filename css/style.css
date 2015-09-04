@@ -1125,3 +1125,8 @@ ul#tab li {
 ul#tab li.active {
     display: block;
 }
+
+.trainType {
+	float: left;
+	margin: 5px;
+}

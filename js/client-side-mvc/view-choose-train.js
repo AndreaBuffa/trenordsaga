@@ -42,7 +42,7 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 	} else {
 		container = document.createElement('div');
 		container.setAttribute('id', 'trainSelector');
-		document.querySelector('#outputLog').appendChild(container);
+		document.querySelector('#container').appendChild(container);
 	}
 	if (this.status === "loading") {
 		container.innerHTML = "Loading....";
@@ -57,8 +57,8 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 			if (currRailwayType != train.type) {
 				currRailwayType = train.type;
 				railwayDiv = document.createElement('div');
-				//railwayDiv.classList.add('row');
-				//railwayDiv.classList.add("6u&nbsp;12u(small)");
+				railwayDiv.classList.add('trainType');
+				//("6u&nbsp;12u(small)");
 				var railwayLink = document.createElement('a');
 				railwayLink.id = currRailwayType;
 				var img = document.createElement('img');
@@ -69,6 +69,7 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 					for(var i=0; i < trainList.length; i++) {
 						if (trainList[i].id === this.id + 'trainList') {
 							trainList[i].style.display = 'block';
+							trainList[i].style.clear = 'left';
 						} else {
 							trainList[i].style.display = 'none';
 						}
