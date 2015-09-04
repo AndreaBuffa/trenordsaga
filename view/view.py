@@ -50,6 +50,7 @@ class StaticView(View):
 
 	def prepare(self):
 		self.renderTpl('head.html', {
+			'nls': langSupport.getEntries(),
 			'renderForMobile': self.renderForMobile})
 		self.pageBuffer += "</head>"
 		self.renderTpl('bodyHeader.html', {
@@ -68,6 +69,7 @@ class OnePageAppView(StaticView):
 
 	def prepare(self):
 		self.renderTpl('head.html', {
+			'nls': langSupport.getEntries(),
 			'renderForMobile': self.renderForMobile})
 
 		self.pageBuffer += '<script type="text/Javascript">'
