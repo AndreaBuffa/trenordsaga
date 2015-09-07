@@ -118,10 +118,20 @@ class ScheduleViewer(View):
 			stationsByDelayJS = myFormatter.ToColumnChartJSon(
 				onDelayStations)
 
+		trainDescr = self.myModel.findTrainDescrById(self.trainId)
+		if trainDescr:
+			trainType = trainDescr.type
+			leaveTime = trainDescr.leaveTime
+			print leaveTime
+
+		niceDate = self.theDate.strftime(langSupport.get('date_format'))
 		self.renderTpl('surveyHead.html', {
 			'nls': langSupport.getEntries(),
 			'stations': chartData,
-			'date': self.theDate,
+			'date': niceDate,
+			'trainNum': self.trainId,
+			'trainType': trainType,
+			'leaveTime' : leaveTime,
 			'stationsByDelay': stationsByDelayJS,
 			'renderForMobile': self.renderForMobile})
 
@@ -138,7 +148,7 @@ class ScheduleViewer(View):
 			self.renderTpl('survey.html', {
 				'nls': langSupport.getEntries(),
 				'onTimeStations': onTimeStations,
-				'date': self.theDate.strftime(langSupport.get('date_format')),
+				'date': niceDate,
 				'trainId': self.trainId})
 		else:
 			self.renderTpl('nosurvey.html', {

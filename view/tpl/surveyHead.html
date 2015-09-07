@@ -41,7 +41,11 @@
 				var data = new google.visualization.DataTable({{ stations|safe|escape }});
 
 				var options = {
-					legend: { position: 'top' }
+					title: '{{nls.trainNum}} {{trainType}} {{trainNum}} {{nls.left}} {{leaveTime}} {{nls.left_day}} {{date}}',
+					curveType: 'function',
+					legend: { position: 'top',
+						  textStyle: { bold: false}
+						}
 				};
 
 				var chart = new google.visualization.LineChart(document.getElementById('timings'));

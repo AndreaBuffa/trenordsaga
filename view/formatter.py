@@ -45,27 +45,24 @@ class Formatter:
 				delayBuf = b"%s (%d %s)" %  (delayBuf, entry['delay_m'],
 					langSupport.get("minutes"))
 
-			buffer = b"%s%s{c: [{v: \"%s\", f: null}, {v: [%d,%d,0,0], f:null}, {v: [%d,%d,0,0], f: \"%s\"}, {v: %s, f: null}]}" % \
-				(buffer,
-				',' if len(buffer) else '',
-				entry['name'],
-				entry['sched_h'],
-				entry['sched_m'],
-				entry['real_h'],
-				entry['real_m'],
-				delayBuf,
-				certaintyBuf)
+			buffer = b'%s%s{c: [{v: "%s", f: null}, ' \
+				  '{v: [%d,%d,0,0], f:null}, ' \
+				  '{v: [%d,%d,0,0], f: "%s"}, ' \
+				  '{v: %s, f: "test"}]}' % \
+				  (buffer, ',' if len(buffer) else '',
+				   entry['name'], entry['sched_h'],
+				   entry['sched_m'], entry['real_h'],
+				   entry['real_m'], delayBuf, certaintyBuf)
 
-		buffer = b"""{
-				cols: [
-						{label: "stop", pattern: "", type: "string"},
-						{label: "%s", pattern: "", type: "timeofday"},
-						{label: "%s", pattern: "", type: "timeofday"},
-						{type: "boolean", p: {"role": "certainty"}}],
-				rows: [%s ]}""" % \
-				(langSupport.get("schedule"),
-				langSupport.get("real"),
-				buffer)
+		buffer = b"""{cols: [{label: "stop", pattern: "", type: "string"},
+				     {label: "%s", pattern: "", type: "timeofday"},
+				     {label: "%s", pattern: "", type: "timeofday"},
+				     {type: "boolean", p: {"role": "certainty"}}
+				    ],
+			      rows: [%s ]
+			     }""" % (langSupport.get("schedule"),
+				     langSupport.get("real"),
+				     buffer)
 
 		return buffer
 

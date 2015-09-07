@@ -95,7 +95,7 @@ class NLS(object):
 					'it-IT': 'in orario!'}
 		self.entries['trainNum'] = {
 					'en-US': 'Train no.',
-					'it-IT': 'N. treno'}
+					'it-IT': 'Treno'}
 		self.entries['brief_descr'] = {
 					'en-US': 'TrenordSaga is a project based on data analisys',
 					'it-IT': 'Un progetto basato sui dati e la loro analisi'}
@@ -123,6 +123,12 @@ class NLS(object):
 		self.entries['date_format'] = {
 					'en-US': '%Y/%m/%d',
 					'it-IT': '%d/%m/%Y'}
+		self.entries['left'] = {
+					'en-US': 'left at',
+					'it-IT': 'partito alle'}
+		self.entries['left_day'] = {
+					'en-US': '',
+					'it-IT': 'del'}
 
 	def setLang(self, acceptLang):
 		match = re.compile('it-IT').search(acceptLang)
