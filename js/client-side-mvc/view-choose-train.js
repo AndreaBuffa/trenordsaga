@@ -58,7 +58,6 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 				currRailwayType = train.type;
 				railwayDiv = document.createElement('div');
 				railwayDiv.classList.add('trainType');
-				//("6u&nbsp;12u(small)");
 				var railwayLink = document.createElement('a');
 				railwayLink.id = currRailwayType;
 				var img = document.createElement('img');
@@ -100,7 +99,14 @@ MYAPP.View.TrainSelector.prototype.draw = function(trainList) {
 						'dayFilter': 'all',
 						'surveyedFrom': this.dataset.surveyedfrom});
 				});
-			linkControl.innerHTML = train.trainId + ' - ' + train.leaveStation + ' (' + train.leaveTime + ') - ' + train.endStation+ ' (' + train.arriveTime + ')';
+			linkControl.innerHTML = ['<b>', train.leaveTime, '</b>',
+						 ' - ',
+						 train.trainId, '&nbsp;',
+						 train.leaveStation, '&nbsp;',
+						 train.endStation,
+						 ' (', train.arriveTime,
+						  ')'].join("");
+
 /*			var linkDiv = document.createElement('div');
 			linkDiv.classList.add('row');
 			linkDiv.appendChild(linkControl);*/
