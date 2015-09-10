@@ -73,6 +73,8 @@ class OnePageAppView(StaticView):
 			'renderForMobile': self.renderForMobile})
 
 		self.pageBuffer += '<script type="text/Javascript">'
+		self.embedJS('common.js', {})
+		self.embedJS('view-train-search.js', {})
 		self.embedJS('view-choose-train.js', {})
 		self.embedJS('view-display-stats.js', {})
 		self.embedJS('model.js', {})
@@ -157,8 +159,10 @@ class ScheduleViewer(View):
 				'trainId': self.trainId})
 
 		self.pageBuffer += '<script type="text/Javascript">'
-		self.embedJS('view-choose-train.js', {})
+		self.embedJS('common.js', {})
 		self.embedJS('model.js', {})
+		self.embedJS('view-train-search.js', {})
+		self.embedJS('view-choose-train.js', {})
 		trainDescriptor = self.myModel.findTrainDescrById(self.trainId)
 		if trainDescriptor is not None:
 			self.embedJS('survey-app.js', {

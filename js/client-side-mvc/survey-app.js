@@ -1,13 +1,13 @@
-MYAPP.View.TrainSelector.prototype.onClick = function(trainDescriptor) {
-	if (this.notifyControl) {
-		this.notifyControl.value = trainDescriptor.trainId;
-	}
+var control = COMM.Observer({});
+control.trigger = function(eventName, params) {
+    document.form.trainid.value = params.trainId;
 }
 
-var myModel = new MYAPP.Model();
+var myModel = MYAPP.Model();
 
-var trainSelector = new MYAPP.View.TrainSelector(myModel, document.querySelector('input[name="trainid"]'));
-myModel.addObserver(trainSelector);
+var trainSelector = MYAPP.View.TrainSelector({'model': myModel});
+myModel.addObserver(COMM.event.modelReady, trainSelector);
+trainSelector.addObserver(COMM.event.trainChanged, control);
 
 $(document).ready(function() {
 	trainSelector.draw();
@@ -22,7 +22,9 @@ window.onload = function() {
 		$("[id^=datepicker]" ).datepicker({
 			dateFormat: "yy-mm-dd",
 			minDate: "{{ minDate|safe|escape }}",
-			maxDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),
+			maxDate: new Date(today.getFullYear(),
+					  today.getMonth(),
+					  today.getDate() - 1),
 			defaultDate: "{{ currDate|safe|escape }}",
 			 onSelect: function(selectedDate) {
 				if (document.form.postBttnBottom) {
@@ -34,6 +36,9 @@ window.onload = function() {
 				document.form.datetime.value = selectedDate;
 		}});
 	});
-	google.load("visualization", "1", {packages:["corechart"],
-		callback : function(){ drawCharts(); }});
+	if (typeof(google) !== "undefined") {
+		google.load("visualization", "1",
+			    { packages: ["corechart"],
+			      callback: function() { drawCharts(); }});
+	}
 }

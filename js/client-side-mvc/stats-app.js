@@ -1,16 +1,17 @@
-MYAPP.View.TrainSelector.prototype.onClick = function(trainDescriptor) {
-	if (this.notifyControl) {
-		this.notifyControl.update(trainDescriptor);
-	}
-}
 
-var myModel = new MYAPP.Model();
+var myModel = MYAPP.Model({});
 
-var trainStats = new MYAPP.View.TrainStats(myModel);
-myModel.addObserver(trainStats);
+var trainStats = MYAPP.View.TrainStats({'model': myModel});
+myModel.addObserver(COMM.event.modelReady, trainStats);
 
-var trainSelector = new MYAPP.View.TrainSelector(myModel, trainStats);
-myModel.addObserver(trainSelector);
+
+var trainSelector = MYAPP.View.TrainSelector({'model': myModel});
+trainSelector.addObserver(COMM.event.trainChanged, trainStats);
+myModel.addObserver(COMM.event.modelReady, trainSelector);
+
+var searchTrain = MYAPP.View.SearchTrain({'model': myModel,
+                                          'container': null});
+myModel.addObserver(COMM.event.modelReady, searchTrain);
 
 $(document).ready(function() {
 	trainSelector.draw();
