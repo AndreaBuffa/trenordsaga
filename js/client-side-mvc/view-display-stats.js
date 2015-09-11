@@ -2,6 +2,7 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TrainStats = function(proto) {
+    var anchor = proto.anchor;
 	var filter = "all";
 	var myModel = proto.model;
 	var status = "loading";

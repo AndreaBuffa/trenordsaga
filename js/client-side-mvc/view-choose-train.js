@@ -4,18 +4,19 @@ MYAPP.View = MYAPP.View || {};
 MYAPP.View.TrainSelector = function(proto) {
 /*	@todo check state
 */
+    var anchor = proto.anchor;
     var myModel = proto.model;
-	var status = "loading";
-	var that = COMM.Observer(proto);
-	that = COMM.Notifier(that);
+    var status = "loading";
+    var that = COMM.Observer(proto);
+    that = COMM.Notifier(that);
 
-	that.trigger = function(eventName, params) {
-		this.update();
-	}
+    that.trigger = function(eventName, params) {
+        this.update();
+    };
 
-	that.update = function() {
-		myModel.getTrainList(function(trainList) {
-			trainList = trainList || [];
+    that.update = function() {
+        myModel.getTrainList(function(trainList) {
+            trainList = trainList || [];
 /*			trainList.sort(function(a, b) {
 				var number1 = a.type.match(/(\d+)$/);
 				var number2 = b.type.match(/(\d+)$/);
@@ -33,26 +34,26 @@ MYAPP.View.TrainSelector = function(proto) {
 					}
 				}
 			});*/
-			status = "ready";
-			that.draw(trainList);
-		});
-	}
+            status = "ready";
+            that.draw(trainList);
+        });
+    };
 
-	that.draw = function(trainList) {
+    that.draw = function(trainList) {
         var container = document.querySelector('#trainSelector');
         if (container) {
             while (container.hasChildNodes()) {
                 container.removeChild(container.lastChild);
             }
-		} else {
-			container = document.createElement('div');
-			container.setAttribute('id', 'trainSelector');
-			document.querySelector('#container').appendChild(container);
-		}
-		if (status === "loading") {
+        } else {
+            container = document.createElement('div');
+            container.setAttribute('id', 'trainSelector');
+            document.querySelector('#container').appendChild(container);
+        }
+        if (status === "loading") {
             container.innerHTML = "Loading....";
             return;
-		}
+        }
         var currRailwayType = '';
         var railwayDiv;
         var trainListDiv;
@@ -80,7 +81,7 @@ MYAPP.View.TrainSelector = function(proto) {
                     }
                 });
                 railwayDiv.appendChild(railwayLink);
-                document.querySelector('#trainSelector').appendChild(railwayDiv);
+                container.appendChild(railwayDiv);
 
                 trainListDiv = document.createElement('div');
                 trainListDiv.id = currRailwayType + 'trainList';
@@ -94,12 +95,17 @@ MYAPP.View.TrainSelector = function(proto) {
                 thead.appendChild(trHead);
                 table.appendChild(thead);
                 trainListDiv.appendChild(table);
-                document.querySelector('#trainSelector').appendChild(trainListDiv);
+                container.appendChild(trainListDiv);
+                //
+                var searchLink = document.createElement('a');
+                searchLink.innerHTML = "Se non lo trovi cercalo qui";
+                searchLink.href = '#' + anchor;
+                trainListDiv.appendChild(searchLink);
             }
             var linkControl = document.createElement('a');
             linkControl.setAttribute('id', train.trainId);
             linkControl.setAttribute('data-surveyedfrom', train.surveyedFrom);
-            linkControl.addEventListener('click', function() {
+            linkControl.addEventListener('click', function () {
                     that.onClick({'trainId': this.id,
                         'dayFilter': 'all',
                         'surveyedFrom': this.dataset.surveyedfrom});
@@ -112,7 +118,7 @@ MYAPP.View.TrainSelector = function(proto) {
                          ' (', train.arriveTime,
                           ')'].join("");
 
-/*			var linkDiv = document.createElement('div');
+/*          var linkDiv = document.createElement('div');
             linkDiv.classList.add('row');
             linkDiv.appendChild(linkControl);*/
             var tr = document.createElement('tr');
@@ -120,19 +126,12 @@ MYAPP.View.TrainSelector = function(proto) {
             td.appendChild(linkControl);
             tr.appendChild(td);
             table.appendChild(tr);
-
-            var searchCtrlDiv = document.createElement('div');
-            trainListDiv.appendChild(searchCtrlDiv);
-            // resuse proto
-            proto.container = searchCtrlDiv;
-            var searchCtrl = MYAPP.View.SearchTrain(proto);
-            myModel.addObserver(COMM.event.modelReady, searchCtrl);
         }
-    }
+    };
 
-	that.onClick = function(newTrain) {
-		this.notify(COMM.event.trainChanged, newTrain);
-	}
+    that.onClick = function(newTrain) {
+        this.notify(COMM.event.trainChanged, newTrain);
+    };
 
-	return that;
+    return that;
 }

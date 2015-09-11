@@ -8,8 +8,8 @@ Features:
 - expose REST API for accessing surveys and statistics (median).
 - made of both synchronous and asynchronous pages.
 - implement a simple national language support system.
-- use messaging for third-part data retrieval
-- use a NoSQL datastore (Google), abstracted by a factory.
+- use messaging for third-party data retrieval
+- use the NoSQL Google datastore, abstracted by a factory.
 - built on top of the Google Cloud Platform using webapp2.
-- use thirdy party HTML/CSS template.
+- use third-party HTML/CSS template.
 

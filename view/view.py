@@ -121,10 +121,11 @@ class ScheduleViewer(View):
 				onDelayStations)
 
 		trainDescr = self.myModel.findTrainDescrById(self.trainId)
+		trainType = leaveTime = startSurveyDate = '';
 		if trainDescr:
 			trainType = trainDescr.type
 			leaveTime = trainDescr.leaveTime
-			print leaveTime
+			startSurveyDate = trainDescr.getIsoFormatDate()
 
 		niceDate = self.theDate.strftime(langSupport.get('date_format'))
 		self.renderTpl('surveyHead.html', {
@@ -163,12 +164,9 @@ class ScheduleViewer(View):
 		self.embedJS('model.js', {})
 		self.embedJS('view-train-search.js', {})
 		self.embedJS('view-choose-train.js', {})
-		trainDescriptor = self.myModel.findTrainDescrById(self.trainId)
-		if trainDescriptor is not None:
-			self.embedJS('survey-app.js', {
-				'currDate': self.theDate,
-				'minDate': trainDescriptor.getIsoFormatDate()
-				})
+		self.embedJS('survey-app.js', {
+			'currDate': self.theDate,
+			'minDate': startSurveyDate})
 		self.embedJS('api-endpoint.js', {})
 		self.pageBuffer += '</script>'
 

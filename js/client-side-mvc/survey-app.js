@@ -5,9 +5,12 @@ control.trigger = function(eventName, params) {
 
 var myModel = MYAPP.Model();
 
-var trainSelector = MYAPP.View.TrainSelector({'model': myModel});
+var trainSelector = MYAPP.View.TrainSelector({'model': myModel, 'anchor': '#search'});
 myModel.addObserver(COMM.event.modelReady, trainSelector);
 trainSelector.addObserver(COMM.event.trainChanged, control);
+
+var searchTrain = MYAPP.View.SearchTrain({'model': myModel, 'anchor': '#search'});
+myModel.addObserver(COMM.event.modelReady, searchTrain)
 
 $(document).ready(function() {
 	trainSelector.draw();
@@ -38,7 +41,7 @@ window.onload = function() {
 	});
 	if (typeof(google) !== "undefined") {
 		google.load("visualization", "1",
-			    { packages: ["corechart"],
-			      callback: function() { drawCharts(); }});
+                {packages: ["corechart"],
+                 callback: function() { drawCharts(); }});
 	}
 }

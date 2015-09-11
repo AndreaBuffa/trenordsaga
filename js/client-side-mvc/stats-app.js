@@ -1,16 +1,14 @@
 
 var myModel = MYAPP.Model({});
 
-var trainStats = MYAPP.View.TrainStats({'model': myModel});
-myModel.addObserver(COMM.event.modelReady, trainStats);
-
-
-var trainSelector = MYAPP.View.TrainSelector({'model': myModel});
-trainSelector.addObserver(COMM.event.trainChanged, trainStats);
+var trainSelector = MYAPP.View.TrainSelector({'model': myModel, 'anchor': '#search'});
 myModel.addObserver(COMM.event.modelReady, trainSelector);
 
-var searchTrain = MYAPP.View.SearchTrain({'model': myModel,
-                                          'container': null});
+var trainStats = MYAPP.View.TrainStats({'model': myModel});
+myModel.addObserver(COMM.event.modelReady, trainStats);
+trainSelector.addObserver(COMM.event.trainChanged, trainStats);
+
+var searchTrain = MYAPP.View.SearchTrain({'model': myModel, 'anchor': '#search'});
 myModel.addObserver(COMM.event.modelReady, searchTrain);
 
 $(document).ready(function() {
