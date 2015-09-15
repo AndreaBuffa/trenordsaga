@@ -16,7 +16,7 @@ COMM.Observer = function(spec) {
     return that;
 };
 
-COMM.Notifier = function() {
+COMM.Notifier = function () {
     var that = {};
     that.observerList = {};
     that.addObserver = function(eventName, observer) {
@@ -42,4 +42,32 @@ COMM.Notifier = function() {
 COMM.event = {
     modelReady: "modelReady",
     trainChanged: "trainChanged"
+};
+
+COMM.writeTable = function(labels, dataset, attributes) {
+    var dataTd, dataTr;
+    var table = document.createElement('table');
+    var tbody = document.createElement('tbody');
+    var th;
+    var thead = document.createElement('thead');
+    var trHead = document.createElement('tr');
+
+    for (var i = 0; i < labels.length; i++) {
+        th = document.createElement('th');
+        th.innerHTML = labels[i];
+        trHead.appendChild(th);
+    }
+    thead.appendChild(trHead);
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    for (var i = 0; i < dataset.length; i++) {
+        dataTr = document.createElement('tr');
+        for (var j = 0; j < attributes.length; j++) {
+            dataTd = document.createElement('td');
+            dataTd.innerHTML += dataset[i][attributes[j]];
+            dataTr.appendChild(dataTd);
+        }
+        tbody.appendChild(dataTr);
+    }
+    return table;
 };

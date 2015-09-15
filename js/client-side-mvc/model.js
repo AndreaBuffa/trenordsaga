@@ -39,8 +39,11 @@ MYAPP.Model = function() {
     };
 
     that.trainLookUp = function(fromStation, to, callback) {
+        var date = new Date();
+        var formatDate = [date.getFullYear(), '-', date.getMonth() + 1,
+                          '-', date.getDate()].join();
         var params = {'fromStation': fromStation, 'toStation': to,
-                      'when': new Date(), 'timeRange': 3};
+                      'when': formatDate, 'timeRange': 2};
 
         gapi.client.discover.trains.searchFromTo(params).execute(
             function(resp) {

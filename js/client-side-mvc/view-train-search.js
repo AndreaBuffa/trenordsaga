@@ -3,7 +3,8 @@ MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.SearchTrain = function(proto) {
     var anchor = proto.anchor;
-	var myModel = proto.model;
+    var dataset = [];
+    var myModel = proto.model;
     var status = "disabled";
     var that = COMM.Observer(proto);
 
@@ -24,7 +25,8 @@ MYAPP.View.SearchTrain = function(proto) {
         }
     };
 
-    that.update = function () {
+    that.update = function (data) {
+        dataset = data;
         this.draw();
     };
 
@@ -49,7 +51,7 @@ MYAPP.View.SearchTrain = function(proto) {
             myModel.trainLookUp(fromField.value, toField.value, function(res) {
                 res = res || [];
                 status = "showResults";
-                that.draw(res);
+                that.update(res);
             });
         });
         form.appendChild(button);
@@ -70,6 +72,10 @@ MYAPP.View.SearchTrain = function(proto) {
                 });
             container.appendChild(link);
             container.appendChild(formDiv);
+        }
+        if (status === "showResults") {
+            container.appendChild(COMM.writeTable(['Treno', 'Op'], dataset,
+                                  ['key', 'leaveTime', 'leaveStation', 'endStation', 'arriveTime', 'isSurveyed']));
         }
         document.querySelector('#container').appendChild(container);
     };
