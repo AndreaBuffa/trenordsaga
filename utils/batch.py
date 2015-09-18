@@ -15,7 +15,9 @@ class BatchHandler(webapp2.RequestHandler):
 		elif task == 'migrate':
 			deferred.defer(entityMigration.Migrate)
 			msg = 'Schema migration successfully initiated.'
-
+		elif task == 'addstatus':
+			deferred.defer(entityMigration.AddStatus)
+			msg = 'AddStatus migration successfully initiated.'
 		elif task == 'retrieve':
 			for train in TrainDescr.query().fetch():
 				deferred.defer(webscraper.scraper.retrieve_schedule, train.trainId)

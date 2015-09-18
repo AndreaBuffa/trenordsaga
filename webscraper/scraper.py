@@ -61,7 +61,7 @@ def get_http_opener():
 	return opener
 
 def get_train_list(opener, url, fromStation, toStation, when, timeRange):
-        try:
+	try:
 		whenDate = datetime.fromtimestamp(
 					mktime(time.strptime(when, "%Y-%m-%d")))
 	except ValueError:
@@ -86,7 +86,7 @@ def get_train_list(opener, url, fromStation, toStation, when, timeRange):
 
 def get_train_details(opener, url, hrefList):
 	details = []
-        if not opener:
+	if not opener:
 		logging.debug('get_train_details: opener is None!')
 		return details
 	for href in hrefList:

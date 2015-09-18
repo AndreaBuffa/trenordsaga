@@ -74,7 +74,7 @@ class OnePageAppView(StaticView):
 
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('common.js', {})
-		self.embedJS('view-train-search.js', {})
+		self.embedJS('view-search-train.js', {})
 		self.embedJS('view-choose-train.js', {})
 		self.embedJS('view-display-stats.js', {})
 		self.embedJS('model.js', {})
@@ -162,7 +162,7 @@ class ScheduleViewer(View):
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('common.js', {})
 		self.embedJS('model.js', {})
-		self.embedJS('view-train-search.js', {})
+		self.embedJS('view-search-train.js', {})
 		self.embedJS('view-choose-train.js', {})
 		self.embedJS('survey-app.js', {
 			'currDate': self.theDate,

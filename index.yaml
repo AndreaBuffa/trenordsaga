@@ -12,6 +12,13 @@ indexes:
 
 - kind: TrainDescr
   properties:
+  - name: status
+  - name: type
+  - name: leaveStation
+  - name: leaveTime
+
+- kind: TrainDescr
+  properties:
   - name: type
   - name: leaveStation
 

@@ -47,6 +47,15 @@ class TrainKeyParam(messages.Message):
 class MultipleTrainKeyRequest(messages.Message):
 	keyList = messages.MessageField(TrainKeyParam, 1, repeated=True)
 
+class NewSurveyRequest(messages.Message):
+	trainNum = messages.StringField(1)
+	trainType = messages.StringField(2)
+	leaveStation = messages.StringField(3)
+	endStation = messages.StringField(4)
+	arriveTime = messages.StringField(5)
+	leaveTime = messages.StringField(6)
+
+
 @endpoints.api(name='discover', version='v1')
 class DicoverApi(remote.Service):
 	"""Discover API v1. Retrieve wichich train number and lines are
@@ -170,3 +179,21 @@ class DicoverApi(remote.Service):
 					surveyedFrom = '',
 					isSurveyed = TrainLine.Status.NOT_SURVEYED))
 		return trainDescrList
+
+	ID_RESOURCE = endpoints.ResourceContainer(
+		num=messages.StringField(1, variant=messages.Variant.STRING),
+		trainType=messages.StringField(2, variant=messages.Variant.STRING),
+		fromStation=messages.StringField(3, variant=messages.Variant.STRING),
+		toStation=messages.StringField(4, variant=messages.Variant.STRING),
+		leave=messages.StringField(5, variant=messages.Variant.STRING),
+		arrive=messages.StringField(6, variant=messages.Variant.STRING))
+
+	@endpoints.method(ID_RESOURCE, message_types.VoidMessage,
+		path='search_from_to/{num}/{trainType}/{fromStation}/{toStation}/{leave}/{arrive}',
+		http_method='PUT',
+		name='trains.addSurvey')
+	def add_survey(self, request):
+		myFactory = DataStore()
+		myDataModel = myFactory.createDataProvider()
+		myDataModel.putNewSurvey(request);
+		return message_types.VoidMessage()

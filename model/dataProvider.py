@@ -27,6 +27,9 @@ class DataProvider:
 	def getServiceURL(self, serviceName):
 		return
 
+	def putNewSurvey(self, survey):
+		return False;
+
 class GAEDatastore(DataProvider):
 	""" Use a Google App Engine Datastore """
 	def retrieveSourcePage(self, trainId, theDate):
@@ -42,7 +45,7 @@ class GAEDatastore(DataProvider):
 		return query.fetch()
 
 	def findAllTrainDescr(self):
-		return TrainDescr.query().order(TrainDescr.type,
+		return TrainDescr.query(TrainDescr.status == 'enabled').order(TrainDescr.type,
 						TrainDescr.leaveStation,
 						TrainDescr.leaveTime).fetch()
 
@@ -71,3 +74,17 @@ class GAEDatastore(DataProvider):
 		if tmp:
 			return tmp.URL
 		return ""
+
+	def putNewSurvey(self, survey):
+		trainDescrRec = TrainDescr()
+		trainDescrRec.trainId = survey.num
+		trainDescrRec.type = survey.trainType
+		trainDescrRec.leaveStation = survey.fromStation
+		trainDescrRec.endStation = survey.toStation
+		trainDescrRec.arriveTime = survey.arrive
+		trainDescrRec.leaveTime = survey.leave
+		#trainDescrRec.date =
+		trainDescrRec.status = 'disabled'
+		trainDescrRec.put()
+
+		return True;

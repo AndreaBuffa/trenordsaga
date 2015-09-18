@@ -8,7 +8,7 @@ MYAPP.View.SearchTrain = function(proto) {
     var status = "disabled";
     var that = COMM.Observer(proto);
     var writeTable = function () {
-        var attributes = ['key', 'leaveTime', 'leaveStation', 'endStation',
+        var attributes = ['type', 'key', 'leaveTime', 'leaveStation', 'endStation',
                           'arriveTime'];
         var button;
         var dataTd, dataTr;
@@ -32,7 +32,7 @@ MYAPP.View.SearchTrain = function(proto) {
             dataTr = document.createElement('tr');
             dataTd = document.createElement('td');
             for (var j = 0; j < attributes.length; j++) {
-                dataTd.innerHTML += dataset[i][attributes[j]];
+                dataTd.innerHTML += dataset[i][attributes[j]] + '&nbsp;';
             }
             dataTr.appendChild(dataTd);
             dataTd = document.createElement('td');
