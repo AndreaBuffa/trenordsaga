@@ -9,6 +9,7 @@ class TrainDescr(ndb.Model):
 	arriveTime = ndb.StringProperty(indexed=True)
 	leaveTime = ndb.StringProperty(indexed=True)
 	date = ndb.DateProperty(indexed=True)
+	status = ndb.StringProperty(indexed=True)
 
 	def getIsoFormatDate(self):
 		if self.date:

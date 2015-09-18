@@ -41,7 +41,7 @@ MYAPP.Model = function() {
     that.trainLookUp = function(fromStation, to, callback) {
         var date = new Date();
         var formatDate = [date.getFullYear(), '-', date.getMonth() + 1,
-                          '-', date.getDate()].join();
+                          '-', date.getDate()].join("");
         var params = {'fromStation': fromStation, 'toStation': to,
                       'when': formatDate, 'timeRange': 2};
 

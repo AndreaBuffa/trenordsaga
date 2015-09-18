@@ -23,6 +23,11 @@ class TrainList(messages.Message):
 	items = messages.MessageField(Train, 1, repeated=True)
 
 class TrainLine(messages.Message):
+	class Status(messages.Enum):
+		SURVEYED = 1
+		NOT_SURVEYED = 2
+		UNDER_EVALUATION = 3
+
 	key = messages.StringField(1)
 	type = messages.StringField(2)
 	leaveStation = messages.StringField(3)
@@ -30,7 +35,7 @@ class TrainLine(messages.Message):
 	arriveTime = messages.StringField(5)
 	leaveTime = messages.StringField(6)
 	surveyedFrom = messages.StringField(7)
-	isSurveyed = messages.BooleanField(8)
+	isSurveyed = messages.EnumField('TrainLine.Status', 8, default='NOT_SURVEYED')
 
 class TrainLineList(messages.Message):
 	"""Collection of train objects"""
@@ -135,6 +140,16 @@ class DicoverApi(remote.Service):
 		for train in detailsList:
 			trainDescr = myDataModel.findTrainDescrById(train['number'])
 			if trainDescr:
+				surveyed = TrainLine.Status.NOT_SURVEYED
+				if trainDescr.status == "enable":
+					surveyed = TrainLine.Status.SURVEYED
+				elif trainDescr.status == "disabled":
+					surveyed = TrainLine.Status.UNDER_EVALUATION
+				elif trainDescr.status == "refused":
+					surveyed = TrainLine.Status.NOT_SURVED
+				elif trainDescr.status == None:
+					surveyed = TrainLine.Status.SURVEYED
+
 				trainDescrList.items.append(TrainLine(
 					key = trainDescr.trainId,
 					type = trainDescr.type,
@@ -143,7 +158,7 @@ class DicoverApi(remote.Service):
 					arriveTime = trainDescr.arriveTime,
 					leaveTime = trainDescr.leaveTime,
 					surveyedFrom = str(trainDescr.date),
-					isSurveyed = True))
+					isSurveyed = surveyed))
 			else:
 				trainDescrList.items.append(TrainLine(
 					key = train['number'],
@@ -153,5 +168,5 @@ class DicoverApi(remote.Service):
 					arriveTime = train['arrivalTime'],
 					leaveTime = train['leaveTime'],
 					surveyedFrom = '',
-					isSurveyed = False))
+					isSurveyed = TrainLine.Status.NOT_SURVEYED))
 		return trainDescrList
