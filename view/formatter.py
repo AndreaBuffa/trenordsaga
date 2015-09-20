@@ -66,23 +66,35 @@ class Formatter:
 
 		return buffer
 
-	def ToColumnChartJSon(self, timeSchedule):
+	def ToColumnChartJSon(self, timeSchedule, delayDict):
 		myBuffer = b"";
 		for entry in timeSchedule:
-			myBuffer = b"%s%s{c: [{v: \"%s\", f: null}, {v: %d, f:\"%s\"}]}" % \
+			delay = 0
+			median = delayDict[entry['name']]
+			if entry['delay_m'] >= 0:
+				delay = entry['delay_m']
+
+			myBuffer = b"""%s%s{c: [{v: \"%s\", f: null},
+									{v: %d, f:\"%s\"}, {v: \"b\", f: null},
+									{v: %d, f:\"%s\"}]}""" % \
 				(myBuffer,
 				',' if len(myBuffer) else '',
 				entry['name'],
-				entry['delay_m'],
-				"1 %s" % langSupport.get("minute") if entry['delay_m'] == 1 else "%d %s" % (entry['delay_m'],
-					langSupport.get("minutes")))
+				delay,
+				"1 %s" % langSupport.get("minute") if delay == 1 else "%d %s" % (delay,
+					langSupport.get("minutes")),
+				 median,
+				 "1 %s" % langSupport.get("minute") if median == 1 else "%d %s" % (median, langSupport.get("minutes")))
 
 		myBuffer = b"""{
 				cols: [
 						{label: "", pattern: "", type: "string"},
 						{label: "%s", pattern: "", type: "number"},
-						{type: "string", p: {"role": "style"}}],
-				rows: [%s ]}""" % (langSupport.get("delay"), myBuffer)
+						{type: "string", p: {"role": "style"}},
+						{label: "%s", pattern: "", type: "number"}],
+				rows: [%s ]}""" % (langSupport.get("delay"),
+								   langSupport.get("median_delay"),
+								   myBuffer)
 
 		return myBuffer
 

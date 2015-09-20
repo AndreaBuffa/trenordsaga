@@ -20,7 +20,7 @@ $(document).ready(function() {
 //});
 
 window.onload = function() {
-	const today = new Date();
+	var today = new Date();
 	$(function() {
 		$("[id^=datepicker]" ).datepicker({
 			dateFormat: "yy-mm-dd",

@@ -110,15 +110,19 @@ class ScheduleViewer(View):
 			stationsByDelay = sorted(timeSchedule,
 				key=lambda station: station['delay_m'],
 				reverse=True)
-			onDelayStations = filter(
-				lambda station: station['delay_m'] > 0,
-				stationsByDelay)
+
 			onTimeStations = filter(
 				lambda station: station['delay_m'] <= 0,
-				stationsByDelay)
+				timeSchedule)
 
-			stationsByDelayJS = myFormatter.ToColumnChartJSon(
-				onDelayStations)
+
+			stops = self.myModel.findAllTrainStopById(self.trainId)
+			delayDict = {}
+			for trainStop in stops:
+				delayDict[trainStop.name] = trainStop.getMedian(True, True)
+
+			stationsByDelayJS = myFormatter.ToColumnChartJSon(timeSchedule,
+															  delayDict)
 
 		trainDescr = self.myModel.findTrainDescrById(self.trainId)
 		trainType = leaveTime = startSurveyDate = '';

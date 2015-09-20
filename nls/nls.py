@@ -34,8 +34,8 @@ class NLS(object):
 					'en-US': 'Stops grouped by delay:',
 					'it-IT': 'Fermate raggruppate per ritardo:'}
 		self.entries['ordered_by_delay'] = {
-					'en-US': 'Stops ordered by delay:',
-					'it-IT': 'Le fermate in ordine di ritardo:'}
+					'en-US': 'Delays and median delay:',
+					'it-IT': 'Il ritardo e il ritardo mediano:'}
 		self.entries['delay_in_minutes'] = {
 					'en-US': 'Delay in minutes',
 					'it-IT': 'Ritardo in minuti'}
@@ -48,6 +48,9 @@ class NLS(object):
 		self.entries['delay'] = {
 					'en-US': 'Delay',
 					'it-IT': 'Ritardo'}
+		self.entries['median_delay'] = {
+					'en-US': 'Median delay',
+					'it-IT': 'Ritardo mediano'}
 		self.entries['banner_title'] = {
 					'en-US': 'This is a saga, but always the same tale',
 					'it-IT': 'una saga, ma &egrave; sempre la stessa storia?'}
