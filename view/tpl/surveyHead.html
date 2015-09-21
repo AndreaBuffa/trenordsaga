@@ -57,10 +57,12 @@
 						format: '',
 						title: '{{ nls.delay_in_minutes }}'
 					},
-					legend: { position: 'none' }
+					title: '{{nls.trainNum}} {{trainType}} {{trainNum}} {{nls.left}} {{leaveTime}} {{nls.left_day}} {{date}}',
+					legend: { position: 'top' },
+					colors: ['#dc3912', '#33ac71']
 				  };
 				var columnChartData = new google.visualization.DataTable({{ stationsByDelay|safe|escape }});
-				for (var i = 0; i < columnChartData.getNumberOfRows(); ++i) {
+/*				for (var i = 0; i < columnChartData.getNumberOfRows(); ++i) {
 					if (columnChartData.getValue(i, 1) >= 10) {
 						columnChartData.setValue(i, 2, "#FF0000");
 					} else if (columnChartData.getValue(i, 1) >= 5) {
@@ -70,7 +72,7 @@
 					} else {
 						columnChartData.setValue(i, 2, "#FFFF00");
 					}
-				}
+				}*/
 				var columnChart = new google.visualization.ColumnChart(document.getElementById('stationsByDelay'));
 				columnChart.draw(columnChartData, columnChartOpt);
 /*
