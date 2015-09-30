@@ -38,16 +38,20 @@ MYAPP.View.SearchTrain = function(proto) {
             dataTd = document.createElement('td');
             button = document.createElement('input');
             button.type = 'button';
-            button.value = dataset[i]['isSurveyed'] === 'NOT_SURVEYED' ? 'add' : 'view';
-            button.addEventListener('click', function () {
-                /*myModel.trainLookUp(fromField.value, toField.value,
-                    function(res) {
-                        res = res || [];
-                        status = "showResults";
-                        that.update(res);
-                    });
-                */
-            });
+			if (dataset[i]['isSurveyed'] === 'NOT_SURVEYED') {
+				button.value = 'add';
+				button.addEventListener('click', function () {
+										/*myModel.trainLookUp(fromField.value, toField.value,
+										 function(res) {
+										 res = res || [];
+										 status = "showResults";
+										 that.update(res);
+										 });
+										 */
+										});
+			} else {
+				button.value = 'view';
+			}
             dataTd.appendChild(button);
             dataTr.appendChild(dataTd);
             tbody.appendChild(dataTr);
@@ -56,16 +60,12 @@ MYAPP.View.SearchTrain = function(proto) {
     }
 
     if (!proto.model) {
-        console.log("SearchTrain, I need a model");
-    }
-
-    if (!proto.container) {
-        console.log("SearchTrain, I need a div container");
+        console.log('SearchTrain, I need a model');
     }
 
     that.trigger = function(eventName, params) {
         if (eventName === COMM.event.modelReady) {
-            status = "collapsed";
+            status = 'collapsed';
             this.update();
         } else {
             log.console("Not listening to " + eventName);
@@ -97,7 +97,7 @@ MYAPP.View.SearchTrain = function(proto) {
         button.addEventListener('click', function () {
             myModel.trainLookUp(fromField.value, toField.value, function(res) {
                 res = res || [];
-                status = "showResults";
+                status = 'showResults';
                 that.update(res);
             });
         });
@@ -107,9 +107,9 @@ MYAPP.View.SearchTrain = function(proto) {
         if (status === 'disabled') {
             return;
         }
-        if (status === "collapsed") {
+        if (status === 'collapsed') {
             var link = document.createElement('a');
-            link.innerHTML = "Cercalo <u>qui</u>";
+            link.innerHTML = 'Cercalo <u>qui</u>';
             link.addEventListener('click', function () {
                     if (formDiv.style.display === 'none') {
                         formDiv.style.display = 'block';
@@ -121,11 +121,22 @@ MYAPP.View.SearchTrain = function(proto) {
             container.appendChild(formDiv);
         }
         if (status === "showResults") {
+			var results =  document.querySelector('#results');
             //container.appendChild(COMM.writeTable(['Treno', 'Op'], dataset,
             //                      ['key', 'leaveTime', 'leaveStation', 'endStation', 'arriveTime', 'isSurveyed']));
-            container.appendChild(writeTable());
+
+			if (results) {
+				while (results.hasChildNodes()) {
+					results.removeChild(results.lastChild);
+				}
+			} else {
+				results = document.createElement('div');
+				results.setAttribute('id', 'results');
+				container.appendChild(results);
+			}
+            results.appendChild(writeTable());
         }
-        document.querySelector('#container').appendChild(container);
+        document.querySelector('#search').appendChild(container);
     };
     that.draw();
     return that;
