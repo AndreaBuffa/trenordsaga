@@ -110,7 +110,6 @@ class DicoverApi(remote.Service):
 		toStation=messages.StringField(2, variant=messages.Variant.STRING),
 		when=messages.StringField(3, variant=messages.Variant.STRING),
 		timeRange=messages.StringField(4, variant=messages.Variant.STRING))
-
 	@endpoints.method(ID_RESOURCE, TrainLineList,
 		path='search_from_to/{fromStation}/{toStation}/{when}/{timeRange}',
 		http_method='GET',
@@ -150,14 +149,16 @@ class DicoverApi(remote.Service):
 			trainDescr = myDataModel.findTrainDescrById(train['number'])
 			if trainDescr:
 				surveyed = TrainLine.Status.NOT_SURVEYED
-				if trainDescr.status == "enable":
+				if trainDescr.status == 'enabled':
 					surveyed = TrainLine.Status.SURVEYED
-				elif trainDescr.status == "disabled":
+				elif trainDescr.status == 'disabled':
 					surveyed = TrainLine.Status.UNDER_EVALUATION
-				elif trainDescr.status == "refused":
+				elif trainDescr.status == 'refused':
 					surveyed = TrainLine.Status.NOT_SURVED
 				elif trainDescr.status == None:
 					surveyed = TrainLine.Status.SURVEYED
+				else:
+					surveyed = TrainLine.Status.NOT_SURVED
 
 				trainDescrList.items.append(TrainLine(
 					key = trainDescr.trainId,
@@ -187,10 +188,9 @@ class DicoverApi(remote.Service):
 		toStation=messages.StringField(4, variant=messages.Variant.STRING),
 		leave=messages.StringField(5, variant=messages.Variant.STRING),
 		arrive=messages.StringField(6, variant=messages.Variant.STRING))
-
 	@endpoints.method(ID_RESOURCE, message_types.VoidMessage,
-		path='search_from_to/{num}/{trainType}/{fromStation}/{toStation}/{leave}/{arrive}',
-		http_method='PUT',
+		path='addSurvey/{num}/{trainType}/{fromStation}/{toStation}/{leave}/{arrive}',
+		http_method='POST',
 		name='trains.addSurvey')
 	def add_survey(self, request):
 		myFactory = DataStore()

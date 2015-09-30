@@ -37,21 +37,25 @@ MYAPP.View.SearchTrain = function(proto) {
             dataTr.appendChild(dataTd);
             dataTd = document.createElement('td');
             button = document.createElement('input');
+            button.setAttribute('data-num', dataset[i]['key']);
+            button.setAttribute('data-type', dataset[i]['type']);
+            button.setAttribute('data-from', dataset[i]['leaveStation']);
+            button.setAttribute('data-to', dataset[i]['endStation']);
+            button.setAttribute('data-leave', dataset[i]['leaveTime']);
+            button.setAttribute('data-arrive', dataset[i]['arriveTime']);
+
             button.type = 'button';
-			if (dataset[i]['isSurveyed'] === 'NOT_SURVEYED') {
-				button.value = 'add';
-				button.addEventListener('click', function () {
-										/*myModel.trainLookUp(fromField.value, toField.value,
-										 function(res) {
-										 res = res || [];
-										 status = "showResults";
-										 that.update(res);
-										 });
-										 */
-										});
-			} else {
-				button.value = 'view';
-			}
+            if (dataset[i]['isSurveyed'] === 'NOT_SURVEYED') {
+                button.value = 'add';
+                button.addEventListener('click', function () {
+                    myModel.addSurvey(this.dataset,
+                        function(res) {
+                            alert(res);
+                        });
+                    });
+            } else {
+                button.value = 'view';
+            }
             dataTd.appendChild(button);
             dataTr.appendChild(dataTd);
             tbody.appendChild(dataTr);

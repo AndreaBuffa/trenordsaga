@@ -40,7 +40,9 @@ MYAPP.View.TrainSelector = function(proto) {
     };
 
     that.draw = function(trainList) {
-        var container = document.querySelector('#trainSelector');
+        var container = document.querySelector('#trainSelector'),
+        currRailwayType = '', railwayDiv, trainListDiv, table;
+
         if (container) {
             while (container.hasChildNodes()) {
                 container.removeChild(container.lastChild);
@@ -54,10 +56,7 @@ MYAPP.View.TrainSelector = function(proto) {
             container.innerHTML = "Loading....";
             return;
         }
-        var currRailwayType = '';
-        var railwayDiv;
-        var trainListDiv;
-        var table;
+
         for (var i = 0; i < trainList.length; i++) {
             var train = trainList[i];
             if (currRailwayType != train.type) {

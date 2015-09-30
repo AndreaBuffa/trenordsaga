@@ -1,8 +1,8 @@
 var MYAPP = MYAPP || {};
 
 MYAPP.Model = function() {
-    var that = COMM.Notifier({});
-    var trainList = [];
+    var that = COMM.Notifier({}), trainList = [];
+
     that.ready = function () {
         that.notify(COMM.event.modelReady);
     };
@@ -50,6 +50,21 @@ MYAPP.Model = function() {
                 if (!resp.code) {
                     resp.items = resp.items || [];
                     callback(resp.items);
+                }
+            });
+    };
+
+    that.addSurvey = function(params, callback) {
+
+            var params = {'num': params.num, 'trainType': params.type,
+                          'fromStation': params.from,
+                          'toStation': params.to, 'leave': params.leave,
+                          'arrive': params.arrive};
+
+            gapi.client.discover.trains.addSurvey(params).execute(function(resp) {
+                //@todo check the return code
+                if (!resp.code) {
+                    callback(true);
                 }
             });
     };

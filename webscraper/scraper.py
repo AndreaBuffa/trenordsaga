@@ -28,6 +28,10 @@ def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 			trainDescr.trainId)
 	else:
 		try:
+			if not trainDescr.url:
+				logging.debug('retrieve_schedule: trainId %d with no URL!',
+							trainId)
+				return
 			source = urllib.urlopen(trainDescr.url)
 			pageBuffer = source.read()
 			#@todo source.getcode() ?
