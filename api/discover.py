@@ -189,7 +189,6 @@ class DicoverApi(remote.Service):
 		leave=messages.StringField(5, variant=messages.Variant.STRING),
 		arrive=messages.StringField(6, variant=messages.Variant.STRING))
 	@endpoints.method(ID_RESOURCE, message_types.VoidMessage,
-		path='addSurvey/{num}/{trainType}/{fromStation}/{toStation}/{leave}/{arrive}',
 		http_method='POST',
 		name='trains.addSurvey')
 	def add_survey(self, request):
