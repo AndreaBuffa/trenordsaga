@@ -2,22 +2,23 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.SearchTrain = function(proto) {
-    var anchor = proto.anchor;
-    var dataset = [];
-    var myModel = proto.model;
-    var status = "disabled";
-    var that = COMM.Observer(proto);
-    var writeTable = function () {
-        var attributes = ['type', 'key', 'leaveTime', 'leaveStation', 'endStation',
-                          'arriveTime'];
-        var button;
-        var dataTd, dataTr;
-        var labels = ['Treno', 'Op'];
-        var table = document.createElement('table');
-        var tbody = document.createElement('tbody');
-        var th;
-        var thead = document.createElement('thead');
-        var trHead = document.createElement('tr');
+    var anchor, dataset, myModel, status, writeTable, that;
+    anchor = proto.anchor;
+    dataset = [];
+    myModel = proto.model;
+    status = "disabled";
+    that = COMM.Observer(proto);
+
+    writeTable = function () {
+        var attributes, button, dataTd, dataTr, labels, table, tbody, th, thead, trHead;
+
+        attributes = ['type', 'key', 'leaveTime', 'leaveStation', 'endStation',
+                      'arriveTime'];
+        labels = ['Treno', 'Op'];
+        table = document.createElement('table');
+        tbody = document.createElement('tbody');
+        thead = document.createElement('thead');
+        trHead = document.createElement('tr');
 
 
         for (var i = 0; i < labels.length; i++) {
@@ -82,21 +83,42 @@ MYAPP.View.SearchTrain = function(proto) {
     };
 
     that.draw = function () {
-        var container = document.createElement('div');
-        var formDiv = document.createElement('div');
-        var form = document.createElement('form');
+        var button, container, form, formDiv, fromField, link, label, results,
+        toField, timeRange, timeRangeId, timeRangeValue, timeRangeLabel;
+        timeRangeId = ['a', 'b', 'c', 'd', 'e'];
+        timeRangeValue = [1, 2, 3, 4, 5];
+        timeRangeLabel = ['prima dell 6', '6-13', '13-18', '18-22', 'dopo le 22'];
+        container = document.createElement('div');
+        formDiv = document.createElement('div');
+        form = document.createElement('form');
 
         container.setAttribute('id', anchor);
         container.setAttribute('style', "clear: left;");
         formDiv.style.display = 'none';
         formDiv.appendChild(form);
-        var fromField = document.createElement('input');
+        fromField = document.createElement('input');
         fromField.type = 'text';
-        var toField = document.createElement('input');
+        toField = document.createElement('input');
         toField.type = 'text';
         form.appendChild(fromField);
         form.appendChild(toField);
-        var button = document.createElement('input');
+        for(var i = 0; i < timeRangeId.length; ++i) {
+            timeRange = document.createElement('input');
+            timeRange.setAttribute('id', timeRangeId[i]);
+            timeRange.type = 'radio';
+            timeRange.name = 'timeRage';
+            timeRange.value = timeRangeValue[i];
+            if (i === 0) {
+                timeRange.setAttribute('checked', 'checked');
+            }
+            label = document.createElement('label');
+            label.innerHTML = timeRangeLabel[i];
+            label.setAttribute('for', timeRangeId[i]);
+            form.appendChild(timeRange);
+            form.appendChild(label);
+        }
+
+        button = document.createElement('input');
         button.type = 'button';
         button.addEventListener('click', function () {
             myModel.trainLookUp(fromField.value, toField.value, function(res) {
@@ -112,7 +134,7 @@ MYAPP.View.SearchTrain = function(proto) {
             return;
         }
         if (status === 'collapsed') {
-            var link = document.createElement('a');
+            link = document.createElement('a');
             link.innerHTML = 'Cercalo <u>qui</u>';
             link.addEventListener('click', function () {
                     if (formDiv.style.display === 'none') {
@@ -125,19 +147,19 @@ MYAPP.View.SearchTrain = function(proto) {
             container.appendChild(formDiv);
         }
         if (status === "showResults") {
-			var results =  document.querySelector('#results');
+            results =  document.querySelector('#results');
             //container.appendChild(COMM.writeTable(['Treno', 'Op'], dataset,
             //                      ['key', 'leaveTime', 'leaveStation', 'endStation', 'arriveTime', 'isSurveyed']));
 
-			if (results) {
-				while (results.hasChildNodes()) {
-					results.removeChild(results.lastChild);
-				}
-			} else {
-				results = document.createElement('div');
-				results.setAttribute('id', 'results');
-				container.appendChild(results);
-			}
+            if (results) {
+                while (results.hasChildNodes()) {
+                    results.removeChild(results.lastChild);
+                }
+            } else {
+                results = document.createElement('div');
+                results.setAttribute('id', 'results');
+                container.appendChild(results);
+            }
             results.appendChild(writeTable());
         }
         document.querySelector('#search').appendChild(container);
