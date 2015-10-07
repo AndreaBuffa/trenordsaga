@@ -92,9 +92,6 @@ class ScheduleViewer(View):
 	trainId = None
 	theDate = None
 
-	def __init__(self, aModel):
-		View.__init__(self, aModel)
-
 	def prepare(self):
 		chartData = []
 		onTimeStations = []
@@ -176,6 +173,13 @@ class ScheduleViewer(View):
 
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
+class ConsoleView(View):
+
+	def prepare(self):
+		requests = self.myModel.getNewSurvey()
+		self.renderTpl('admin/new.html', {
+			   'requests': requests
+			   })
 
 class ScheduleValidator(View):
 	def render(self):

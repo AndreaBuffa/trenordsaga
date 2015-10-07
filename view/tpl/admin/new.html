@@ -1,0 +1,55 @@
+<html>
+	<head></head>
+	<body>
+{% if requests %}
+	{% for req in requests %}
+<form action='console' method="post">
+<table>
+		<tr>
+			<td></td>
+			<td>Tipo:</td>
+			<td><input name='type' type='text' value='{{ req.type }}'/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>TrainId:</td>
+			<td><input name='trainNum' type='text' value='{{ req.trainId }}'/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Da:</td>
+			<td><input name='leaveStation' type='text' value='{{ req.leaveStation }}'/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>A:</td>
+			<td><input name='endStation' type='text' value='{{ req.endStation }}'/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Partenza:</td>
+			<td><input name='leaveTime' type='text' value='{{ req.leaveTime }}'/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Arrivo:</td>
+			<td><input  name='arriveTime' type='text' value='{{ req.arriveTime }}'/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>URL:</td>
+			<td><input  name='url' type='text' value='{{ req.url }}' size='150'/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td><input type='submit' text='submit'/></td>
+		</tr>
+</table>
+</form>
+	{% endfor %}
+{% else %}
+	<tr>no pending requests</tr>
+{% endif %}
+	</body>
+</html>

@@ -36,8 +36,9 @@ handlers:
   script: utils.batch.batchJob
   login: admin
 # Console
-- url: /console/.*
+- url: /console
   script: main.app
+  login: admin
 # Main WEB site
 - url: /.*
   script: main.app

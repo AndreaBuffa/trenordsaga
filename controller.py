@@ -9,6 +9,7 @@ reg_v = re.compile(r"1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er
 
 class Controller():
 	myView = None
+	myModel = None
 	request = None
 	response = None
 
@@ -70,7 +71,7 @@ class DayController(Controller):
 			theDate = datetime.datetime.strptime(self.request.get("datetime"), "%Y-%m-%d").date()
 		except ValueError:
 			theDate = self.getLastDatetime()
-		trainId = self.request.get("trainid");
+		trainId = self.request.get("trainid")
 		self.myView.showBanner = False;
 		self.getViewAction(theDate, trainId)
 
@@ -83,17 +84,34 @@ class DummyController(Controller):
 class ConsoleController(Controller):
 
 	def __init__(self, request, response):
-		super(ConsoleController, self).__init__(request, response)
-		myFactory = DataStore()
-		myDataModel = myFactory.createDataProvider()
-		self.myView = ScheduleValidator(myDataModel)
+		self.request = request
+		self.response = response
 
-	def get(self, trainId="", date=""):
-		if date:
-			try:
-				theDate = datetime.datetime.strptime(date, "%Y-%m-%d").date()
-			except ValueError:
-				theDate = self.getLastDatetime()
-		else:
-			theDate = self.getLastDatetime()
-		self.getViewAction(theDate, trainId)
+	def getViewAction(self):
+		self.response.headers['Content-Type'] = 'text/html;'
+		self.response.out.write(self.myView.render(self.isMobileClient()))
+
+	def get(self):
+		self.getViewAction()
+
+	def post(self):
+		trainId = self.request.get('trainNum')
+		trainType = self.request.get('type')
+		fromStation = self.request.get('leaveStation')
+		toStation = self.request.get('endStation')
+		arrival = self.request.get('arriveTime')
+		departure = self.request.get('leaveTime')
+		URL = self.request.get('url')
+		if trainId and trainType and fromStation and toStation and arrival and departure and URL != 'None':
+			newSurvey = self.myModel.findTrainDescrById(trainId)
+			newSurvey.trainId = trainId
+			newSurvey.type = trainType
+			newSurvey.leaveStation = fromStation
+			newSurvey.endStation = toStation
+			newSurvey.arriveTime = arrival
+			newSurvey.leaveTime = departure
+			newSurvey.date = datetime.datetime.today()
+			newSurvey.status = 'enabled'
+			newSurvey.url = URL
+			newSurvey.put()
+		self.getViewAction()

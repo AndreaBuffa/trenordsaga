@@ -30,6 +30,9 @@ class DataProvider:
 	def putNewSurvey(self, survey):
 		return False;
 
+	def getNewSurvey(self):
+		return False;
+
 class GAEDatastore(DataProvider):
 	""" Use a Google App Engine Datastore """
 	def retrieveSourcePage(self, trainId, theDate):
@@ -86,5 +89,7 @@ class GAEDatastore(DataProvider):
 		#trainDescrRec.date =
 		trainDescrRec.status = 'disabled'
 		trainDescrRec.put()
-
 		return True;
+
+	def getNewSurvey(self):
+		return TrainDescr.query(TrainDescr.status == 'disabled').fetch();

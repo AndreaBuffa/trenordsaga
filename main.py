@@ -8,6 +8,7 @@ class HandleRequest(webapp2.RequestHandler):
 		app = appFactory.create(self.request, self.response)
 		myController = app.getController()
 		myController.myView = app.getView()
+		myController.myModel = app.getModel()
 		return myController.get()
 
 	def post(self):
@@ -15,6 +16,7 @@ class HandleRequest(webapp2.RequestHandler):
 		app = appFactory.create(self.request, self.response)
 		myController = app.getController()
 		myController.myView = app.getView()
+		myController.myModel = app.getModel()
 		return myController.post()
 
 class AppFactory:
@@ -26,11 +28,13 @@ class FrontEndFactory(AppFactory):
 
 	def create(self, request, response):
 		if re.compile('^\/about').search(request.path):
-			return StaticPage(request, response)
+			return StaticApp(request, response)
 		elif re.compile('^\/stats').search(request.path):
 			return ClientEndpoint(request, response)
+		elif re.compile('^\/console').search(request.path):
+			return AdminApp(request, response)
 		else:
-			return DynamicPage(request, response)
+			return DynamicApp(request, response)
 
 class MVC:
 	myView = None
@@ -50,7 +54,7 @@ class MVC:
 	def getModel(self):
 		return
 
-class DynamicPage(MVC):
+class DynamicApp(MVC):
 	""" Provides a common synchronous client/server app """
 	def getController(self):
 		controller = DayController(self.request, self.response)
@@ -65,7 +69,7 @@ class DynamicPage(MVC):
 		myFactory = DataStore()
 		return myFactory.createDataProvider()
 
-class StaticPage(MVC):
+class StaticApp(MVC):
 	""" Provides a static content. Model is None. """
 	def getController(self):
 		controller = DummyController(self.request, self.response)
@@ -79,17 +83,28 @@ class StaticPage(MVC):
 	def getModel(self):
 		return None
 
-class ClientEndpoint(StaticPage):
+class ClientEndpoint(StaticApp):
 	""" Provides a client endpoint for querying the server API"""
 	def getView(self):
 		if not self.myView:
 			self.myView = OnePageAppView(None)
 		return self.myView
 
+class AdminApp(DynamicApp):
+
+	def getController(self):
+		controller = ConsoleController(self.request, self.response)
+		return controller
+
+	def getView(self):
+		if not self.myView:
+			self.myView = ConsoleView(self.getModel())
+		return self.myView
+
 
 app = webapp2.WSGIApplication([
 	(r'/survey', HandleRequest),
-	(r'/console/(\d)+/(\d{4}-\d{1,2}-\d{1,2})', ConsoleController),
+	(r'/console', HandleRequest),
 	(r'/about', HandleRequest),
 	(r'/stats', HandleRequest),
 	(r'/', HandleRequest)
