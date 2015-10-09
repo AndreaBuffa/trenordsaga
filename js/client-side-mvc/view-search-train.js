@@ -121,7 +121,19 @@ MYAPP.View.SearchTrain = function(proto) {
         button = document.createElement('input');
         button.type = 'button';
         button.addEventListener('click', function () {
-            myModel.trainLookUp(fromField.value, toField.value, function(res) {
+            var params = {}, radioObj = document.getElementsByName('timeRage');
+            params = {'fromStation': fromField.value, 'toStation': toField.value,
+                      'timeRange': 2};
+            if(radioObj) {
+                for(var i = 0; i < radioObj.length; i++) {
+                        if (radioObj[i].checked) {
+                            params.timeRange = radioObj[i].value;
+                            break;
+                        }
+                }
+            }
+
+            myModel.trainLookUp(params, function(res) {
                 res = res || [];
                 status = 'showResults';
                 that.update(res);

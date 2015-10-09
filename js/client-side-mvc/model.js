@@ -38,12 +38,11 @@ MYAPP.Model = function() {
             });
     };
 
-    that.trainLookUp = function(fromStation, to, callback) {
-        var date = new Date();
-        var formatDate = [date.getFullYear(), '-', date.getMonth() + 1,
-                          '-', date.getDate()].join("");
-        var params = {'fromStation': fromStation, 'toStation': to,
-                      'when': formatDate, 'timeRange': 2};
+    that.trainLookUp = function(params, callback) {
+        var date = new Date(), formatDate;
+        formatDate = [date.getFullYear(), '-', date.getMonth() + 1,
+                      '-', date.getDate()].join("");
+        params.when = formatDate;
 
         gapi.client.discover.trains.searchFromTo(params).execute(
             function(resp) {
