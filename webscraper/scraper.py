@@ -29,7 +29,7 @@ def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 	else:
 		try:
 			if not trainDescr.url:
-				logging.debug('retrieve_schedule: trainId %d with no URL!',
+				logging.debug('retrieve_schedule: trainId %s with no URL!',
 							trainId)
 				return
 			source = urllib.urlopen(trainDescr.url)
@@ -56,7 +56,7 @@ def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 				deferred.defer(retrieve_schedule, trainId,
 					       attemps=attemps-1)
 			else:
-				logging.debug('retrieve_schedule: %d attemps failed for train %s !',
+				logging.debug('retrieve_schedule: %s attemps failed for train %s !',
 					      MAX_ATTEMPS, trainId)
 
 def get_http_opener():
