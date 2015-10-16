@@ -19,8 +19,11 @@ class BatchHandler(webapp2.RequestHandler):
 			deferred.defer(entityMigration.AddStatus)
 			msg = 'AddStatus migration successfully initiated.'
 		elif task == 'retrieve':
-			for train in TrainDescr.query().fetch():
-				deferred.defer(webscraper.scraper.retrieve_schedule, train.trainId)
+			for train in TrainDescr.query(
+					TrainDescr.status == 'enabled').fetch():
+				deferred.defer(
+					webscraper.scraper.retrieve_schedule,
+					train.trainId)
 			msg = 'Web scraping successfully initiated.'
 		else:
 			msg = 'Failed, not existing task'
