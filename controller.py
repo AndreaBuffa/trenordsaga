@@ -64,6 +64,15 @@ class Controller():
 		#implement redirection o home
 		pass
 
+'''
+Used for static pages generation
+'''
+class DummyController(Controller):
+
+	def get(self):
+		self.response.headers['Content-Type'] = 'text/html;'
+		self.response.out.write(self.myView.render(self.isMobileClient()))
+
 class DayController(Controller):
 
 	def post(self):
@@ -74,12 +83,6 @@ class DayController(Controller):
 		trainId = self.request.get("trainid")
 		self.myView.showBanner = False;
 		self.getViewAction(theDate, trainId)
-
-class DummyController(Controller):
-
-	def get(self):
-		self.response.headers['Content-Type'] = 'text/html;'
-		self.response.out.write(self.myView.render(self.isMobileClient()))
 
 class ConsoleController(Controller):
 

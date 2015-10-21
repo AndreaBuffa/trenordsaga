@@ -119,7 +119,7 @@ class ScheduleViewer(View):
 				delayDict[trainStop.name] = trainStop.getMedian(True, True)
 
 			stationsByDelayJS = myFormatter.ToColumnChartJSon(timeSchedule,
-															  delayDict)
+			                                                  delayDict)
 
 		trainDescr = self.myModel.findTrainDescrById(self.trainId)
 		trainType = leaveTime = startSurveyDate = '';
@@ -130,14 +130,14 @@ class ScheduleViewer(View):
 
 		niceDate = self.theDate.strftime(langSupport.get('date_format'))
 		self.renderTpl('surveyHead.html', {
-			'nls': langSupport.getEntries(),
-			'stations': chartData,
-			'date': niceDate,
-			'trainNum': self.trainId,
-			'trainType': trainType,
-			'leaveTime' : leaveTime,
-			'stationsByDelay': stationsByDelayJS,
-			'renderForMobile': self.renderForMobile})
+		               'nls': langSupport.getEntries(),
+		               'stations': chartData,
+		               'date': niceDate,
+		               'trainNum': self.trainId,
+		               'trainType': trainType,
+		               'leaveTime' : leaveTime,
+		               'stationsByDelay': stationsByDelayJS,
+		               'renderForMobile': self.renderForMobile})
 
 		self.renderTpl('bodyHeader.html', {
 			'nls': langSupport.getEntries(),
@@ -145,20 +145,20 @@ class ScheduleViewer(View):
 
 		if self.showBanner:
 			self.renderTpl('banner.html', {
-					'nls': langSupport.getEntries()
-				})
+			               'nls': langSupport.getEntries()
+			               })
 
 		if buffer:
 			self.renderTpl('survey.html', {
-				'nls': langSupport.getEntries(),
-				'onTimeStations': onTimeStations,
-				'date': niceDate,
-				'trainId': self.trainId})
+			               'nls': langSupport.getEntries(),
+			               'onTimeStations': onTimeStations,
+			               'date': niceDate,
+			               'trainId': self.trainId})
 		else:
 			self.renderTpl('nosurvey.html', {
-				'nls': langSupport.getEntries(),
-				'date': self.theDate,
-				'trainId': self.trainId})
+			               'nls': langSupport.getEntries(),
+			               'date': self.theDate,
+			               'trainId': self.trainId})
 
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('common.js', {})
@@ -166,20 +166,28 @@ class ScheduleViewer(View):
 		self.embedJS('view-search-train.js', {})
 		self.embedJS('view-choose-train.js', {})
 		self.embedJS('survey-app.js', {
-			'currDate': self.theDate,
-			'minDate': startSurveyDate})
+		             'currDate': self.theDate,
+		             'minDate': startSurveyDate})
 		self.embedJS('api-endpoint.js', {})
 		self.pageBuffer += '</script>'
 
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
+
+class DataViewer(ScheduleViewer):
+	def prepare(self):
+		#self.renderTpl('head.html', {
+		#	'nls': langSupport.getEntries(),
+		#	'renderForMobile': self.renderForMobile})
+		self.pageBuffer += self.myModel.retrieveSourcePage(self.trainId, self.theDate)
+		#self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
 class ConsoleView(View):
 
 	def prepare(self):
 		requests = self.myModel.getNewSurvey()
 		self.renderTpl('admin/new.html', {
-			   'requests': requests
-			   })
+		               'requests': requests
+		               })
 
 class ScheduleValidator(View):
 	def render(self):
