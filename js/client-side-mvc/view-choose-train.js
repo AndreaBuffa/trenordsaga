@@ -40,8 +40,10 @@ MYAPP.View.TrainSelector = function(proto) {
     };
 
     that.draw = function(trainList) {
-        var container = document.querySelector('#trainSelector'),
-        currRailwayType = '', railwayDiv, trainListDiv, table;
+        var container = document.querySelector('#trainSelector'), img,
+        currRailwayType = '', from = '', linkControl, railwayDiv, railwayLink,
+        searchLink, table, td, th1, thead, to = '', tr, trHead, train, trainList,
+        trainListDiv;
 
         if (container) {
             while (container.hasChildNodes()) {
@@ -58,18 +60,24 @@ MYAPP.View.TrainSelector = function(proto) {
         }
 
         for (var i = 0; i < trainList.length; i++) {
-            var train = trainList[i];
+            train = trainList[i];
             if (currRailwayType != train.type) {
+                searchLink = document.createElement('a');
+                searchLink.innerHTML = "Se non lo trovi cercalo qui";
+                searchLink.href = '#' + anchor;
+                if (trainListDiv)
+                    trainListDiv.appendChild(searchLink);
+
                 currRailwayType = train.type;
                 railwayDiv = document.createElement('div');
                 railwayDiv.classList.add('trainType');
-                var railwayLink = document.createElement('a');
+                railwayLink = document.createElement('a');
                 railwayLink.id = currRailwayType;
-                var img = document.createElement('img');
+                img = document.createElement('img');
                 img.src = 'images/' + currRailwayType + '.jpg';
                 railwayLink.appendChild(img);
                 railwayLink.addEventListener('click', function() {
-                    var trainList = document.querySelectorAll('[id$=trainList]');
+                    trainList = document.querySelectorAll('[id$=trainList]');
                     for(var i=0; i < trainList.length; i++) {
                         if (trainList[i].id === this.id + 'trainList') {
                             trainList[i].style.display = 'block';
@@ -81,27 +89,28 @@ MYAPP.View.TrainSelector = function(proto) {
                 });
                 railwayDiv.appendChild(railwayLink);
                 container.appendChild(railwayDiv);
-
                 trainListDiv = document.createElement('div');
                 trainListDiv.id = currRailwayType + 'trainList';
                 trainListDiv.classList.add('table-wrapper');
                 trainListDiv.style.display = 'none';
+            }
+            if (from != train.leaveStation || to != train.endStation) {
+                from = train.leaveStation;
+                to = train.endStation;
+
                 table = document.createElement('table');
-                var thead = document.createElement('thead');
-                var trHead = document.createElement('tr');
-                var th1 = document.createElement('th1');
+                thead = document.createElement('thead');
+                trHead = document.createElement('tr');
+                th1 = document.createElement('th');
+                th1.innerHTML = from + ' - ' + to;
                 trHead.appendChild(th1);
                 thead.appendChild(trHead);
                 table.appendChild(thead);
                 trainListDiv.appendChild(table);
                 container.appendChild(trainListDiv);
                 //
-                var searchLink = document.createElement('a');
-                searchLink.innerHTML = "Se non lo trovi cercalo qui";
-                searchLink.href = '#' + anchor;
-                trainListDiv.appendChild(searchLink);
             }
-            var linkControl = document.createElement('a');
+            linkControl = document.createElement('a');
             linkControl.setAttribute('id', train.trainId);
             linkControl.setAttribute('data-surveyedfrom', train.surveyedFrom);
             linkControl.addEventListener('click', function () {
@@ -120,8 +129,8 @@ MYAPP.View.TrainSelector = function(proto) {
 /*          var linkDiv = document.createElement('div');
             linkDiv.classList.add('row');
             linkDiv.appendChild(linkControl);*/
-            var tr = document.createElement('tr');
-            var td = document.createElement('td');
+            tr = document.createElement('tr');
+            td = document.createElement('td');
             td.appendChild(linkControl);
             tr.appendChild(td);
             table.appendChild(tr);
