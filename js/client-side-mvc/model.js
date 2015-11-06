@@ -50,23 +50,35 @@ MYAPP.Model = function() {
                     resp.items = resp.items || [];
                     callback(resp.items);
                 }
-            });
+        });
     };
 
     that.addSurvey = function(params, callback) {
 
-            var params = {'num': params.num, 'trainType': params.type,
-                          'fromStation': params.from,
-                          'toStation': params.to, 'leave': params.leave,
-                          'arrive': params.arrive};
+        var params = {'num': params.num, 'trainType': params.type,
+                      'fromStation': params.from,
+                      'toStation': params.to, 'leave': params.leave,
+                      'arrive': params.arrive};
 
-            gapi.client.discover.trains.addSurvey(params).execute(function(resp) {
+        gapi.client.discover.trains.addSurvey(params).execute(function(resp) {
+            //@todo check the return code
+            if (!resp.code) {
+                callback(true);
+            }
+        });
+    };
+
+    that.getSurveyDataSource = function(params, callback) {
+        gapi.client.discover.trains.getDataSource(params).execute(
+            function(resp) {
                 //@todo check the return code
                 if (!resp.code) {
-                    callback(true);
+                    resp.items = resp.items || [];
+                    //x = x.replace(/\\"/g, '"');
+                    callback(resp.items);
                 }
-            });
-    };
+        });
+    }
 
     return that;
 }

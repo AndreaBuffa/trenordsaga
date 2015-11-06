@@ -8,10 +8,10 @@ function init() {
 			myModel.ready();
 		}
 	}
-	apisToLoad = 2;
+	apisToLoad = 3;
 	gapi.client.load('discover', 'v1', APIReady, apiRoot);
 	gapi.client.load('statistics', 'v1', APIReady, apiRoot);
-	//gapi.client.load('schedule', 'v1', callback, apiRoot);
+	gapi.client.load('schedule', 'v1', APIReady, apiRoot);
 }
 </script>
 <script async src="https://apis.google.com/js/client.js?onload=init"></script>

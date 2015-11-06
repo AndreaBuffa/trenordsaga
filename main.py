@@ -3,7 +3,7 @@ from controller import *
 
 class HandleRequest(webapp2.RequestHandler):
 
-	def get(self, trainId="", date=""):
+	def get(self, trainId="", y="", m="", d=""):
 		appFactory = FrontEndFactory()
 		app = appFactory.create(self.request, self.response)
 		myController = app.getController()
@@ -31,8 +31,6 @@ class FrontEndFactory(AppFactory):
 			return StaticApp(request, response)
 		elif re.compile('^\/stats').search(request.path):
 			return ClientEndpoint(request, response)
-		elif re.compile('^\/source').search(request.path):
-			return DataViewerApp(request, response)
 		elif re.compile('^\/console').search(request.path):
 			return AdminApp(request, response)
 		else:
@@ -103,19 +101,11 @@ class AdminApp(DynamicApp):
 			self.myView = ConsoleView(self.getModel())
 		return self.myView
 
-class DataViewerApp(DynamicApp):
-
-	def getView(self):
-		if not self.myView:
-			self.myView = DataViewer(self.getModel())
-		return self.myView
-
 
 app = webapp2.WSGIApplication([
 	(r'/survey', HandleRequest),
 	(r'/console', HandleRequest),
 	(r'/about', HandleRequest),
 	(r'/stats', HandleRequest),
-	(r'/source', HandleRequest),
 	(r'/', HandleRequest)
 ])

@@ -173,13 +173,6 @@ class ScheduleViewer(View):
 
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
-class DataViewer(ScheduleViewer):
-	def prepare(self):
-		#self.renderTpl('head.html', {
-		#	'nls': langSupport.getEntries(),
-		#	'renderForMobile': self.renderForMobile})
-		self.pageBuffer += self.myModel.retrieveSourcePage(self.trainId, self.theDate)
-		#self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
 class ConsoleView(View):
 

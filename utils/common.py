@@ -48,3 +48,14 @@ def isWorkDay(theDate):
 		if theDate == t[0]:
 			return False
 	return True
+
+def buildDate(y, m, d, ret):
+	if y and m and d:
+		try:
+			ret.append(datetime.strptime(y + "-" + m + "-" + d,
+			                             "%Y-%m-%d").date())
+		except ValueError:
+			return False
+	else:
+		return False
+	return True
