@@ -1126,6 +1126,60 @@ ul#tab li.active {
     display: block;
 }
 
+/**/
+.tabViewHook {
+    background-color: #000000;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    z-index: -1;
+    position: fixed;
+}
+
+.tabViewList {
+    list-style-type: none;
+    padding: 0;
+    left: 0px;
+    top: 4.75em;
+    position: relative;
+    //text-align: center;
+}
+
+.tabViewListMobile {
+    list-style-type: none;
+    padding: 0;
+    left: 80px;
+    top: 0px;
+    position: relative;
+    //text-align: center;
+}
+
+li.tabView {
+    display: inline-block;
+    background-color: #32c896;
+    border-bottom: solid 5px #238b68;
+    padding: 5px 20px;
+    margin-bottom: 4px;
+    color: #fff;
+    cursor: pointer;
+    //display: none;
+}
+
+li.tabView: hover {
+    background-color: #238b68;
+}
+
+li.tabView.active {
+    background-color: #238b68;
+    //display: block;
+}
+
+ul#tabView {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
 .trainType {
 	float: left;
 	margin: 5px;

@@ -74,6 +74,7 @@ class OnePageAppView(StaticView):
 
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('common.js', {})
+		self.embedJS('view-tab-view.js', {})
 		self.embedJS('view-search-train.js', {})
 		self.embedJS('view-choose-train.js', {})
 		self.embedJS('view-display-stats.js', {})

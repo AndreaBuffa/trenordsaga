@@ -4,10 +4,11 @@ MYAPP.View = MYAPP.View || {};
 MYAPP.View.TrainSelector = function(proto) {
 /*	@todo check state
 */
-    var anchor = proto.anchor;
-    var myModel = proto.model;
-    var status = "loading";
-    var that = COMM.Observer(proto);
+    var anchor, myModel, status, that;
+    anchor = proto.anchor;
+    myModel = proto.model;
+    status = "loading";
+    that = COMM.Observer(proto);
     that = COMM.Notifier(that);
 
     that.trigger = function(eventName, params) {

@@ -8,8 +8,10 @@ COMM.isArray = function(myArray) {
     return false;
 };
 
-COMM.Observer = function(spec) {
-    var that = {};
+COMM.Observer = function(that) {
+    if (!that) {
+        console.log("that observer is NULL");
+    }
     that.trigger = function(eventName, params) {
         console.log("Implement me...");
     };

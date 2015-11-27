@@ -174,7 +174,9 @@ MYAPP.View.SearchTrain = function(proto) {
             }
             results.appendChild(writeTable());
         }
-        document.querySelector('#search').appendChild(container);
+        if (document.querySelector('#search')) {
+            document.querySelector('#search').appendChild(container);
+        }
     };
     that.draw();
     return that;

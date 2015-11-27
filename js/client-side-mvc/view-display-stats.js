@@ -31,6 +31,7 @@ MYAPP.View.TrainStats = function(proto) {
 				status = "ready";
 				that.draw(stats);
 			});
+            //@todo delete me
 			this.draw();
 		}
 	}

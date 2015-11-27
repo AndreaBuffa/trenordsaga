@@ -4,6 +4,7 @@ MYAPP.Model = function() {
     var that = COMM.Notifier({}), trainList = [];
 
     that.ready = function () {
+        console.log("Model Ready");
         that.notify(COMM.event.modelReady);
     };
 
