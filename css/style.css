@@ -1133,7 +1133,7 @@ ul#tab li.active {
     left: 0px;
     width: 100%;
     z-index: -1;
-    position: fixed;
+    //position: fixed;
 }
 
 .tabViewList {

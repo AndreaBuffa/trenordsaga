@@ -18,8 +18,8 @@ COMM.Observer = function(that) {
     return that;
 };
 
-COMM.Notifier = function () {
-    var that = {};
+COMM.Notifier = function (spec) {
+    var that = spec;
     that.observerList = {};
     that.addObserver = function(eventName, observer) {
         //check observer type

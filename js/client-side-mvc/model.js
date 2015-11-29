@@ -1,13 +1,24 @@
 var MYAPP = MYAPP || {};
 
 MYAPP.Model = function() {
-    var that = COMM.Notifier({}), trainList = [];
+    var currTrainId, that, trainList = [];
+    that = COMM.Notifier({});
+    that = COMM.Observer(that);
 
     that.ready = function () {
         console.log("Model Ready");
         that.notify(COMM.event.modelReady);
     };
 
+    that.trigger = function(eventName, params) {
+		switch(eventName) {
+			case COMM.event.trainChanged:
+				currTrainId = params.trainId;
+			break;
+		}
+    };
+
+    //@todo checke if ready before query the server endpoint
     that.getTrainList = function(callback) {
         if (trainList.length == 0) {
             gapi.client.discover.trains.listSurveyedTrain().execute(
@@ -56,12 +67,12 @@ MYAPP.Model = function() {
 
     that.addSurvey = function(params, callback) {
 
-        var params = {'num': params.num, 'trainType': params.type,
+        var args = {'num': params.num, 'trainType': params.type,
                       'fromStation': params.from,
                       'toStation': params.to, 'leave': params.leave,
                       'arrive': params.arrive};
 
-        gapi.client.discover.trains.addSurvey(params).execute(function(resp) {
+        gapi.client.discover.trains.addSurvey(args).execute(function(resp) {
             //@todo check the return code
             if (!resp.code) {
                 callback(true);
@@ -79,6 +90,10 @@ MYAPP.Model = function() {
                     callback(resp.items);
                 }
         });
+    }
+
+    that.getCurrentTrainId = function() {
+        return currTrainId;
     }
 
     return that;

@@ -43,8 +43,7 @@ MYAPP.View.TrainSelector = function(proto) {
     that.draw = function(trainList) {
         var container = document.querySelector('#trainSelector'), img,
         currRailwayType = '', from = '', linkControl, railwayDiv, railwayLink,
-        searchLink, table, td, th1, thead, to = '', tr, trHead, train, trainList,
-        trainListDiv;
+        searchLink, table, td, th1, thead, to = '', tr, trHead, train, trainListDiv;
 
         if (container) {
             while (container.hasChildNodes()) {

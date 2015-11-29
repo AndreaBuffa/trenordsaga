@@ -8,10 +8,13 @@ var myModel = MYAPP.Model();
 var trainSelector = MYAPP.View.TrainSelector({'model': myModel, 'anchor': '#search'});
 myModel.addObserver(COMM.event.modelReady, trainSelector);
 trainSelector.addObserver(COMM.event.trainChanged, control);
+trainSelector.addObserver(COMM.event.trainChanged, myModel);
 
 var searchTrain = MYAPP.View.SearchTrain({'model': myModel, 'anchor': '#search'});
 myModel.addObserver(COMM.event.modelReady, searchTrain);
 
+//var showDataSource = MYAPP.View.({'model': myModel});
+//myModel.addObserver(COMM.event.modelReady, showDataSource);
 
 $(document).ready(function() {
 	trainSelector.draw();

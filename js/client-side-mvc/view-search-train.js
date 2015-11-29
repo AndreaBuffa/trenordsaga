@@ -120,6 +120,7 @@ MYAPP.View.SearchTrain = function(proto) {
 
         button = document.createElement('input');
         button.type = 'button';
+        button.value = 'Cerca';
         button.addEventListener('click', function () {
             var params = {}, radioObj = document.getElementsByName('timeRage');
             params = {'fromStation': fromField.value, 'toStation': toField.value,
@@ -132,7 +133,6 @@ MYAPP.View.SearchTrain = function(proto) {
                         }
                 }
             }
-
             myModel.trainLookUp(params, function(res) {
                 res = res || [];
                 status = 'showResults';

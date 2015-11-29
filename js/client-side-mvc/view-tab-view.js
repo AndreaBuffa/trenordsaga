@@ -21,7 +21,7 @@ MYAPP.View.TabView = function(proto) {
         contents[idx] = content;
     }
     that.draw = function() {
-        var container, mainDiv, li, ul, width;
+        var container, div, mainDiv, li, ul, width;
         if (status === 'loading') {
             return;
         }
@@ -49,8 +49,19 @@ MYAPP.View.TabView = function(proto) {
             li.setAttribute('class', 'tabView');
             li.setAttribute('style', 'width: ' + width + '%;');
             //li.appendChild(headers[i]);
-            li.innerHTML =  headers[i];
-            
+            //li.setAttribute('data-?', ..);
+            li.addEventListener('click', function() {
+                for(var i=0; i < this.parentElement.childElementCount; i++) {
+                    if (this.parentElement.children[i] === this) {
+                        this.parentElement.children[i].classList.add('active');
+                    } else {
+                        this.parentElement.children[i].classList.remove('active');
+                    }
+                }
+            });
+            div = document.createElement('div');
+            div.innerHTML = headers[i];
+            li.appendChild(div);
             ul.appendChild(li);
         }
     }

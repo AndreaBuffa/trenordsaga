@@ -76,7 +76,7 @@ class OnePageAppView(StaticView):
 		self.embedJS('common.js', {})
 		self.embedJS('view-tab-view.js', {})
 		self.embedJS('view-search-train.js', {})
-		self.embedJS('view-choose-train.js', {})
+		self.embedJS('view-choose-type.js', {})
 		self.embedJS('view-display-stats.js', {})
 		self.embedJS('model.js', {})
 		self.embedJS('stats-app.js', {})
