@@ -48,7 +48,8 @@ COMM.Notifier = function (that) {
 COMM.event = {
     modelReady: "modelReady",
     typeChanged: "typeChanged",
-    trainChanged: "trainChanged"
+    trainChanged: "trainChanged",
+    chartsLibReady: "chartsLibReady"
 };
 
 COMM.writeTable = function(labels, dataset, attributes) {

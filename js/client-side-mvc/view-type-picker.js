@@ -18,7 +18,7 @@ MYAPP.View.TypePicker = function(proto) {
     that.update = function() {
         myModel.getTrainList({}, function(trainList) {
             trainList = trainList || [];
-          trainList.sort(function(a, b) {
+            trainList.sort(function(a, b) {
                 var number1 = a.type.match(/(\d+)$/);
                 var number2 = b.type.match(/(\d+)$/);
                 if (number1 == null) {

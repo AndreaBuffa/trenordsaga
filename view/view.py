@@ -17,11 +17,12 @@ class View:
 	tplPath = ""
 	jsPath = ""
 
-	def __init__(self, aModel):
+	def __init__(self, aModel, request):
 		self.myModel = aModel
 		self.showBanner = True
 		self.tplPath = os.path.dirname(__file__) + TPL_PATH
 		self.jsPath = os.path.dirname(__file__) + JS_PATH
+		self.request = request
 
 	def renderTpl(self, path="", dataToBind={}):
 		if path:
@@ -36,7 +37,7 @@ class View:
 				dataToBind)
 
 	def render(self, isMobileClient):
-		#self.renderForMobile = isMobileClient
+		self.renderForMobile = isMobileClient
 		self.prepare()
 		return self.pageBuffer
 
@@ -44,9 +45,6 @@ class View:
 		pass
 
 class StaticView(View):
-
-	def __init__(self, aModel):
-		View.__init__(self, None)
 
 	def prepare(self):
 		self.renderTpl('head.html', {
@@ -78,15 +76,23 @@ class OnePageAppView(StaticView):
 		self.embedJS('view-search-train.js', {})
 		self.embedJS('view-type-picker.js', {})
 		self.embedJS('view-num-picker.js', {})
-		self.embedJS('view-display-stats.js', {})
 		self.embedJS('model.js', {})
-		self.embedJS('stats-app.js', {})
+		if re.compile('^\/dev').search(self.request.path):
+			self.embedJS('view-surveys.js', {})
+			self.embedJS('survey-app-new.js', {})
+		else:
+			self.embedJS('view-display-stats.js', {})
+			self.embedJS('stats-app.js', {})
+
 		self.embedJS('api-endpoint.js', {})
 		self.pageBuffer += '</script>'
 
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': False})
-		self.renderTpl('stats.html', {'nls': langSupport.getEntries()})
+		if re.compile('^\/dev').search(self.request.path):
+			self.renderTpl('survey-new.html', {'nls': langSupport.getEntries()})
+		else:
+			self.renderTpl('stats.html', {'nls': langSupport.getEntries()})
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
 

@@ -31,6 +31,8 @@ class FrontEndFactory(AppFactory):
 			return StaticApp(request, response)
 		elif re.compile('^\/stats').search(request.path):
 			return ClientEndpoint(request, response)
+		elif re.compile('^\/dev').search(request.path):
+			return ClientEndpoint(request, response)
 		elif re.compile('^\/console').search(request.path):
 			return AdminApp(request, response)
 		else:
@@ -62,7 +64,7 @@ class DynamicApp(MVC):
 
 	def getView(self):
 		if not self.myView:
-			self.myView = ScheduleViewer(self.getModel())
+			self.myView = ScheduleViewer(self.getModel(), {})
 		return self.myView
 
 	def getModel(self):
@@ -77,7 +79,7 @@ class StaticApp(MVC):
 
 	def getView(self):
 		if not self.myView:
-			self.myView = StaticView(self.getModel())
+			self.myView = StaticView(self.getModel(), {})
 		return self.myView
 
 	def getModel(self):
@@ -87,7 +89,7 @@ class ClientEndpoint(StaticApp):
 	""" Provides a client endpoint for querying the server API"""
 	def getView(self):
 		if not self.myView:
-			self.myView = OnePageAppView(None)
+			self.myView = OnePageAppView(None, self.request)
 		return self.myView
 
 class AdminApp(DynamicApp):
@@ -98,7 +100,7 @@ class AdminApp(DynamicApp):
 
 	def getView(self):
 		if not self.myView:
-			self.myView = ConsoleView(self.getModel())
+			self.myView = ConsoleView(self.getModel(), {})
 		return self.myView
 
 
@@ -107,5 +109,6 @@ app = webapp2.WSGIApplication([
 	(r'/console', HandleRequest),
 	(r'/about', HandleRequest),
 	(r'/stats', HandleRequest),
+	(r'/dev', HandleRequest),
 	(r'/', HandleRequest)
 ])
