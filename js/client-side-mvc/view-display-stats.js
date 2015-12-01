@@ -83,7 +83,12 @@ MYAPP.View.TrainStats = function(proto) {
 			var tmp = container.querySelector('#workDay');
 			tmp.addEventListener('click', tabClickHandler);
 		}
-		document.querySelector('#container').appendChild(container);
+		if (document.querySelector('#' + proto.divId)) {
+            document.querySelector('#' + proto.divId).appendChild(container);
+        } else {
+            console.log('TrainStats, cannot find the main div cont.' + proto.divId);
+            return;
+        }
 		if (status !== "ready") {
 			var element = document.createElement('div');
 			element.classList.add('row');

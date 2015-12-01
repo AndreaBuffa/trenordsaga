@@ -3,18 +3,18 @@ control.trigger = function(eventName, params) {
     document.form.trainid.value = params.trainId;
 }
 
-var myModel = MYAPP.Model();
+var model = MYAPP.Model();
 
-var trainSelector = MYAPP.View.TrainSelector({'model': myModel, 'anchor': '#search'});
-myModel.addObserver(COMM.event.modelReady, trainSelector);
+var trainSelector = MYAPP.View.TrainSelector({'model': model, 'anchor': '#search'});
+model.addObserver(COMM.event.modelReady, trainSelector);
 trainSelector.addObserver(COMM.event.trainChanged, control);
-trainSelector.addObserver(COMM.event.trainChanged, myModel);
+trainSelector.addObserver(COMM.event.trainChanged, model);
 
-var searchTrain = MYAPP.View.SearchTrain({'model': myModel, 'anchor': '#search'});
-myModel.addObserver(COMM.event.modelReady, searchTrain);
+var searchTrain = MYAPP.View.SearchTrain({'model': model, 'anchor': '#search'});
+model.addObserver(COMM.event.modelReady, searchTrain);
 
-//var showDataSource = MYAPP.View.({'model': myModel});
-//myModel.addObserver(COMM.event.modelReady, showDataSource);
+//var showDataSource = MYAPP.View.({'model': model});
+//model.addObserver(COMM.event.modelReady, showDataSource);
 
 $(document).ready(function() {
 	trainSelector.draw();

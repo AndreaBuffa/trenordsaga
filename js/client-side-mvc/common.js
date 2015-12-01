@@ -11,6 +11,7 @@ COMM.isArray = function(myArray) {
 COMM.Observer = function(that) {
     if (!that) {
         console.log("that observer is NULL");
+        return;
     }
     that.trigger = function(eventName, params) {
         console.log("Implement me...");
@@ -18,8 +19,11 @@ COMM.Observer = function(that) {
     return that;
 };
 
-COMM.Notifier = function (spec) {
-    var that = spec;
+COMM.Notifier = function (that) {
+    if (!that) {
+        console.log("that Notifier is NULL");
+        return;
+    }
     that.observerList = {};
     that.addObserver = function(eventName, observer) {
         //check observer type
@@ -43,6 +47,7 @@ COMM.Notifier = function (spec) {
 
 COMM.event = {
     modelReady: "modelReady",
+    typeChanged: "typeChanged",
     trainChanged: "trainChanged"
 };
 

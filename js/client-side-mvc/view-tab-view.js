@@ -2,8 +2,8 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TabView = function(proto) {
-    var headers, contents, that;
-    myModel = proto.model;
+    var headers, contents, liCtrlArray, that;
+    liCtrlArray = new Array();
     status = "loading";
     that = {};
     that = COMM.Observer(that);
@@ -11,15 +11,43 @@ MYAPP.View.TabView = function(proto) {
     that.trigger = function(eventName, params) {
         status = "ready";
         this.draw();
+        this.setTabFocus(0);
     }
+
+    that.setTabFocus = function(idx) {
+        var contentCtrl, event;
+        if (idx >= 0 && idx < liCtrlArray.length) {
+            if (liCtrlArray[idx]) {
+                event = document.createEvent('Event');
+                event.initEvent('click', true, true);
+                liCtrlArray[idx].dispatchEvent(event);
+            } else {
+                console.log('TabView, no li ctrl for index (' + idx + ')');
+            }
+        } else {
+            if (idx === -1) {
+                for(var i = 0; i < liCtrlArray.length; i++) {
+                    contentCtrl = document.querySelector('#' + liCtrlArray[i].dataset.contentid);
+                    if (contentCtrl)
+                        contentCtrl.style.display = 'none';
+                    liCtrlArray[i].innerHTML = headers[i];
+                }
+            } else {
+                console.log('TabView, cannot set focus for index (' + idx + ')');
+            }
+        }
+    }
+
     headers = new Array();
     contents = new Array();
     that.fillTabHeader = function(idx, content) {
         headers[idx] = content;
     }
-    that.fillTabContent = function(idx, content) {
-        contents[idx] = content;
+
+    that.fillTabContent = function(idx, divId) {
+        contents[idx] = divId;
     }
+
     that.draw = function() {
         var container, div, mainDiv, li, ul, width;
         if (status === 'loading') {
@@ -46,17 +74,29 @@ MYAPP.View.TabView = function(proto) {
         width = Math.floor(100 / headers.length);
         for(var i = 0; i < headers.length; i++) {
             li = document.createElement('li');
+            liCtrlArray.push(li);
             li.setAttribute('class', 'tabView');
             li.setAttribute('style', 'width: ' + width + '%;');
             //li.appendChild(headers[i]);
-            //li.setAttribute('data-?', ..);
+            if (i < contents.length) {
+                li.setAttribute('data-contentid', contents[i]);
+            }
             li.addEventListener('click', function() {
+                var contentCtrl, liCtrl;
                 for(var i=0; i < this.parentElement.childElementCount; i++) {
-                    if (this.parentElement.children[i] === this) {
-                        this.parentElement.children[i].classList.add('active');
+                    liCtrl = this.parentElement.children[i];
+                    if (liCtrl === this) {
+                        liCtrl.classList.add('active');
+                        contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
+                        if (contentCtrl)
+                            contentCtrl.style.display = 'block';
                     } else {
-                        this.parentElement.children[i].classList.remove('active');
+                        liCtrl.classList.remove('active');
+                        contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
+                        if (contentCtrl)
+                            contentCtrl.style.display = 'none';
                     }
+                    liCtrl.innerHTML = headers[i];
                 }
             });
             div = document.createElement('div');

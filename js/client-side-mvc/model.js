@@ -1,12 +1,12 @@
 var MYAPP = MYAPP || {};
 
 MYAPP.Model = function() {
-    var currTrainId, that, trainList = [];
-    that = COMM.Notifier({});
-    that = COMM.Observer(that);
+    var currTrainId, status = 'loading', that, trainList = [];
+    that = COMM.Observer(COMM.Notifier({}));
 
     that.ready = function () {
         console.log("Model Ready");
+        status = 'ready';
         that.notify(COMM.event.modelReady);
     };
 
@@ -18,8 +18,9 @@ MYAPP.Model = function() {
 		}
     };
 
-    //@todo checke if ready before query the server endpoint
-    that.getTrainList = function(callback) {
+    that.getTrainList = function(params, callback) {
+        if (status !== 'ready')
+            return;
         if (trainList.length == 0) {
             gapi.client.discover.trains.listSurveyedTrain().execute(
                 function(resp) {
@@ -30,7 +31,17 @@ MYAPP.Model = function() {
                     }
                 });
         } else {
-            callback(trainList);
+            if (params.trainType) {
+                var tmp = new Array();
+                for (var i = 0; i < trainList.length; i++) {
+                    if (params.trainType === trainList[i].type) {
+                        tmp.push(trainList[i]);
+                    }
+                }
+                callback(tmp);
+            } else {
+                callback(trainList);
+            }
         }
     };
 
