@@ -5,8 +5,7 @@ var trainNumDiv = 'trainNum';
 var statsDiv = 'stats';
 
 var typePicker = MYAPP.View.TypePicker({'divId': trainTypeDiv,
-                                        'model': model,
-                                        'anchor': '#search'});
+                                        'model': model});
 model.addObserver(COMM.event.modelReady, typePicker);
 
 var numPicker = MYAPP.View.NumPicker({'divId': trainNumDiv, 'model': model});
@@ -17,7 +16,7 @@ var trainStats = MYAPP.View.TrainStats({'divId': 'stats', 'model': model});
 model.addObserver(COMM.event.modelReady, trainStats);
 numPicker.addObserver(COMM.event.trainChanged, trainStats);
 
-var searchTrain = MYAPP.View.SearchTrain({'model': model, 'anchor': '#search'});
+var searchTrain = MYAPP.View.SearchTrain({'model': model});
 model.addObserver(COMM.event.modelReady, searchTrain);
 
 var picker = MYAPP.View.TabView({'divId': '#menuPicker'});
@@ -47,6 +46,3 @@ eventDispatcher.trigger = function(eventName, params) {
 typePicker.addObserver(COMM.event.typeChanged, eventDispatcher);
 numPicker.addObserver(COMM.event.trainChanged, eventDispatcher);
 
-$(document).ready(function() {
-    typePicker.draw();
-});

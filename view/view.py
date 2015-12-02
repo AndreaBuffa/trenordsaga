@@ -78,6 +78,7 @@ class OnePageAppView(StaticView):
 		self.embedJS('view-num-picker.js', {})
 		self.embedJS('model.js', {})
 		if re.compile('^\/dev').search(self.request.path):
+			self.embedJS('view-date-picker.js', {})
 			self.embedJS('view-surveys.js', {})
 			self.embedJS('survey-app-new.js', {})
 		else:

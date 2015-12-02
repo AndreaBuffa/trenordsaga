@@ -49,7 +49,8 @@ COMM.event = {
     modelReady: "modelReady",
     typeChanged: "typeChanged",
     trainChanged: "trainChanged",
-    chartsLibReady: "chartsLibReady"
+    chartsLibReady: "chartsLibReady",
+    dateChanged: "dateChanged"
 };
 
 COMM.writeTable = function(labels, dataset, attributes) {
