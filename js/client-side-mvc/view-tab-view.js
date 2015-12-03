@@ -77,6 +77,7 @@ MYAPP.View.TabView = function(proto) {
             liCtrlArray.push(li);
             li.setAttribute('class', 'tabView');
             li.setAttribute('style', 'width: ' + width + '%;');
+            //li.setAttribute('style', 'width: ' + (i === 0 ? '120px;': width + '%;'));
             //li.appendChild(headers[i]);
             if (i < contents.length) {
                 li.setAttribute('data-contentid', contents[i]);

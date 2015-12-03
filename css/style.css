@@ -1131,7 +1131,6 @@ ul#tab li.active {
     background-color: #000000;
     top: 0px;
     left: 0px;
-    width: 100%;
     z-index: -1;
     //position: fixed;
 }
@@ -1142,27 +1141,26 @@ ul#tab li.active {
     left: 0px;
     top: 4.75em;
     position: relative;
-    //text-align: center;
+    text-align: right;
 }
 
 .tabViewListMobile {
     list-style-type: none;
     padding: 0;
-    left: 80px;
     top: 0px;
     position: relative;
-    //text-align: center;
+    text-align: right;
 }
 
 li.tabView {
     display: inline-block;
+    height: 60px;
     background-color: #32c896;
     border-bottom: solid 5px #238b68;
-    padding: 5px 20px;
+    padding: 0px 5px;
     margin-bottom: 4px;
     color: #fff;
     cursor: pointer;
-    //display: none;
 }
 
 li.tabView: hover {
@@ -1171,7 +1169,6 @@ li.tabView: hover {
 
 li.tabView.active {
     background-color: #238b68;
-    //display: block;
 }
 
 ul#tabView {
