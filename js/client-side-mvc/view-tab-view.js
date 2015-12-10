@@ -58,34 +58,38 @@ MYAPP.View.TabView = function(proto) {
             console.log("TabView, cannot fin the div where to draw" + proto.divId);
             return;
         }
-        mainDiv = document.createElement('div');
-        container.appendChild(mainDiv);
+        //mainDiv = document.createElement('div');
+        //container.appendChild(mainDiv);
 
-        ul = document.createElement('ul');
+        ul = container.getElementsByTagName('ul')[0];
+        /*
         if (skel.getStateId() === "/global/xlarge") {
             //ul.id = "tabView";
             ul.setAttribute('class', 'tabViewList');
         } else {
             //ul.id = "tabViewMobile";
             ul.setAttribute('class', 'tabViewListMobile');
-        }
+        } */
 
-        mainDiv.appendChild(ul);
+        //mainDiv.appendChild(ul);
         width = Math.floor(100 / headers.length);
         for(var i = 0; i < headers.length; i++) {
             li = document.createElement('li');
             liCtrlArray.push(li);
-            li.setAttribute('class', 'tabView');
-            li.setAttribute('style', 'width: ' + width + '%;');
+            //li.setAttribute('class', 'tabView');
+            //li.setAttribute('style', 'width: ' + width + '%;');
             //li.setAttribute('style', 'width: ' + (i === 0 ? '120px;': width + '%;'));
             //li.appendChild(headers[i]);
             if (i < contents.length) {
                 li.setAttribute('data-contentid', contents[i]);
             }
             li.addEventListener('click', function() {
-                var contentCtrl, liCtrl;
-                for(var i=0; i < this.parentElement.childElementCount; i++) {
+                var contentCtrl, j, liCtrl;
+                for(var i = 0,j = 0; i < this.parentElement.childElementCount; i++) {
                     liCtrl = this.parentElement.children[i];
+                    if (!liCtrl.dataset.contentid) {
+                        continue;
+                    }
                     if (liCtrl === this) {
                         liCtrl.classList.add('active');
                         contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
@@ -97,7 +101,8 @@ MYAPP.View.TabView = function(proto) {
                         if (contentCtrl)
                             contentCtrl.style.display = 'none';
                     }
-                    liCtrl.innerHTML = headers[i];
+                    liCtrl.innerHTML = headers[j];
+                    j++;
                 }
             });
             div = document.createElement('div');

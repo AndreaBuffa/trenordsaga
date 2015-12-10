@@ -866,6 +866,10 @@
 		top: 0;
 	}
 
+	body #header {
+		position: fixed;
+	}
+
 	#header {
 		background-color: #202222;
 		color: #ffffff;
@@ -1124,57 +1128,6 @@ ul#tab li {
 }
 ul#tab li.active {
     display: block;
-}
-
-/**/
-.tabViewHook {
-    background-color: #000000;
-    top: 0px;
-    left: 0px;
-    z-index: -1;
-    //position: fixed;
-}
-
-.tabViewList {
-    list-style-type: none;
-    padding: 0;
-    left: 0px;
-    top: 4.75em;
-    position: relative;
-    text-align: right;
-}
-
-.tabViewListMobile {
-    list-style-type: none;
-    padding: 0;
-    top: 0px;
-    position: relative;
-    text-align: right;
-}
-
-li.tabView {
-    display: inline-block;
-    height: 60px;
-    background-color: #32c896;
-    border-bottom: solid 5px #238b68;
-    padding: 0px 5px;
-    margin-bottom: 4px;
-    color: #fff;
-    cursor: pointer;
-}
-
-li.tabView: hover {
-    background-color: #238b68;
-}
-
-li.tabView.active {
-    background-color: #238b68;
-}
-
-ul#tabView {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
 }
 
 .trainType {

@@ -18,13 +18,14 @@ numPicker.addObserver(COMM.event.trainChanged, datePicker);
 
 var surveys = MYAPP.View.Surveys({'divId': surveyDiv, 'model': model});
 model.addObserver(COMM.event.modelReady, surveys);
+datePicker.addObserver(COMM.event.dateChanged, surveys);
 
-var wizard = MYAPP.View.TabView({'divId': '#menuPicker'});
-wizard.fillTabHeader(0, '1');
+var wizard = MYAPP.View.TabView({'divId': '#nav'});
+wizard.fillTabHeader(0, '');
 wizard.fillTabContent(0, trainTypeDiv);
-wizard.fillTabHeader(1, '2');
+wizard.fillTabHeader(1, '');
 wizard.fillTabContent(1, trainNumDiv);
-wizard.fillTabHeader(2, '3');
+wizard.fillTabHeader(2, '');
 wizard.fillTabContent(2, dateDiv);
 model.addObserver(COMM.event.modelReady, wizard);
 
@@ -36,8 +37,8 @@ eventDispatcher.trigger = function(eventName, params) {
         case COMM.event.typeChanged:
             img = "<img src='images/" + params.trainType + ".jpg' />";
             wizard.fillTabHeader(0, img);
-            wizard.setTabFocus(1);
             wizard.fillTabHeader(1, '-');
+            wizard.setTabFocus(1);
             break;
         case COMM.event.trainChanged:
             wizard.fillTabHeader(1, params.trainId);

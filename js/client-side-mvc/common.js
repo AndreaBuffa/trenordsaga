@@ -49,7 +49,6 @@ COMM.event = {
     modelReady: "modelReady",
     typeChanged: "typeChanged",
     trainChanged: "trainChanged",
-    chartsLibReady: "chartsLibReady",
     dateChanged: "dateChanged"
 };
 

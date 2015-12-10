@@ -4,16 +4,16 @@ MYAPP.View = MYAPP.View || {};
 MYAPP.View.Surveys = function(proto) {
     var chartsLibReady = false, modelReady = false, model, status, that;
     model = proto.model;
-    status = "loading";
+    status = "noBinded";
     that = COMM.Observer(proto);
 
     that.trigger = function(eventName, params) {
         switch(eventName) {
-            case COMM.event.chartsLibReady:
-                chartsLibReady = true;
-            break;
             case COMM.event.modelReady:
                 modelReady = true;
+            break;
+            case COMM.event.dateChanged:
+                status = "loading";
             break;
         }
         if (chartsLibReady && modelReady) {
@@ -33,6 +33,9 @@ MYAPP.View.Surveys = function(proto) {
 
     that.draw = function(columnChartData) {
         var columnchart, columnChartOptions, div;
+        if (status === 'noBinded') {
+            return;
+        }
         columnChartData = new google.visualization.DataTable(columnChartData);
         columnChartOptions = {
             title: '{{nls.trainNum}} {{trainType}} {{trainNum}} {{nls.left}} {{leaveTime}} {{nls.left_day}} {{date}}',
@@ -55,12 +58,11 @@ MYAPP.View.Surveys = function(proto) {
         script.setAttribute('async', 'async');
         script.setAttribute('src', 'https://www.google.com/jsapi');
         script.onload = function() {
-            google.load("visualization", "1",
-                    { packages: ["corechart"],
-                      callback: function() {
-                          that.trigger(COMM.event.chartsLibReady, {});
-                      }
-                    });
+            google.load("visualization", "1", { packages: ["corechart"],
+                                                callback: function() {
+                                                        chartsLibReady = true;
+                                                    }
+                                               });
         }
         head = document.getElementsByTagName('head')[0];
         head.appendChild(script);

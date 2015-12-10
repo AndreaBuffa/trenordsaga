@@ -19,10 +19,10 @@ numPicker.addObserver(COMM.event.trainChanged, trainStats);
 var searchTrain = MYAPP.View.SearchTrain({'model': model});
 model.addObserver(COMM.event.modelReady, searchTrain);
 
-var picker = MYAPP.View.TabView({'divId': '#menuPicker'});
-picker.fillTabHeader(0, '1');
+var picker = MYAPP.View.TabView({'divId': '#nav'});
+picker.fillTabHeader(0, '');
 picker.fillTabContent(0, trainTypeDiv);
-picker.fillTabHeader(1, '2');
+picker.fillTabHeader(1, '');
 picker.fillTabContent(1, trainNumDiv);
 model.addObserver(COMM.event.modelReady, picker);
 
@@ -33,8 +33,8 @@ eventDispatcher.trigger = function(eventName, params) {
         case COMM.event.typeChanged:
             img = "<img src='images/" + params.trainType + ".jpg' />";
             picker.fillTabHeader(0, img);
-            picker.setTabFocus(1);
             picker.fillTabHeader(1, '-');
+            picker.setTabFocus(1);
             break;
         case COMM.event.trainChanged:
             picker.fillTabHeader(1, params.trainId);
