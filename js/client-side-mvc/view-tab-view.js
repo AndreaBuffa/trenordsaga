@@ -2,7 +2,28 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TabView = function(proto) {
-    var headers, contents, liCtrlArray, that;
+    var headers, contents, liCtrlArray, that, clickHandler = function() {
+        var contentCtrl, j, liCtrl;
+        for(var i = 0,j = 0; i < this.parentElement.childElementCount; i++) {
+            liCtrl = this.parentElement.children[i];
+            if (!liCtrl.dataset.managed) {
+                continue;
+            }
+            if (liCtrl === this) {
+                liCtrl.classList.add('active');
+                contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
+                if (contentCtrl)
+                    contentCtrl.style.display = 'table';
+            } else {
+                liCtrl.classList.remove('active');
+                contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
+                if (contentCtrl)
+                    contentCtrl.style.display = 'none';
+            }
+            liCtrl.innerHTML = headers[j];
+            j++;
+        }
+    };
     liCtrlArray = new Array();
     status = "loading";
     that = {};
@@ -15,12 +36,10 @@ MYAPP.View.TabView = function(proto) {
     }
 
     that.setTabFocus = function(idx) {
-        var contentCtrl, event;
+        var contentCtrl;
         if (idx >= 0 && idx < liCtrlArray.length) {
             if (liCtrlArray[idx]) {
-                event = document.createEvent('Event');
-                event.initEvent('click', true, true);
-                liCtrlArray[idx].dispatchEvent(event);
+                clickHandler.bind(liCtrlArray[idx])();
             } else {
                 console.log('TabView, no li ctrl for index (' + idx + ')');
             }
@@ -82,28 +101,14 @@ MYAPP.View.TabView = function(proto) {
             //li.appendChild(headers[i]);
             if (i < contents.length) {
                 li.setAttribute('data-contentid', contents[i]);
+                li.setAttribute('data-managed', 'yes');
             }
             li.addEventListener('click', function() {
-                var contentCtrl, j, liCtrl;
-                for(var i = 0,j = 0; i < this.parentElement.childElementCount; i++) {
-                    liCtrl = this.parentElement.children[i];
-                    if (!liCtrl.dataset.contentid) {
-                        continue;
-                    }
-                    if (liCtrl === this) {
-                        liCtrl.classList.add('active');
-                        contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
-                        if (contentCtrl)
-                            contentCtrl.style.display = 'block';
-                    } else {
-                        liCtrl.classList.remove('active');
-                        contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
-                        if (contentCtrl)
-                            contentCtrl.style.display = 'none';
-                    }
-                    liCtrl.innerHTML = headers[j];
-                    j++;
-                }
+                var event = document.createEvent('Event');
+                clickHandler.bind(this)();
+                //
+                event.initEvent('click', true, true);
+                document.querySelector('span.toggle').dispatchEvent(event);
             });
             div = document.createElement('div');
             div.innerHTML = headers[i];
