@@ -6,6 +6,7 @@ from model.dataProviderFactory import DataStore
 #from datetime import datetime
 import utils.common
 from utils.parser import ScheduleParser
+from view.formatter import *
 package = 'main_api'
 
 class Stop(messages.Message):
@@ -24,6 +25,10 @@ class StopCollection(messages.Message):
 
 class DataSourceContainer(messages.Message):
 	data = messages.StringField(1)
+
+class SurveyGraphContainer(messages.Message):
+	scheduled_real = messages.StringField(1)
+	real_median = messages.StringField(2)
 
 @endpoints.api(name='schedule', version='v1')
 class ScheduleApi(remote.Service):
@@ -81,5 +86,26 @@ class ScheduleApi(remote.Service):
 		myDataModel = myFactory.createDataProvider()
 		ret.data = myDataModel.retrieveSourcePage(request.trainid,
 		                                          tmpDate[0])
+		return ret
+
+	@endpoints.method(ID_RESOURCE, SurveyGraphContainer,
+	        path='survey_graph_data/{trainid}/{year}/{month}/{day}',
+	        http_method='GET', name='trains.getSurveyGraphData')
+	def get_survey_graph_data(self, request):
+		ret = SurveyGraphContainer();
+		tmpDate = [];
+		if not utils.common.buildDate(request.year, request.month,
+		                              request.day, tmpDate):
+		        return ret
+
+		myFactory = DataStore()
+		myDataModel = myFactory.createDataProvider()
+		buffer = myDataModel.retrieveSourcePage(request.trainid, tmpDate[0])
+		if buffer:
+			myParser = ScheduleParser(buffer)
+			timeSchedule = myParser.GetTimings()
+			myFormatter = Formatter()
+			ret.scheduled_real = myFormatter.ToLineChartJSon(timeSchedule)
+
 		return ret
 

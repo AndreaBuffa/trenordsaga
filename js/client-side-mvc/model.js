@@ -91,6 +91,31 @@ MYAPP.Model = function() {
         });
     };
 
+    that.getSurveyGraphData = function(params, callback) {
+        var date = new Array();
+        // some params name translations
+        params.trainid = params.trainId;
+        date = params.selectedDate.split('-');
+        if (date.length !== 3) {
+            console.log("Model: wrong date passed");
+            return;
+        }
+        params.year = date[0];
+        params.month = date[1];
+        params.day = date[2];
+        gapi.client.schedule.trains.getSurveyGraphData(params).execute(
+            function(resp) {
+                var ret = '';
+                //@todo check the return code
+                if (!resp.code) {
+                    if (resp.scheduled_real) {
+                        ret = JSON.parse(resp.scheduled_real);
+                    }
+                    callback(ret);
+                }
+        });
+    }
+
     that.getSurveyDataSource = function(params, callback) {
         gapi.client.discover.trains.getDataSource(params).execute(
             function(resp) {
