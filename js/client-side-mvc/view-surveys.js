@@ -22,20 +22,23 @@ MYAPP.View.Surveys = function(proto) {
     };
 
     that.update = function(params) {
-        model.getSurveyGraphData(params, function(columnChartData) {
+        model.getSurveyGraphData(params, function(lineChartData, columnChartData) {
             status = "ready";
-            that.draw(columnChartData);
+            that.draw(params, lineChartData, columnChartData);
         });
     };
 
-    that.draw = function(columnChartData) {
-        var columnchart, columnChartOptions, div;
+    that.draw = function(params, lineChartData, columnChartData) {
+        var columnChart, columnChartDataTable, columnChartOpt, div, div2,
+        lineChart, lineChartDataTable, lineChartOptions;
         if (status === 'noBinded') {
             return;
         }
-        columnChartData = new google.visualization.DataTable(columnChartData);
-        columnChartOptions = {
-            title: '{{nls.trainNum}} {{trainType}} {{trainNum}} {{nls.left}} {{leaveTime}} {{nls.left_day}} {{date}}',
+        lineChartDataTable = new google.visualization.DataTable(lineChartData);
+        lineChartOptions = {
+            title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
+                   ' {{nls.left}} ' + params.leaveTime + ' {{nls.left_day}} ' +
+                   params.selectedDate,
             curveType: 'function',
             legend: { position: 'top',
                   textStyle: { bold: false}
@@ -46,8 +49,32 @@ MYAPP.View.Surveys = function(proto) {
             console.log('Surveys, cannot find div(' + proto.divId +')');
             return;
         }
-        columnchart = new google.visualization.LineChart(div);
-        columnchart.draw(columnChartData, columnChartOptions);
+        lineChart = new google.visualization.LineChart(div);
+        lineChart.draw(lineChartDataTable, lineChartOptions);
+
+        columnChartOpt = {
+            vAxis: {
+                format: '',
+                title: '{{ nls.delay_in_minutes }}'
+            },
+            title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
+                   ' {{nls.left}} ' + params.leaveTime + ' {{nls.left_day}} ' +
+                   params.selectedDate,
+            legend: { position: 'top' },
+            colors: ['#dc3912', '#33ac71']
+        };
+        div2 = document.getElementById(proto.divId2);
+        if (!div2) {
+            console.log('Surveys, cannot find div(' + proto.divId2 +')');
+            return;
+        }
+        columnChart = new google.visualization.ColumnChart(div2);
+        columnChartDataTable = new google.visualization.DataTable(columnChartData);
+        columnChart.draw(columnChartDataTable, columnChartOpt);
+
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+        table.draw(columnChartDataTable, {showRowNumber: true, width: '100%', height: '100%'});
+
     }
 
     that.toggle = function(visible) {
@@ -67,7 +94,7 @@ MYAPP.View.Surveys = function(proto) {
         script.setAttribute('async', 'async');
         script.setAttribute('src', 'https://www.google.com/jsapi');
         script.onload = function() {
-            google.load("visualization", "1", { packages: ["corechart"],
+            google.load("visualization", "1", { packages: ["corechart", "table"],
                                                 callback: function() {
                                                         chartsLibReady = true;
                                                     }

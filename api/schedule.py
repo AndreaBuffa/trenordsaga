@@ -3,7 +3,6 @@ from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
 from model.dataProviderFactory import DataStore
-#from datetime import datetime
 import utils.common
 from utils.parser import ScheduleParser
 from view.formatter import *
@@ -103,9 +102,16 @@ class ScheduleApi(remote.Service):
 		buffer = myDataModel.retrieveSourcePage(request.trainid, tmpDate[0])
 		if buffer:
 			myParser = ScheduleParser(buffer)
-			timeSchedule = myParser.GetTimings()
+			survey = myParser.GetTimings()
 			myFormatter = Formatter()
-			ret.scheduled_real = myFormatter.ToLineChartJSon(timeSchedule)
+			ret.scheduled_real = myFormatter.ToLineChartJSon(survey)
+
+			stops = myDataModel.findAllTrainStopById(request.trainid)
+			delayDict = {}
+			for trainStop in stops:
+				delayDict[trainStop.name] = trainStop.getMedian(True, True)
+
+			ret.real_median = myFormatter.ToColumnChartJSon(survey, delayDict)
 
 		return ret
 

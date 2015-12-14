@@ -74,9 +74,9 @@ class Formatter:
 			if entry['delay_m'] >= 0:
 				delay = entry['delay_m']
 
-			myBuffer = b"""%s%s{c: [{v: \"%s\", f: null},
-									{v: %d, f:\"%s\"}, {v: \"b\", f: null},
-									{v: %d, f:\"%s\"}]}""" % \
+			myBuffer = b"""%s%s{"c": [{"v": \"%s\", "f": null},
+									  {"v": %d, "f":"%s"},
+									  {"v": %d, "f":"%s"}]}""" % \
 				(myBuffer,
 				',' if len(myBuffer) else '',
 				entry['name'],
@@ -87,12 +87,11 @@ class Formatter:
 				 "1 %s" % langSupport.get("minute") if median == 1 else "%d %s" % (median, langSupport.get("minutes")))
 
 		myBuffer = b"""{
-				cols: [
-						{label: "", pattern: "", type: "string"},
-						{label: "%s", pattern: "", type: "number"},
-						{type: "string", p: {"role": "style"}},
-						{label: "%s", pattern: "", type: "number"}],
-				rows: [%s ]}""" % (langSupport.get("delay"),
+				"cols": [
+						{"label": "", "pattern": "", "type": "string"},
+						{"label": "%s", "pattern": "", "type": "number"},
+						{"label": "%s", "pattern": "", "type": "number"}],
+				"rows": [%s ]}""" % (langSupport.get("delay"),
 								   langSupport.get("median_delay"),
 								   myBuffer)
 

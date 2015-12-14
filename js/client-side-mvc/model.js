@@ -105,13 +105,14 @@ MYAPP.Model = function() {
         params.day = date[2];
         gapi.client.schedule.trains.getSurveyGraphData(params).execute(
             function(resp) {
-                var ret = '';
+                var columnChartData = {}, lineChartData = {};
                 //@todo check the return code
                 if (!resp.code) {
                     if (resp.scheduled_real) {
-                        ret = JSON.parse(resp.scheduled_real);
+                        lineChartData = JSON.parse(resp.scheduled_real);
+                        columnChartData = JSON.parse(resp.real_median);
                     }
-                    callback(ret);
+                    callback(lineChartData, columnChartData);
                 }
         });
     }
