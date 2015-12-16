@@ -1136,3 +1136,13 @@ ul#tab li.active {
 	float: left;
 	margin: 5px;
 }
+
+.svgIcon {
+	width: 25px;
+	height: 25px;
+	fill: #cee8d8;
+}
+.svgIcon:hover {
+	fill: #ffffff;
+}
+
