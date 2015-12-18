@@ -41,22 +41,24 @@ MYAPP.View.TypePicker = function(proto) {
     };
 
     that.draw = function(trainList) {
-        var container = document.querySelector('#' + proto.divId), img,
-        currRailwayType = '', railwayDiv, railwayLink, train, trainListDiv;
+        var container = document.querySelector('#' + proto.divId), currRailwayType = '',
+        img, label, railwayDiv, railwayLink, train;
 
         if (container) {
             while (container.hasChildNodes()) {
                 container.removeChild(container.lastChild);
             }
         } else {
-            container = document.createElement('div');
-            container.setAttribute('id', proto.divId);
-            document.querySelector('#type').appendChild(container);
+            console.log('Type-Picker, cannot find div container ' + proto.divId);
+            return;
         }
         if (status === "loading") {
             container.innerHTML = "Loading....";
             return;
         }
+        label = document.createElement('div');
+        label.innerHTML = '<header class="major"><p>Scegli per tipologia:</p></header>';
+        container.appendChild(label);
 
         for (var i = 0; i < trainList.length; i++) {
             train = trainList[i];

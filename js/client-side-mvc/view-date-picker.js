@@ -20,7 +20,23 @@ MYAPP.View.DatePicker = function(proto) {
     };
 
     that.draw = function() {
-        var today;
+        var container = document.querySelector('#' + proto.divId), div, today;
+        if (container) {
+            while (container.hasChildNodes()) {
+                container.removeChild(container.lastChild);
+            }
+        } else {
+            console.log('Type-Picker, cannot find div container ' + proto.divId);
+            return;
+        }
+        div = document.createElement('div');
+        div.innerHTML = '<header class="major"><p>Scegli il giorno:</p></header>';
+        container.appendChild(div);
+
+        div = document.createElement('div');
+        div.setAttribute('id', 'datepicker');
+        container.appendChild(div);
+
         if (status === 'ready') {
             today = new Date();
             $("[id^=datepicker]").datepicker({

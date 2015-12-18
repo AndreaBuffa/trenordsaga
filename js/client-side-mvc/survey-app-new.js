@@ -1,7 +1,7 @@
 
 var model = MYAPP.Model({});
 var trainTypeDiv = 'type', trainNumDiv = 'trainNum', surveyDiv1 = 'survey',
-surveyDiv2 = 'compare', dateDiv = 'datepicker';
+surveyDiv2 = 'compare', dateDiv = 'date';
 
 var typePicker = MYAPP.View.TypePicker({'divId': trainTypeDiv,
                                         'model': model});

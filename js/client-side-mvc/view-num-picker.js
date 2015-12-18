@@ -33,9 +33,9 @@ MYAPP.View.NumPicker = function(proto) {
     };
 
     that.draw = function(trainList) {
-        var container = document.querySelector('#' + proto.divId), img,
-        currRailwayType = '', from = '', linkControl, table, td, th1, thead,
-        to = '', tr, trHead, train, trainListDiv;
+        var container = document.querySelector('#' + proto.divId), currRailwayType = '',
+        from = '', linkControl, label, table, td, th1, thead, to = '', tr,
+        trHead, train, trainListDiv;
 
         if (container) {
             while (container.hasChildNodes()) {
@@ -50,6 +50,9 @@ MYAPP.View.NumPicker = function(proto) {
             container.innerHTML = "Loading....";
             return;
         }
+        label = document.createElement('div');
+        label.innerHTML = '<header class="major"><p>Scegli il tuo treno:</p></header>';
+        container.appendChild(label);
 
         for (var i = 0; i < trainList.length; i++) {
             train = trainList[i];
