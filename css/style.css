@@ -1146,3 +1146,8 @@ ul#tab li.active {
 	fill: #ffffff;
 }
 
+.trainMenu {
+	width: 100%;
+	border: 5px grey solid;
+}
+
