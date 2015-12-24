@@ -34,7 +34,7 @@ eventDispatcher.trigger = function(eventName, params) {
     var innerHTML;
     switch (eventName) {
         case COMM.event.typeChanged:
-            innerHTML = COMM.lineIcon + "<img src='images/" + params.trainType + ".jpg' />";
+            innerHTML = COMM.lineIcon + "<img src='images/" + params.trainType + ".jpg' class='typeIcon'/>";
             wizard.fillTabHeader(0, innerHTML);
             wizard.fillTabHeader(1, '-');
             wizard.setTabFocus(1);

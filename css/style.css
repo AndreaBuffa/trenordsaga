@@ -1137,17 +1137,31 @@ ul#tab li.active {
 	margin: 5px;
 }
 
+.typeIcon {
+	vertical-align: middle;
+}
+
 .svgIcon {
 	width: 25px;
 	height: 25px;
+	vertical-align: middle;
 	fill: #cee8d8;
 }
+
 .svgIcon:hover {
 	fill: #ffffff;
 }
 
 .trainMenu {
 	width: 100%;
-	border: 5px grey solid;
+	border: 1px green solid;
 }
 
+.pickerLi {
+	color: #ffffff;
+	border-top: solid 1px rgba(144, 144, 144, 0.25);
+}
+
+#navPanel nav ul .pickerLi {
+    padding: 0.75em 0;
+}

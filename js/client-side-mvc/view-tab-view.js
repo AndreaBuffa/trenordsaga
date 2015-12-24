@@ -22,6 +22,7 @@ MYAPP.View.TabView = function(proto) {
             }
             liCtrl.innerHTML = headers[j];
             j++;
+            liCtrl.classList.add('pickerLi');
         }
     };
     liCtrlArray = new Array();
@@ -68,7 +69,7 @@ MYAPP.View.TabView = function(proto) {
     }
 
     that.draw = function() {
-        var container, div, mainDiv, li, ul, width;
+        var container, headLi, mainDiv, li, ul;
         if (status === 'loading') {
             return;
         }
@@ -81,17 +82,7 @@ MYAPP.View.TabView = function(proto) {
         //container.appendChild(mainDiv);
 
         ul = container.getElementsByTagName('ul')[0];
-        /*
-        if (skel.getStateId() === "/global/xlarge") {
-            //ul.id = "tabView";
-            ul.setAttribute('class', 'tabViewList');
-        } else {
-            //ul.id = "tabViewMobile";
-            ul.setAttribute('class', 'tabViewListMobile');
-        } */
-
         //mainDiv.appendChild(ul);
-        width = Math.floor(100 / headers.length);
         for(var i = 0; i < headers.length; i++) {
             li = document.createElement('li');
             liCtrlArray.push(li);
@@ -110,10 +101,17 @@ MYAPP.View.TabView = function(proto) {
                 event.initEvent('click', true, true);
                 document.querySelector('span.toggle').dispatchEvent(event);
             });
-            div = document.createElement('div');
-            div.innerHTML = headers[i];
-            li.appendChild(div);
-            ul.appendChild(li);
+            li.innerHTML = headers[i];
+            if (skel.getStateId() === "/global/xlarge/large") {
+                ul.appendChild(li);
+            } else {
+                if (!headLi) {
+                    headLi = ul.childNodes[0];
+                }
+                if (ul.hasChildNodes()) {
+                    ul.insertBefore(li, headLi);
+                }
+            }
         }
     }
     return that;
