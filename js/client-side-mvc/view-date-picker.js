@@ -51,10 +51,6 @@ MYAPP.View.DatePicker = function(proto) {
                               that.notify(COMM.event.dateChanged, params);
                           }
             });
-            status = 'ok';
-        } else {
-            $("[id^=datepicker]").datepicker("option", "minDate",
-                                             params.surveyedFrom);
         }
     }
 

@@ -1130,6 +1130,14 @@ ul#tab li.active {
     display: block;
 }
 
+.lineChart, .columnChart {
+	height: 500px;
+}
+
+.tableChart {
+	height: 100%;
+}
+
 .trainType {
 	width: 50px;
 	height: 50px;
@@ -1154,7 +1162,6 @@ ul#tab li.active {
 
 .trainMenu {
 	width: 100%;
-	border: 1px green solid;
 }
 
 .pickerLi {

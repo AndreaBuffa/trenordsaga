@@ -12,13 +12,17 @@ MYAPP.View.TabView = function(proto) {
             if (liCtrl === this) {
                 liCtrl.classList.add('active');
                 contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
-                if (contentCtrl)
+                if (contentCtrl) {
                     contentCtrl.style.display = 'table';
+                    that.notify(COMM.event.tabChanged, {'visible': true});
+                }
             } else {
                 liCtrl.classList.remove('active');
                 contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
-                if (contentCtrl)
+                if (contentCtrl) {
                     contentCtrl.style.display = 'none';
+                    that.notify(COMM.event.tabChanged, {'visible': false});
+                }
             }
             liCtrl.innerHTML = headers[j];
             j++;
@@ -29,6 +33,7 @@ MYAPP.View.TabView = function(proto) {
     status = "loading";
     that = {};
     that = COMM.Observer(that);
+    that = COMM.Notifier(that);
 
     that.trigger = function(eventName, params) {
         status = "ready";
@@ -95,14 +100,17 @@ MYAPP.View.TabView = function(proto) {
                 li.setAttribute('data-managed', 'yes');
             }
             li.addEventListener('click', function() {
-                var event = document.createEvent('Event');
+                var event;
                 clickHandler.bind(this)();
-                //
-                event.initEvent('click', true, true);
-                document.querySelector('span.toggle').dispatchEvent(event);
+                // collapse side menu
+                if (COMM.isMobile()) {
+                    event = document.createEvent('Event');
+                    event.initEvent('click', true, true);
+                    document.querySelector('span.toggle').dispatchEvent(event);
+                }
             });
             li.innerHTML = headers[i];
-            if (skel.getStateId() === "/global/xlarge/large") {
+            if (!COMM.isMobile()) {
                 ul.appendChild(li);
             } else {
                 if (!headLi) {

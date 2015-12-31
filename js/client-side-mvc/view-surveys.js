@@ -7,7 +7,7 @@ MYAPP.View.Surveys = function(proto) {
     status = "noBinded";
     that = COMM.Observer(proto);
 
-    that.trigger = function(eventName, params) {
+    that.trigger = function(eventName, param) {
         switch(eventName) {
             case COMM.event.modelReady:
                 if (chartsLibReady)
@@ -15,22 +15,26 @@ MYAPP.View.Surveys = function(proto) {
             break;
             case COMM.event.dateChanged:
                 status = "loading";
-                this.update(params);
-                return
+                this.update(param);
+            break;
+            case COMM.event.tabChanged:
+                if (param.visible === false) {
+                    that.hide();
+                }
             break;
         }
     };
 
-    that.update = function(params) {
-        model.getSurveyGraphData(params, function(lineChartData, columnChartData) {
+    that.update = function(param) {
+        model.getSurveyGraphData(param, function(lineChartData, columnChartData) {
             status = "ready";
-            that.draw(params, lineChartData, columnChartData);
+            that.draw(param, lineChartData, columnChartData);
         });
     };
 
     that.draw = function(params, lineChartData, columnChartData) {
-        var columnChart, columnChartDataTable, columnChartOpt, div, div2,
-        lineChart, lineChartDataTable, lineChartOptions;
+        var columnChart, columnChartDataTable, columnChartOpt, div, div2, div3,
+        lineChart, lineChartDataTable, lineChartOptions, tableChart;
         if (status === 'noBinded') {
             return;
         }
@@ -49,6 +53,7 @@ MYAPP.View.Surveys = function(proto) {
             console.log('Surveys, cannot find div(' + proto.divId +')');
             return;
         }
+        div.setAttribute('style', 'display: block;');
         lineChart = new google.visualization.LineChart(div);
         lineChart.draw(lineChartDataTable, lineChartOptions);
 
@@ -68,13 +73,21 @@ MYAPP.View.Surveys = function(proto) {
             console.log('Surveys, cannot find div(' + proto.divId2 +')');
             return;
         }
+        div2.setAttribute('style', 'display: block;');
         columnChart = new google.visualization.ColumnChart(div2);
         columnChartDataTable = new google.visualization.DataTable(columnChartData);
         columnChart.draw(columnChartDataTable, columnChartOpt);
 
-        var table = new google.visualization.Table(document.getElementById('table_div'));
-        table.draw(columnChartDataTable, {showRowNumber: true, width: '100%', height: '100%'});
+        div3 = document.getElementById(proto.divId3);
+        if (!div3) {
+            console.log('Surveys, cannot find div(' + proto.divId3 +')');
+            return;
+        }
+        div3.setAttribute('style', 'display: block;');
 
+        tableChart = new google.visualization.Table(div3);
+        tableChart.draw(columnChartDataTable,
+                        { showRowNumber: true, width: '100%', height: '100%'});
     }
 
     that.toggle = function(visible) {
@@ -87,6 +100,21 @@ MYAPP.View.Surveys = function(proto) {
             div.style.display = 'table';
         else
             div.style.display = 'hidden';
+    }
+
+    that.hide = function() {
+        var divList = [], tmp;
+        divList.push(proto.divId);
+        divList.push(proto.divId2);
+        divList.push(proto.divId3);
+        for (var i = 0; i < divList.length; i++) {
+            tmp = document.getElementById(divList[i]);
+            if (!tmp) {
+                console.log('Surveys, cannot find div(' + divList[i] +')');
+                return;
+            }
+            tmp.setAttribute('style', 'display: none;');
+        };
     }
 
     that.init = function() {

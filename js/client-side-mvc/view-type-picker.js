@@ -7,35 +7,26 @@ MYAPP.View.TypePicker = function(proto) {
     var anchor, myModel, status, that;
     anchor = proto.anchor;
     myModel = proto.model;
-    status = "loading";
+    status = "";
     that = COMM.Observer(proto);
     that = COMM.Notifier(that);
 
     that.trigger = function(eventName, params) {
-        this.update();
+        switch(eventName) {
+            case COMM.event.modelReady:
+                status = "ready";
+                this.update();
+            break;
+            case COMM.event.docReady:
+                status = "loading";
+                this.draw();
+            break;
+        }
     };
 
     that.update = function() {
         myModel.getTrainList({}, function(trainList) {
             trainList = trainList || [];
-            trainList.sort(function(a, b) {
-                var number1 = a.type.match(/(\d+)$/);
-                var number2 = b.type.match(/(\d+)$/);
-                if (number1 == null) {
-                    if (number2 == null) {
-                        return 0;
-                    } else {
-                        return -1;
-                    }
-                } else {
-                    if (number2 == null) {
-                        return 1;
-                    } else {
-                        return parseInt(number1[0]) - parseInt(number2[0]);
-                    }
-                }
-            });
-            status = "ready";
             that.draw(trainList);
         });
     };
@@ -57,7 +48,7 @@ MYAPP.View.TypePicker = function(proto) {
             return;
         }
         label = document.createElement('div');
-        label.innerHTML = '<header class="major"><p>Scegli per tipologia:</p></header>';
+        label.innerHTML = '<h2>Scegli per tipologia:</h2>';
         container.appendChild(label);
 
         for (var i = 0; i < trainList.length; i++) {
