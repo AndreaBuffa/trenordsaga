@@ -33,22 +33,23 @@ model.addObserver(COMM.event.modelReady, tabView);
 tabView.addObserver(COMM.event.tabChanged, surveys);
 
 var wizard = COMM.Observer({});
+var liBuilder = COMM.MenuLiBuilder({});
 wizard.trigger = function(eventName, params) {
     var innerHTML;
     //surveys.hide();
     switch (eventName) {
         case COMM.event.typeChanged:
-            innerHTML = COMM.lineIcon + "<img src='images/" + params.trainType + ".jpg' class='typeIcon'/>";
+            innerHTML = liBuilder.getTypeLi(params.trainType);
             tabView.fillTabHeader(0, innerHTML);
             tabView.fillTabHeader(1, '-');
             tabView.setTabFocus(1);
             break;
         case COMM.event.trainChanged:
-            tabView.fillTabHeader(1, COMM.trainIcon + params.trainId);
+            tabView.fillTabHeader(1, liBuilder.getTrainNumLi(params.trainId));
             tabView.setTabFocus(2);
             break;
         case COMM.event.dateChanged:
-            tabView.fillTabHeader(2, COMM.calendarIcon + params.selectedDate);
+            tabView.fillTabHeader(2, liBuilder.getCalendarLi(params.selectedDate));
             tabView.setTabFocus(-1);
             break;
     }

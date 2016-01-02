@@ -85,6 +85,7 @@ MYAPP.View.TrainStats = function(proto) {
 		}
 		if (document.querySelector('#' + proto.divId)) {
             document.querySelector('#' + proto.divId).appendChild(container);
+            document.querySelector('#' + proto.divId).setAttribute('style', 'display: block;');
         } else {
             console.log('TrainStats, cannot find the main div cont.' + proto.divId);
             return;
@@ -129,8 +130,22 @@ MYAPP.View.TrainStats = function(proto) {
 			case COMM.event.trainChanged:
 				this.update(params);
 			break;
+            case COMM.event.tabChanged:
+                if (params.visible === false) {
+                    that.hide();
+                }
+            break;
 		}
 	}
+
+    that.hide = function() {
+    	var container = document.querySelector('#' + proto.divId);
+		if (!container) {
+            console.log('Surveys, cannot find div(' + proto.divId +')');
+            return;
+        }
+        container.setAttribute('style', 'display: none;');
+    }
 
 	return that;
 }

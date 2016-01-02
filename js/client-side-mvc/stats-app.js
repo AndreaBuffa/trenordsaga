@@ -25,19 +25,19 @@ picker.fillTabContent(0, trainTypeDiv);
 picker.fillTabHeader(1, '');
 picker.fillTabContent(1, trainNumDiv);
 model.addObserver(COMM.event.modelReady, picker);
+picker.addObserver(COMM.event.tabChanged, trainStats);
 
 var eventDispatcher = COMM.Observer({});
+var liBuilder = COMM.MenuLiBuilder({});
 eventDispatcher.trigger = function(eventName, params) {
-    var img; // trainDescr = {};
     switch (eventName) {
         case COMM.event.typeChanged:
-            img = "<img src='images/" + params.trainType + ".jpg' />";
-            picker.fillTabHeader(0, img);
+            picker.fillTabHeader(0, liBuilder.getTypeLi(params.trainType));
             picker.fillTabHeader(1, '-');
             picker.setTabFocus(1);
             break;
         case COMM.event.trainChanged:
-            picker.fillTabHeader(1, params.trainId);
+            picker.fillTabHeader(1, liBuilder.getTrainNumLi(params.trainId));
             picker.setTabFocus(-1);
             break;
     }

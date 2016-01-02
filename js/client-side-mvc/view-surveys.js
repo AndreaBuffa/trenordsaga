@@ -2,7 +2,8 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.Surveys = function(proto) {
-    var chartsLibReady = false, model, status, that;
+    var chartsLibReady = false, columnChartData, model, params, lineChartData,
+    status, that;
     model = proto.model;
     status = "noBinded";
     that = COMM.Observer(proto);
@@ -32,9 +33,14 @@ MYAPP.View.Surveys = function(proto) {
         });
     };
 
-    that.draw = function(params, lineChartData, columnChartData) {
+    that.draw = function(_params, _lineChartData, _columnChartData) {
         var columnChart, columnChartDataTable, columnChartOpt, div, div2, div3,
         lineChart, lineChartDataTable, lineChartOptions, tableChart;
+        if (_params && _lineChartData && _columnChartData) {
+            params = _params;
+            lineChartData = _lineChartData;
+            columnChartData =  _columnChartData
+        }
         if (status === 'noBinded') {
             return;
         }
@@ -46,7 +52,8 @@ MYAPP.View.Surveys = function(proto) {
             curveType: 'function',
             legend: { position: 'top',
                   textStyle: { bold: false}
-                }
+                },
+            tooltip: { trigger: 'selection' }
         };
         div = document.getElementById(proto.divId);
         if (!div) {
@@ -56,6 +63,7 @@ MYAPP.View.Surveys = function(proto) {
         div.setAttribute('style', 'display: block;');
         lineChart = new google.visualization.LineChart(div);
         lineChart.draw(lineChartDataTable, lineChartOptions);
+        lineChart.setSelection([{row: 3, column: 2}]);
 
         columnChartOpt = {
             vAxis: {
@@ -130,6 +138,9 @@ MYAPP.View.Surveys = function(proto) {
         }
         head = document.getElementsByTagName('head')[0];
         head.appendChild(script);
+        $(window).resize(function(){
+            that.draw();
+        });
         return that;
     }
 

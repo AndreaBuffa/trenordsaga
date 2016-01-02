@@ -65,6 +65,24 @@ COMM.event = {
     tabChanged: "tabChanged"
 };
 
+COMM.MenuLiBuilder = function(that) {
+    if (!that) {
+        console.log("that MenuLiBuilder is NULL");
+        return;
+    }
+    that.getTypeLi = function(trainType) {
+        return COMM.lineIcon + "<img src='images/" + trainType +
+            ".jpg' class='typeIcon'/>";
+    };
+    that.getTrainNumLi = function(trainNum) {
+        return COMM.trainIcon + trainNum;
+    };
+    that.getCalendarLi = function(currDate) {
+        return COMM.calendarIcon + currDate;
+    };
+    return that;
+}
+
 COMM.DocReadyDispatcher = function(proto) {
     var that = {};
     that = COMM.Notifier(that);
