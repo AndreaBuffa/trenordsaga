@@ -33,6 +33,8 @@ class FrontEndFactory(AppFactory):
 			return ClientEndpoint(request, response)
 		elif re.compile('^\/dev').search(request.path):
 			return ClientEndpoint(request, response)
+		elif re.compile('^\/search').search(request.path):
+			return ClientEndpoint(request, response)
 		elif re.compile('^\/console').search(request.path):
 			return AdminApp(request, response)
 		else:
@@ -110,5 +112,6 @@ app = webapp2.WSGIApplication([
 	(r'/about', HandleRequest),
 	(r'/stats', HandleRequest),
 	(r'/dev', HandleRequest),
+	(r'/search', HandleRequest),
 	(r'/', HandleRequest)
 ])

@@ -72,18 +72,23 @@ class OnePageAppView(StaticView):
 
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('common.js', {})
-		self.embedJS('view-tab-view.js', {})
-		self.embedJS('view-search-train.js', {})
-		self.embedJS('view-type-picker.js', {})
-		self.embedJS('view-num-picker.js', {})
 		self.embedJS('model.js', {})
-		if re.compile('^\/dev').search(self.request.path):
-			self.embedJS('view-date-picker.js', {})
-			self.embedJS('view-surveys.js', {})
-			self.embedJS('survey-app-new.js', {})
+		if re.compile('^\/search').search(self.request.path):
+			self.embedJS('view-add-train.js', {})
+			self.embedJS('add-train-app.js', {})
 		else:
-			self.embedJS('view-display-stats.js', {})
-			self.embedJS('stats-app.js', {})
+			self.embedJS('view-tab-view.js', {})
+			self.embedJS('view-type-picker.js', {})
+			self.embedJS('view-num-picker.js', {})
+			self.embedJS('view-search.js', {})
+
+			if re.compile('^\/dev').search(self.request.path):
+				self.embedJS('view-date-picker.js', {})
+				self.embedJS('view-surveys.js', {})
+				self.embedJS('survey-app-new.js', {})
+			else:
+				self.embedJS('view-display-stats.js', {})
+				self.embedJS('stats-app.js', {})
 
 		self.embedJS('api-endpoint.js', {})
 		self.pageBuffer += '</script>'
@@ -92,6 +97,8 @@ class OnePageAppView(StaticView):
 			'landingClass': False})
 		if re.compile('^\/dev').search(self.request.path):
 			self.renderTpl('survey-new.html', {'nls': langSupport.getEntries()})
+		elif re.compile('^\/search').search(self.request.path):
+			self.renderTpl('search.html', {'nls': langSupport.getEntries()})
 		else:
 			self.renderTpl('stats.html', {'nls': langSupport.getEntries()})
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})

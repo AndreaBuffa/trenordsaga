@@ -51,7 +51,7 @@ MYAPP.View.NumPicker = function(proto) {
             return;
         }
         label = document.createElement('div');
-        label.innerHTML = '<header class="major"><p>Scegli il tuo treno:</p></header>';
+        label.innerHTML = '<h2>Scegli il treno:</h2>';
         container.appendChild(label);
 
         for (var i = 0; i < trainList.length; i++) {

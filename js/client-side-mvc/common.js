@@ -62,7 +62,8 @@ COMM.event = {
     trainChanged: "trainChanged",
     dateChanged: "dateChanged",
     docReady: "docReady",
-    tabChanged: "tabChanged"
+    tabChanged: "tabChanged",
+    scrollUp: "scrollUp"
 };
 
 COMM.MenuLiBuilder = function(that) {
@@ -92,6 +93,28 @@ COMM.DocReadyDispatcher = function(proto) {
         });
         return that;
     }
+    return that.init();
+}
+
+COMM.ScrollUpDispatcher = function(that) {
+    if (!that) {
+        console.log("that ScrollUpDispatcher is NULL");
+        return;
+    }
+    that = COMM.Notifier(that);
+    var lastScrollTop = 0;
+    that.init = function() {
+        $(window).scroll(function(event){
+           var st = $(this).scrollTop();
+           if (st > lastScrollTop){
+               // downscroll code
+           } else {
+                that.notify(COMM.event.scrollUp);
+           }
+           lastScrollTop = st;
+        });
+        return that;
+    }   
     return that.init();
 }
 

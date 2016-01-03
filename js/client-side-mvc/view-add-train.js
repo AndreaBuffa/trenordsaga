@@ -94,7 +94,7 @@ MYAPP.View.SearchTrain = function(proto) {
 
         container.setAttribute('id', anchor);
         container.setAttribute('style', "clear: left;");
-        formDiv.style.display = 'none';
+        //formDiv.style.display = 'none';
         formDiv.appendChild(form);
         fromField = document.createElement('input');
         fromField.type = 'text';

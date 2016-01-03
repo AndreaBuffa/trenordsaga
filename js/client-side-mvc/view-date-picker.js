@@ -14,6 +14,43 @@ MYAPP.View.DatePicker = function(proto) {
                     console.log("Datepicker,(" + eventName + ") received but I'm still loading");
                 }
                 params = eventParams;
+                /* Italian initialisation for the jQuery UI date picker plugin. */
+                /* Written by Antonello Pasella (antonello.pasella@gmail.com). */
+                ( function( factory ) {
+                    if ( typeof define === "function" && define.amd ) {
+
+                        // AMD. Register as an anonymous module.
+                        define( [ "../widgets/datepicker" ], factory );
+                    } else {
+
+                        // Browser globals
+                        factory( jQuery.datepicker );
+                    }
+                }( function( datepicker ) {
+
+                datepicker.regional.it = {
+                    closeText: "Chiudi",
+                    prevText: "&#x3C;Prec",
+                    nextText: "Succ&#x3E;",
+                    currentText: "Oggi",
+                    monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno",
+                        "Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre" ],
+                    monthNamesShort: [ "Gen","Feb","Mar","Apr","Mag","Giu",
+                        "Lug","Ago","Set","Ott","Nov","Dic" ],
+                    dayNames: [ "Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato" ],
+                    dayNamesShort: [ "Dom","Lun","Mar","Mer","Gio","Ven","Sab" ],
+                    dayNamesMin: [ "Do","Lu","Ma","Me","Gi","Ve","Sa" ],
+                    weekHeader: "Sm",
+                    dateFormat: "dd/mm/yy",
+                    firstDay: 1,
+                    isRTL: false,
+                    showMonthAfterYear: false,
+                    yearSuffix: "" };
+                datepicker.setDefaults( datepicker.regional.it );
+
+                return datepicker.regional.it;
+
+                } ) );
                 this.draw();
             break;
         }
@@ -30,7 +67,7 @@ MYAPP.View.DatePicker = function(proto) {
             return;
         }
         div = document.createElement('div');
-        div.innerHTML = '<header class="major"><p>Scegli il giorno:</p></header>';
+        div.innerHTML = '<h2>Scegli il giorno:</h2>';
         container.appendChild(div);
 
         div = document.createElement('div');
@@ -39,7 +76,7 @@ MYAPP.View.DatePicker = function(proto) {
 
         if (status === 'ready') {
             today = new Date();
-            $("[id^=datepicker]").datepicker({
+            $("#datepicker").datepicker({
                 dateFormat: "yy-mm-dd",
                 minDate: params.surveyedFrom,
                 maxDate: new Date(today.getFullYear(),
@@ -47,9 +84,9 @@ MYAPP.View.DatePicker = function(proto) {
                           today.getDate() - 1),
                 //defaultDate: currDate,
                 onSelect: function(selectedDate) {
-                              params.selectedDate = selectedDate;
-                              that.notify(COMM.event.dateChanged, params);
-                          }
+                    params.selectedDate = selectedDate;
+                    that.notify(COMM.event.dateChanged, params);
+                }
             });
         }
     }

@@ -1,7 +1,8 @@
 
 var model = MYAPP.Model({});
 var trainTypeDiv = 'type', trainNumDiv = 'trainNum', surveyDiv1 = 'survey',
-surveyDiv2 = 'compare', surveyDiv3 = 'table_div', dateDiv = 'date';
+surveyDiv2 = 'compare', surveyDiv3 = 'table_div', dateDiv = 'date', 
+searchDiv = 'search';
 
 var typePicker = MYAPP.View.TypePicker({'divId': trainTypeDiv,
                                         'model': model});
@@ -22,6 +23,12 @@ datePicker.addObserver(COMM.event.dateChanged, surveys);
 var readyDispatcher = COMM.DocReadyDispatcher({});
 readyDispatcher.addObserver(COMM.event.docReady, typePicker);
 
+var scrollUpNotifier = COMM.ScrollUpDispatcher({});
+var searchTrain = MYAPP.View.Search({'divId': searchDiv});
+scrollUpNotifier.addObserver(COMM.event.scrollUp, searchTrain);
+readyDispatcher.addObserver(COMM.event.docReady, searchTrain);
+model.addObserver(COMM.event.modelReady, searchTrain);
+
 var tabView = MYAPP.View.TabView({'divId': '#nav'});
 tabView.fillTabHeader(0, COMM.lineIcon);
 tabView.fillTabContent(0, trainTypeDiv);
@@ -36,7 +43,6 @@ var wizard = COMM.Observer({});
 var liBuilder = COMM.MenuLiBuilder({});
 wizard.trigger = function(eventName, params) {
     var innerHTML;
-    //surveys.hide();
     switch (eventName) {
         case COMM.event.typeChanged:
             innerHTML = liBuilder.getTypeLi(params.trainType);
