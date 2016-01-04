@@ -84,7 +84,8 @@ class OnePageAppView(StaticView):
 
 			if re.compile('^\/dev').search(self.request.path):
 				self.embedJS('view-date-picker.js', {})
-				self.embedJS('view-surveys.js', {})
+				self.embedJS('view-surveys.js',
+							 {'nls': langSupport.getEntries()})
 				self.embedJS('survey-app-new.js', {})
 			else:
 				self.embedJS('view-display-stats.js', {})
@@ -177,14 +178,9 @@ class ScheduleViewer(View):
 			               'trainId': self.trainId})
 
 		self.pageBuffer += '<script type="text/Javascript">'
-		self.embedJS('common.js', {})
-		self.embedJS('model.js', {})
-		self.embedJS('view-search-train.js', {})
-		self.embedJS('view-choose-train.js', {})
 		self.embedJS('survey-app.js', {
 		             'currDate': self.theDate,
 		             'minDate': startSurveyDate})
-		self.embedJS('api-endpoint.js', {})
 		self.pageBuffer += '</script>'
 
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})

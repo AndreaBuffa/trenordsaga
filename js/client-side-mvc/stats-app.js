@@ -16,9 +16,6 @@ var trainStats = MYAPP.View.TrainStats({'divId': 'stats', 'model': model});
 model.addObserver(COMM.event.modelReady, trainStats);
 numPicker.addObserver(COMM.event.trainChanged, trainStats);
 
-var searchTrain = MYAPP.View.SearchTrain({'model': model});
-model.addObserver(COMM.event.modelReady, searchTrain);
-
 var picker = MYAPP.View.TabView({'divId': '#nav'});
 picker.fillTabHeader(0, '');
 picker.fillTabContent(0, trainTypeDiv);
@@ -26,6 +23,9 @@ picker.fillTabHeader(1, '');
 picker.fillTabContent(1, trainNumDiv);
 model.addObserver(COMM.event.modelReady, picker);
 picker.addObserver(COMM.event.tabChanged, trainStats);
+
+var readyDispatcher = COMM.DocReadyDispatcher({});
+readyDispatcher.addObserver(COMM.event.docReady, typePicker);
 
 var eventDispatcher = COMM.Observer({});
 var liBuilder = COMM.MenuLiBuilder({});

@@ -17,7 +17,6 @@ numPicker.addObserver(COMM.event.trainChanged, datePicker);
 
 var surveys = MYAPP.View.Surveys({'divId': surveyDiv1, 'divId2': surveyDiv2,
                                   'divId3': surveyDiv3, 'model': model});
-model.addObserver(COMM.event.modelReady, surveys);
 datePicker.addObserver(COMM.event.dateChanged, surveys);
 
 var readyDispatcher = COMM.DocReadyDispatcher({});

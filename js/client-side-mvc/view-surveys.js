@@ -5,18 +5,15 @@ MYAPP.View.Surveys = function(proto) {
     var chartsLibReady = false, columnChartData, model, params, lineChartData,
     status, that;
     model = proto.model;
-    status = "noBinded";
+    status = "";
     that = COMM.Observer(proto);
 
     that.trigger = function(eventName, param) {
         switch(eventName) {
-            case COMM.event.modelReady:
-                if (chartsLibReady)
-                    this.draw();
-            break;
             case COMM.event.dateChanged:
-                status = "loading";
                 this.update(param);
+                status = '';
+                that.draw();
             break;
             case COMM.event.tabChanged:
                 if (param.visible === false) {
@@ -41,7 +38,18 @@ MYAPP.View.Surveys = function(proto) {
             lineChartData = _lineChartData;
             columnChartData =  _columnChartData
         }
-        if (status === 'noBinded') {
+        div = document.getElementById(proto.divId);
+        if (!div) {
+            console.log('Surveys, cannot find div(' + proto.divId +')');
+            return;
+        }
+        if (status === '') {
+            div.setAttribute('style', 'display: block;');
+            div.innerHTML = "loading..";
+            return;
+        }
+        if (!chartsLibReady) {
+            console.log('Surveys, chartsLibReady is false');
             return;
         }
         lineChartDataTable = new google.visualization.DataTable(lineChartData);
@@ -55,12 +63,6 @@ MYAPP.View.Surveys = function(proto) {
                 },
             tooltip: { trigger: 'selection' }
         };
-        div = document.getElementById(proto.divId);
-        if (!div) {
-            console.log('Surveys, cannot find div(' + proto.divId +')');
-            return;
-        }
-        div.setAttribute('style', 'display: block;');
         lineChart = new google.visualization.LineChart(div);
         lineChart.draw(lineChartDataTable, lineChartOptions);
         lineChart.setSelection([{row: 3, column: 2}]);
