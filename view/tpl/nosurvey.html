@@ -1,6 +1,4 @@
 <section class="wrapper">
-	<form name="form" method="post" action="survey">
-	<input type="hidden" name="trainid" value="{{ trainId }}">
 	<section class="container">
 		<section>
 			<header class="major">
@@ -8,14 +6,9 @@
 			</header>
 		</section>
 		<section>
-
-			<div id="container"></div>
-
 			<header class="major" style="clear: left">
-				<p>{{ nls.cant_find }}</p>
+				<p>{{ nls.cant_find }}<a href="dev" class="button big">{{ nls.query_the_oracle }}</a></p>
 			</header>
-			<p><a href="dev" class="button big">{{ nls.query_the_oracle }}</a></p>
 		</section>
 	</section>
-	</form>
 </section>

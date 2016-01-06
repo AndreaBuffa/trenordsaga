@@ -1,8 +1,10 @@
 
 var model = MYAPP.Model({});
-var trainTypeDiv = 'type', trainNumDiv = 'trainNum', surveyDiv1 = 'survey',
-surveyDiv2 = 'compare', surveyDiv3 = 'table_div', dateDiv = 'date', 
+var trainTypeDiv = 'type', trainNumDiv = 'trainNum', dateDiv = 'date',
 searchDiv = 'search';
+var divList = ['trend', 'survey', 'compareHeader', 'compare', 'compareTableHeader',
+'table_div'];
+
 
 var typePicker = MYAPP.View.TypePicker({'divId': trainTypeDiv,
                                         'model': model});
@@ -15,8 +17,7 @@ typePicker.addObserver(COMM.event.typeChanged, numPicker);
 var datePicker = MYAPP.View.DatePicker({'divId': dateDiv});
 numPicker.addObserver(COMM.event.trainChanged, datePicker);
 
-var surveys = MYAPP.View.Surveys({'divId': surveyDiv1, 'divId2': surveyDiv2,
-                                  'divId3': surveyDiv3, 'model': model});
+var surveys = MYAPP.View.Surveys({'divList': divList, 'model': model});
 datePicker.addObserver(COMM.event.dateChanged, surveys);
 
 var readyDispatcher = COMM.DocReadyDispatcher({});

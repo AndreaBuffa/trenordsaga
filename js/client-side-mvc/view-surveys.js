@@ -2,8 +2,9 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.Surveys = function(proto) {
-    var chartsLibReady = false, columnChartData, model, params, lineChartData,
+    var chartsLibReady = false, columnChartData, divIdx, model, params, lineChartData,
     status, that;
+    divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5};
     model = proto.model;
     status = "";
     that = COMM.Observer(proto);
@@ -31,27 +32,34 @@ MYAPP.View.Surveys = function(proto) {
     };
 
     that.draw = function(_params, _lineChartData, _columnChartData) {
-        var columnChart, columnChartDataTable, columnChartOpt, div, div2, div3,
-        lineChart, lineChartDataTable, lineChartOptions, tableChart;
+        var columnChart, columnChartDataTable, columnChartOpt, divIdList,
+        divCtrlList = [],lineChart, lineChartDataTable, lineChartOptions,
+        tableChart;
         if (_params && _lineChartData && _columnChartData) {
             params = _params;
             lineChartData = _lineChartData;
             columnChartData =  _columnChartData
         }
-        div = document.getElementById(proto.divId);
-        if (!div) {
-            console.log('Surveys, cannot find div(' + proto.divId +')');
-            return;
-        }
+        divIdList = proto.divList;
+        for (var i = 0; i < divIdList.length; i++) {
+            divCtrlList.push(document.getElementById(divList[i]));
+            if (!divCtrlList[divCtrlList.length - 1]) {
+                console.log('Surveys, cannot find div(' +
+                    divCtrlList[divCtrlList.length - 1] +')');
+                return;
+            }
+        };
         if (status === '') {
-            div.setAttribute('style', 'display: block;');
-            div.innerHTML = "loading..";
+            divCtrlList[divIdx.chart1].setAttribute('style', 'display: block;')
+            divCtrlList[divIdx.chart1].innerHTML = "loading..";
             return;
         }
         if (!chartsLibReady) {
             console.log('Surveys, chartsLibReady is false');
             return;
         }
+
+        divCtrlList[divIdx.hd1].setAttribute('style', 'display: block;');
         lineChartDataTable = new google.visualization.DataTable(lineChartData);
         lineChartOptions = {
             title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
@@ -63,10 +71,11 @@ MYAPP.View.Surveys = function(proto) {
                 },
             tooltip: { trigger: 'selection' }
         };
-        lineChart = new google.visualization.LineChart(div);
+        lineChart = new google.visualization.LineChart(divCtrlList[divIdx.chart1]);
         lineChart.draw(lineChartDataTable, lineChartOptions);
         lineChart.setSelection([{row: 3, column: 2}]);
 
+        divCtrlList[divIdx.hd2].setAttribute('style', 'display: block;');
         columnChartOpt = {
             vAxis: {
                 format: '',
@@ -78,47 +87,23 @@ MYAPP.View.Surveys = function(proto) {
             legend: { position: 'top' },
             colors: ['#dc3912', '#33ac71']
         };
-        div2 = document.getElementById(proto.divId2);
-        if (!div2) {
-            console.log('Surveys, cannot find div(' + proto.divId2 +')');
-            return;
-        }
-        div2.setAttribute('style', 'display: block;');
-        columnChart = new google.visualization.ColumnChart(div2);
+        divCtrlList[divIdx.chart2].setAttribute('style', 'display: block;');
+        columnChart = new google.visualization.ColumnChart(divCtrlList[divIdx.chart2]);
         columnChartDataTable = new google.visualization.DataTable(columnChartData);
         columnChart.draw(columnChartDataTable, columnChartOpt);
 
-        div3 = document.getElementById(proto.divId3);
-        if (!div3) {
-            console.log('Surveys, cannot find div(' + proto.divId3 +')');
-            return;
-        }
-        div3.setAttribute('style', 'display: block;');
 
-        tableChart = new google.visualization.Table(div3);
+        divCtrlList[divIdx.hd3].setAttribute('style', 'display: block;');
+        divCtrlList[divIdx.chart3].setAttribute('style', 'display: block;');
+        tableChart = new google.visualization.Table(divCtrlList[divIdx.chart3]);
         tableChart.draw(columnChartDataTable,
                         { showRowNumber: true, width: '100%', height: '100%'});
     }
 
-    that.toggle = function(visible) {
-        var div = document.getElementById(proto.divId);
-        if (!div) {
-            console.log('Surveys, cannot find div(' + proto.divId +')');
-            return;
-        }
-        if (visible)
-            div.style.display = 'table';
-        else
-            div.style.display = 'hidden';
-    }
-
     that.hide = function() {
-        var divList = [], tmp;
-        divList.push(proto.divId);
-        divList.push(proto.divId2);
-        divList.push(proto.divId3);
-        for (var i = 0; i < divList.length; i++) {
-            tmp = document.getElementById(divList[i]);
+        var tmp, divIdList = proto.divList;
+        for (var i = 0; i < divIdList.length; i++) {
+            tmp = document.getElementById(divIdList[i]);
             if (!tmp) {
                 console.log('Surveys, cannot find div(' + divList[i] +')');
                 return;

@@ -52,17 +52,32 @@ class NLS(object):
 					'en-US': 'Median delay',
 					'it-IT': 'Ritardo mediano'}
 		self.entries['banner_title'] = {
-					'en-US': 'This is a saga, but always the same tale',
+					'en-US': 'This is a saga, but always the same tale?',
 					'it-IT': 'una saga, ma &egrave; sempre la stessa storia?'}
 		self.entries['banner_title_sub'] = {
 					'en-US': 'Performance Albairate-Saronno line',
 					'it-IT': 'Le performance del treno Albairate-Saronno delle 8:08'}
+		self.entries['banner_title_sub_sub'] = {
+					'en-US': 'Is my train late on regular basis?',
+					'it-IT': 'Il mio treno &egrave; sempre in ritardo. Ma sar&agrave; vero?'}
+		self.entries['banner_title_explain'] = {
+					'en-US': 'Survey your train and check if it is really late every day',
+					'it-IT': 'Monitora il tuo treno e verifica se &egrave davvero sempre in ritardo'}
+		self.entries['banner_fun_1'] = {
+					'en-US': 'Check the train survey daily.',
+					'it-IT': 'Consulta il ritardo per giorno.'}
+		self.entries['banner_fun_2'] = {
+					'en-US': 'Check the statistics.',
+					'it-IT': 'Guarda le statistiche.'}
+		self.entries['banner_fun_3'] = {
+					'en-US': 'Join the project.',
+					'it-IT': 'Partecipa al progetto aggiungendo il tuo treno.'}
 		self.entries['learn_more'] = {
 					'en-US': 'Learn more',
 					'it-IT': 'Per saperne di pi&ugrave;'}
 		self.entries['daily'] = {
-					'en-US': 'Daily',
-					'it-IT': 'Giorno per giorno'}
+					'en-US': 'Surveys',
+					'it-IT': 'Rilevazioni'}
 		self.entries['statistics'] = {
 					'en-US': 'Statistics',
 					'it-IT': 'Statistiche'}
@@ -112,8 +127,8 @@ class NLS(object):
 					'en-US': 'Sign Up',
 					'it-IT': 'Registrati'}
 		self.entries['query_the_oracle'] = {
-					'en-US': 'Do another query',
-					'it-IT': 'Fai un\'altra query'}
+					'en-US': 'Start here',
+					'it-IT': 'Comincia qui'}
 		self.entries['change_train'] = {
 					'en-US': 'Change train/railway:',
 					'it-IT': 'Scegli un altro treno:'}

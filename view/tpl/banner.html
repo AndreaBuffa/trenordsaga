@@ -1,9 +1,10 @@
+{% autoescape off %}
 <section id="banner">
-    <h2>{% autoescape off %}{{ nls.banner_title }}</h2>
+    <h2>{{ nls.banner_title }}</h2>
     <p>{{ nls.banner_sub_title }}</p>
     <ul class="actions">
         <li>
-            <a href="about" class="button big">{{ nls.learn_more }}{% endautoescape %}</a>
+            <a href="about" class="button big">{{ nls.learn_more }}</a>
         </li>
     </ul>
 </section>
@@ -11,21 +12,21 @@
 <section id="one" class="wrapper style1 align-center">
     <div class="container">
         <header>
-            <h2>Il mio treno è sempre in ritardo. Ma sarà vero?</h2>
-            <p>Monitora il tuo treno e verifica se è davvero sempre in ritardo</p>
+            <h2>{{ nls.banner_title_sub_sub }}</h2>
+            <p>{{ nls.banner_title_explain }}</p>
         </header>
         <div class="row 200%">
             <section class="4u 12u$(small)">
                 <i class="icon big rounded fa-clock-o"></i>
-                <p>Consulta il ritardo per giorno.</p>
+                <p>{{ nls.banner_fun_1 }}</p>
             </section>
             <section class="4u 12u$(small)">
                 <i class="icon big rounded fa-comments"></i>
-                <p>Guarda le statistiche.</p>
+                <p>{{ nls.banner_fun_2 }} Guarda le statistiche.</p>
             </section>
             <section class="4u$ 12u$(small)">
                 <i class="icon big rounded fa-user"></i>
-                <p>Iscriviti per saperne di più.</p>
+                <p>{{ nls.banner_fun_3 }}</p>
             </section>
         </div>
     </div>
@@ -34,3 +35,4 @@
 				<h2>&nbsp;</h2>
 			<p>{{ nls.for_example }}</p>
 			</header>
+{% endautoescape %}
