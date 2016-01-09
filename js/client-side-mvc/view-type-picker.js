@@ -33,7 +33,7 @@ MYAPP.View.TypePicker = function(proto) {
 
     that.draw = function(trainList) {
         var container = document.querySelector('#' + proto.divId), currRailwayType = '',
-        img, label, railwayDiv, railwayLink, train;
+        label, railwayDiv, railwayLink, train;
 
         if (container) {
             while (container.hasChildNodes()) {
@@ -60,9 +60,7 @@ MYAPP.View.TypePicker = function(proto) {
                 railwayLink = document.createElement('a');
                 railwayLink.id = currRailwayType;
                 railwayLink.setAttribute('data-type', currRailwayType);
-                img = document.createElement('img');
-                img.src = 'images/' + currRailwayType + '.jpg';
-                railwayLink.appendChild(img);
+                railwayLink.innerHTML = COMM.getTrainIcon(currRailwayType);
                 railwayLink.addEventListener('click', function() {
                     that.notify(COMM.event.typeChanged,
                                 {'trainType': this.dataset.type});
