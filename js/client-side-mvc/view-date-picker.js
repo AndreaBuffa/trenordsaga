@@ -67,7 +67,7 @@ MYAPP.View.DatePicker = function(proto) {
             return;
         }
         div = document.createElement('div');
-        div.innerHTML = '<h2>Scegli il giorno:</h2>';
+        div.innerHTML = '<header class="major"><h2>{{ nls.choose_date }}</h2></header>';
         container.appendChild(div);
 
         div = document.createElement('div');

@@ -48,7 +48,7 @@ MYAPP.View.TypePicker = function(proto) {
             return;
         }
         label = document.createElement('div');
-        label.innerHTML = '<h2>Scegli per tipologia:</h2>';
+        label.innerHTML = '<header class="major"><h2>{{ nls.choose_type }}</h2></header>';
         container.appendChild(label);
 
         for (var i = 0; i < trainList.length; i++) {

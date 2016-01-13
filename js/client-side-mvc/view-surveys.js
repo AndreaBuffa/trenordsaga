@@ -2,18 +2,18 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.Surveys = function(proto) {
-    var chartsLibReady = false, columnChartData, divIdx, model, params, lineChartData,
-    status, that;
+    var chartsLibReady = false, columnChartData, divIdx, model, params,
+	lineChartData, status, that;
     divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5};
     model = proto.model;
-    status = "";
+    status = '';
     that = COMM.Observer(proto);
 
     that.trigger = function(eventName, param) {
         switch(eventName) {
             case COMM.event.dateChanged:
                 this.update(param);
-                status = '';
+                status = 'loading';
                 that.draw();
             break;
             case COMM.event.tabChanged:
@@ -26,7 +26,7 @@ MYAPP.View.Surveys = function(proto) {
 
     that.update = function(param) {
         model.getSurveyGraphData(param, function(lineChartData, columnChartData) {
-            status = "ready";
+            status = 'ready';
             that.draw(param, lineChartData, columnChartData);
         });
     };
@@ -38,7 +38,7 @@ MYAPP.View.Surveys = function(proto) {
         if (_params && _lineChartData && _columnChartData) {
             params = _params;
             lineChartData = _lineChartData;
-            columnChartData =  _columnChartData
+            columnChartData = _columnChartData;
         }
         divIdList = proto.divList;
         for (var i = 0; i < divIdList.length; i++) {
@@ -49,7 +49,7 @@ MYAPP.View.Surveys = function(proto) {
                 return;
             }
         };
-        if (status === '') {
+        if (status === 'loading') {
             divCtrlList[divIdx.chart1].setAttribute('style', 'display: block;')
             divCtrlList[divIdx.chart1].innerHTML = "loading..";
             return;

@@ -111,7 +111,9 @@ class ScheduleApi(remote.Service):
 			for trainStop in stops:
 				delayDict[trainStop.name] = trainStop.getMedian(True, True)
 
-			ret.real_median = myFormatter.ToColumnChartJSon(survey, delayDict)
+			ret.real_median = myFormatter.ToColumnChartJSon(survey,
+			                                                delayDict,
+			                                                tmpDate[0])
 
 		return ret
 

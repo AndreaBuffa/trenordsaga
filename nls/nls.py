@@ -36,6 +36,9 @@ class NLS(object):
 		self.entries['ordered_by_delay'] = {
 					'en-US': 'Delays and median delay:',
 					'it-IT': 'Il ritardo e il ritardo mediano:'}
+		self.entries['table_resume'] = {
+					'en-US': 'Table brief resume:',
+					'it-IT': 'Riepilogo in formato tabellare:'}
 		self.entries['delay_in_minutes'] = {
 					'en-US': 'Delay in minutes',
 					'it-IT': 'Ritardo in minuti'}
@@ -147,6 +150,15 @@ class NLS(object):
 		self.entries['left_day'] = {
 					'en-US': '',
 					'it-IT': 'del'}
+		self.entries['choose_type'] = {
+					'en-US': 'Choose the train type:',
+					'it-IT': 'Scelta del tipo di treno:'}
+		self.entries['choose_train_num'] = {
+					'en-US': 'Choose the train number:',
+					'it-IT': 'Scelta del treno:'}
+		self.entries['choose_date'] = {
+					'en-US': 'Choose the date:',
+					'it-IT': 'Scelta del giorno:'}
 
 	def setLang(self, acceptLang):
 		match = re.compile('it-IT').search(acceptLang)

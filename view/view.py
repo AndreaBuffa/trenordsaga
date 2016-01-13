@@ -78,12 +78,12 @@ class OnePageAppView(StaticView):
 			self.embedJS('add-train-app.js', {})
 		else:
 			self.embedJS('view-tab-view.js', {})
-			self.embedJS('view-type-picker.js', {})
-			self.embedJS('view-num-picker.js', {})
+			self.embedJS('view-type-picker.js', {'nls': langSupport.getEntries()})
+			self.embedJS('view-num-picker.js', {'nls': langSupport.getEntries()})
 			self.embedJS('view-search.js', {})
 
 			if re.compile('^\/dev').search(self.request.path):
-				self.embedJS('view-date-picker.js', {})
+				self.embedJS('view-date-picker.js', {'nls': langSupport.getEntries()})
 				self.embedJS('view-surveys.js',
 							 {'nls': langSupport.getEntries()})
 				self.embedJS('survey-app-new.js', {})

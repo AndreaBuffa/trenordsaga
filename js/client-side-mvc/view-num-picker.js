@@ -51,7 +51,7 @@ MYAPP.View.NumPicker = function(proto) {
             return;
         }
         label = document.createElement('div');
-        label.innerHTML = '<h2>Scegli il treno:</h2>';
+        label.innerHTML = '<header class="major"><h2>{{ nls.choose_train_num }}</h2></header';
         container.appendChild(label);
 
         for (var i = 0; i < trainList.length; i++) {
@@ -61,7 +61,6 @@ MYAPP.View.NumPicker = function(proto) {
                 trainListDiv = document.createElement('div');
                 trainListDiv.id = currRailwayType + 'trainList';
                 trainListDiv.classList.add('table-wrapper');
-                //trainListDiv.style.display = 'none';
             }
             if (from != train.leaveStation || to != train.endStation) {
                 from = train.leaveStation;

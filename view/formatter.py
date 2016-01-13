@@ -66,7 +66,7 @@ class Formatter:
 
 		return buffer
 
-	def ToColumnChartJSon(self, timeSchedule, delayDict):
+	def ToColumnChartJSon(self, timeSchedule, delayDict, currDate):
 		myBuffer = b"";
 		for entry in timeSchedule:
 			delay = 0
@@ -86,12 +86,15 @@ class Formatter:
 				 median,
 				 "1 %s" % langSupport.get("minute") if median == 1 else "%d %s" % (median, langSupport.get("minutes")))
 
+		niceDate = currDate.strftime(langSupport.get('date_format'))
+		currDalayLabel = langSupport.get("delay") + " " + \
+						langSupport.get("left_day") + " " + niceDate
 		myBuffer = b"""{
 				"cols": [
 						{"label": "", "pattern": "", "type": "string"},
 						{"label": "%s", "pattern": "", "type": "number"},
 						{"label": "%s", "pattern": "", "type": "number"}],
-				"rows": [%s ]}""" % (langSupport.get("delay"),
+				"rows": [%s ]}""" % (currDalayLabel,
 								   langSupport.get("median_delay"),
 								   myBuffer)
 
