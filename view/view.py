@@ -136,7 +136,8 @@ class ScheduleViewer(View):
 				delayDict[trainStop.name] = trainStop.getMedian(True, True)
 
 			stationsByDelayJS = myFormatter.ToColumnChartJSon(timeSchedule,
-			                                                  delayDict)
+			                                                  delayDict,
+			                                                  self.theDate)
 
 		trainDescr = self.myModel.findTrainDescrById(self.trainId)
 		trainType = leaveTime = startSurveyDate = '';
