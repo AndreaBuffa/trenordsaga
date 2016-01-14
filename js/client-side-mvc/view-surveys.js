@@ -49,6 +49,9 @@ MYAPP.View.Surveys = function(proto) {
                 return;
             }
         };
+        if (status === 'hidden') {
+            return;
+        }
         if (status === 'loading') {
             divCtrlList[divIdx.chart1].setAttribute('style', 'display: block;')
             divCtrlList[divIdx.chart1].innerHTML = "loading..";
@@ -110,6 +113,7 @@ MYAPP.View.Surveys = function(proto) {
             }
             tmp.setAttribute('style', 'display: none;');
         };
+        status = 'hidden';
     }
 
     that.init = function() {
