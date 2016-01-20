@@ -2,10 +2,7 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.NumPicker = function(proto) {
-/*	@todo check state
-*/
-    var anchor, myModel, currType, status, that;
-    anchor = proto.anchor;
+    var myModel, currType, status, that;
     myModel = proto.model;
     status = "loading";
     that = COMM.Notifier(COMM.Observer(proto));
@@ -71,12 +68,12 @@ MYAPP.View.NumPicker = function(proto) {
                 trHead = document.createElement('tr');
                 th1 = document.createElement('th');
                 th1.innerHTML = from + ' - ' + to;
+                th1.setAttribute('colspan', '3');
                 trHead.appendChild(th1);
                 thead.appendChild(trHead);
                 table.appendChild(thead);
                 trainListDiv.appendChild(table);
                 container.appendChild(trainListDiv);
-                //
             }
             linkControl = document.createElement('a');
             linkControl.setAttribute('id', train.trainId);
@@ -90,22 +87,65 @@ MYAPP.View.NumPicker = function(proto) {
                         'dayFilter': 'all',
                         'surveyedFrom': this.dataset.surveyedfrom});
                 });
-            linkControl.innerHTML = ['<b>', train.leaveTime, '</b>',
-                         ' - ',
-                         train.trainId, '&nbsp;',
-                         train.leaveStation, '&nbsp;',
-                         train.endStation,
+
+            tr = document.createElement('tr');
+            tr.setAttribute('class', 'trainTr');
+            tr.innerHTML = ['<td name="time"><b>', train.leaveTime, '</b></td>',
+                            '<td name="sep">num:</td>', '<td>', train.trainId,
+                            '</td>'].join("");
+            table.appendChild(tr);
+            tr = document.createElement('tr');
+            tr.setAttribute('class', 'trainTr');
+            td = document.createElement('td');
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.setAttribute('name', 'sep');
+            td.innerHTML = 'da:';
+            tr.appendChild(td);
+            td = document.createElement('td');
+            linkControl.innerHTML = train.leaveStation;
+            td.appendChild(linkControl);
+            tr.appendChild(td);
+            table.appendChild(tr);
+
+            tr = document.createElement('tr');
+            tr.setAttribute('class', 'trainTr');
+            td = document.createElement('td');
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.setAttribute('name', 'sep');
+            td.innerHTML = 'a:';
+            tr.appendChild(td);
+            td = document.createElement('td');
+            var linkControl2 = linkControl.cloneNode(true);
+
+            linkControl2.addEventListener('click', function () {
+                    that.notify(COMM.event.trainChanged, {'trainId': this.id,
+                        'type': this.dataset.type,
+                        'leaveTime': this.dataset.leavetime,
+                        'dayFilter': 'all',
+                        'surveyedFrom': this.dataset.surveyedfrom});
+                });
+
+            linkControl2.innerHTML = [train.endStation, ' (', train.arriveTime,
+                                      ')'].join("");
+            td.appendChild(linkControl2);
+            tr.appendChild(td);
+            table.appendChild(tr);
+            tr = document.createElement('tr');
+            tr.setAttribute('class', 'trainTrSep');
+            table.appendChild(tr);
+
+/*            tr.innerHTML = ['<table class="reset"><tr><td name="time"><b>', train.leaveTime, '</b></td>',
+                         '<td name="sep">num:</td>', '<td>', train.trainId, '</td></tr>',
+                         '<tr><td></td><td name="sep">da:</td><td>', train.leaveStation, '&nbsp;</td></tr>',
+                         '<tr><td></td><td name="sep">a:</td><td>', train.endStation,
                          ' (', train.arriveTime,
-                          ')'].join("");
+                          ')', '</td></tr>', '</table>'].join("");*/
 
 /*          var linkDiv = document.createElement('div');
             linkDiv.classList.add('row');
             linkDiv.appendChild(linkControl);*/
-            tr = document.createElement('tr');
-            td = document.createElement('td');
-            td.appendChild(linkControl);
-            tr.appendChild(td);
-            table.appendChild(tr);
         }
     };
 
