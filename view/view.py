@@ -71,7 +71,7 @@ class OnePageAppView(StaticView):
 			'renderForMobile': self.renderForMobile})
 
 		self.pageBuffer += '<script type="text/Javascript">'
-		self.embedJS('common.js', {})
+		self.embedJS('common.js', {'nls': langSupport.getEntries()})
 		self.embedJS('model.js', {})
 		if re.compile('^\/search').search(self.request.path):
 			self.embedJS('view-add-train.js', {})

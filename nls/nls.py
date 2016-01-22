@@ -15,6 +15,9 @@ class NLS(object):
 	def __init__(self, lang="en-US"):
 		self.default = lang
 		self.currLang = self.default
+		self.entries['flag'] = {
+					'en-US': 'en-US',
+					'it-IT': 'it-IT'}
 		self.entries['name'] = {
 					'en-US': 'Trenord Saga'}
 		self.entries['home'] = {

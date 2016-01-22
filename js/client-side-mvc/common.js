@@ -100,6 +100,15 @@ COMM.MenuLiBuilder = function(that) {
         return COMM.trainIcon + trainNum;
     };
     that.getCalendarLi = function(currDate) {
+        var match = [];
+        if ('{{nls.flag}}' === 'it-IT') {
+            match = currDate.match(/^(\d{4,})\-(\d{2,})\-(\d{2,})$/);
+            if (match == null || match.length < 3) {
+                console.log("MenuLiBuilder, Invalid dateformat");
+            }
+            match.shift();
+            return COMM.calendarIcon + match.reverse().join("-") ;
+        }
         return COMM.calendarIcon + currDate;
     };
     return that;
