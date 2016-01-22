@@ -15,6 +15,7 @@ handlers:
   script: api_main.handle
 # Task Queue
 - url: /_ah/queue/deferred
+  module: default
   login: admin
   script: google.appengine.ext.deferred.application
   secure: always
