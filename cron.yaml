@@ -1,5 +1,5 @@
 cron:
-- description: launch the web scaper
+- description: launch the web scraper
   url: /batch/retrieve
   schedule: every day 23:00
   timezone: Europe/Rome

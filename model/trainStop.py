@@ -28,9 +28,9 @@ class TrainStop(ndb.Model):
 	workDaySurveys = ndb.IntegerProperty(indexed = False)
 	"""the number of surveys taken during a weekend or a day off """
 	dayOffSurveys = ndb.IntegerProperty(indexed = False)
-	"""List of DelayConunter, (1 min, 10 times), (2 mins, 14 times).. ordered by delay"""
+	"""List of DelayCounter, (1 min, 10 times), (2 mins, 14 times).. ordered by delay"""
 	workDayDelays = ndb.StructuredProperty(DelayCounter, repeated = True, indexed = False)
-	"""List of DelayConunter, (1 min, 10 times), (2 mins, 14 times).. ordered by delay"""
+	"""List of DelayCounter, (1 min, 10 times), (2 mins, 14 times).. ordered by delay"""
 	dayOffDelays = ndb.StructuredProperty(DelayCounter, repeated = True, indexed = False)
 	"""the date of the first survey for this station name and this train id"""
 	startdate = ndb.DateProperty(indexed = False)

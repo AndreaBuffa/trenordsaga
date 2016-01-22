@@ -18,7 +18,7 @@ COMM.textList = {'S1': '&nbsp;S1', 'S2': '&nbsp;S2', 'S3': '&nbsp;S3',
 
 
 COMM.isMobile = function() {
-    if (skel.getStateId() === "/global/xlarge/large") {
+    if (skel.getStateId() === "/global/xlarge") {
         return false;
     }
     return true;

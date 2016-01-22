@@ -69,14 +69,15 @@ MYAPP.View.Surveys = function(proto) {
                    ' {{nls.left}} ' + params.leaveTime + ' {{nls.left_day}} ' +
                    params.selectedDate,
             curveType: 'function',
-            legend: { position: 'top',
-                  textStyle: { bold: false}
-                },
-            tooltip: { trigger: 'selection' }
+            legend: {position: 'top',
+                     textStyle: { bold: false}},
+            tooltip: {trigger: 'selection'}
         };
         lineChart = new google.visualization.LineChart(divCtrlList[divIdx.chart1]);
         lineChart.draw(lineChartDataTable, lineChartOptions);
-        lineChart.setSelection([{row: 3, column: 2}]);
+        lineChart.setSelection([{
+            row: Math.floor(lineChartDataTable.getNumberOfRows() / 2),
+            column: 2}]);
 
         divCtrlList[divIdx.hd2].setAttribute('style', 'display: block;');
         columnChartOpt = {
@@ -87,20 +88,24 @@ MYAPP.View.Surveys = function(proto) {
             title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
                    ' {{nls.left}} ' + params.leaveTime + ' {{nls.left_day}} ' +
                    params.selectedDate,
-            legend: { position: 'top' },
-            colors: ['#dc3912', '#33ac71']
+            legend: {position: 'top'},
+            colors: ['#dc3912', '#33ac71'],
+            tooltip: {trigger: 'selection'}
         };
         divCtrlList[divIdx.chart2].setAttribute('style', 'display: block;');
         columnChart = new google.visualization.ColumnChart(divCtrlList[divIdx.chart2]);
         columnChartDataTable = new google.visualization.DataTable(columnChartData);
         columnChart.draw(columnChartDataTable, columnChartOpt);
+        columnChart.setSelection([{
+            row: Math.floor(columnChartDataTable.getNumberOfRows() / 2),
+            column: 2}]);
 
 
         divCtrlList[divIdx.hd3].setAttribute('style', 'display: block;');
         divCtrlList[divIdx.chart3].setAttribute('style', 'display: block;');
         tableChart = new google.visualization.Table(divCtrlList[divIdx.chart3]);
         tableChart.draw(columnChartDataTable,
-                        { showRowNumber: true, width: '100%', height: '100%'});
+                        {showRowNumber: true, width: '100%', height: '100%'});
     }
 
     that.hide = function() {
@@ -121,10 +126,10 @@ MYAPP.View.Surveys = function(proto) {
         script.setAttribute('async', 'async');
         script.setAttribute('src', 'https://www.google.com/jsapi');
         script.onload = function() {
-            google.load("visualization", "1", { packages: ["corechart", "table"],
-                                                callback: function() {
-                                                        chartsLibReady = true;
-                                                    }
+            google.load("visualization", "1", {packages: ["corechart", "table"],
+                                               callback: function() {
+                                                       chartsLibReady = true;
+                                                   }
                                                });
         }
         head = document.getElementsByTagName('head')[0];

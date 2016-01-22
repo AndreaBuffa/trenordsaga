@@ -96,7 +96,7 @@ class ScheduleApi(remote.Service):
 		if not utils.common.buildDate(request.year, request.month,
 		                              request.day, tmpDate):
 		        return ret
-
+        #@todo check the date.
 		myFactory = DataStore()
 		myDataModel = myFactory.createDataProvider()
 		buffer = myDataModel.retrieveSourcePage(request.trainid, tmpDate[0])
