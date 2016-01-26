@@ -4,7 +4,8 @@ MYAPP.View = MYAPP.View || {};
 MYAPP.View.Surveys = function(proto) {
     var chartsLibReady = false, columnChartData, divIdx, model, params,
 	lineChartData, status, that;
-    divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5};
+    divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5,
+        noSurvayMsg: 6};
     model = proto.model;
     status = '';
     that = COMM.Observer(proto);
@@ -53,12 +54,17 @@ MYAPP.View.Surveys = function(proto) {
             return;
         }
         if (status === 'loading') {
-            divCtrlList[divIdx.chart1].setAttribute('style', 'display: block;')
+            divCtrlList[divIdx.chart1].setAttribute('style', 'display: block;');
             divCtrlList[divIdx.chart1].innerHTML = "loading..";
             return;
         }
         if (!chartsLibReady) {
             console.log('Surveys, chartsLibReady is false');
+            return;
+        }
+        if (lineChartData.rows.length === 0 || columnChartData.rows.length === 0) {
+            divCtrlList[divIdx.noSurvayMsg].setAttribute('style', 'display: block;');
+            divCtrlList[divIdx.chart1].setAttribute('style', 'display: none;');
             return;
         }
 

@@ -3,7 +3,7 @@ var model = MYAPP.Model({});
 var trainTypeDiv = 'type', trainNumDiv = 'trainNum', dateDiv = 'date',
 searchDiv = 'search';
 var divList = ['trend', 'survey', 'compareHeader', 'compare', 'compareTableHeader',
-'table_div'];
+'table_div', 'nosurvey'];
 
 
 var typePicker = MYAPP.View.TypePicker({'divId': trainTypeDiv,

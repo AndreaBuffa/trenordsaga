@@ -95,7 +95,7 @@ class NLS(object):
 					'it-IT': 'Su di me:'}
 		self.entries['nosurvey'] = {
 					'en-US': 'Ooops.. No survey available..',
-					'it-IT': 'Ops.. niente rilevazioni....Si prega di riprovare.'}
+					'it-IT': 'Questo treno non &egrave; stato effettuato nella data corrente'}
 		self.entries['trend'] = {
 					'en-US': 'Delay trend:',
 					'it-IT': 'Confronto tra gli orari previsti e quelli effettivi:'}

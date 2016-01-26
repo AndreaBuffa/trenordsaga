@@ -1,9 +1,14 @@
+{% autoescape off %}
 <section class="wrapper">
 	<section class="container">
 		<div id="search" class="trainMenu" style="display: none;"></div>
 		<div id="type" class="trainMenu"></div>
 		<div id="trainNum" class="trainMenu"></div>
 		<div id="date" class="trainMenu"></div>
+		<header id="nosurvey" class="major" style="display: none;">
+			<h2>&nbsp;</h2>
+			<p>{{ nls.nosurvey }}</p>
+		</header>
 		<header id="trend" class="major" style="display: none;">
 			<h2>&nbsp;</h2>
 			<p>{{ nls.trend }}</p>
@@ -21,3 +26,4 @@
 		<div id="table_div" class="tableChart" style="display: none;"></div>
 	</section>
 </section>
+{% endautoescape %}
