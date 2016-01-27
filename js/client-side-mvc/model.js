@@ -45,6 +45,15 @@ MYAPP.Model = function() {
         }
     };
 
+    that.getTrainDescr = function(trainId) {
+        for(var i = 0; i < trainList.length; i++) {
+            if (trainList[i].trainId === trainId) {
+                return trainList[i];
+            }
+        }
+        return null;
+    }
+
     that.getTrainStats = function(trainId, filter, callback) {
         var params = {'trainid': trainId, 'dayFilter': 'all'};
         if (filter !== 'all' && filter !== 'dayOff' && filter !== 'workDay') {

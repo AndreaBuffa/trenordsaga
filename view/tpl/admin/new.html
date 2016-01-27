@@ -1,6 +1,10 @@
 <html>
-	<head></head>
-	<body>
+<head></head>
+<body>
+	<a href="http://www.viaggiatreno.it/vt_pax_internet/mobile/numero?lang=IT" target='_new' >Viaggiotreno</a>
+	<p></p>
+	<a href="http://www.rfi.it/cms/v/index.jsp?vgnextoid=7d9f505ff902f210VgnVCM1000008916f90aRCRD" target='_new' >RFI</a>
+	<p></p>
 {% if requests %}
 	{% for req in requests %}
 <form action='console' method="post">
@@ -33,12 +37,17 @@
 		<tr>
 			<td></td>
 			<td>Arrivo:</td>
-			<td><input  name='arriveTime' type='text' value='{{ req.arriveTime }}'/></td>
+			<td><input name='arriveTime' type='text' value='{{ req.arriveTime }}'/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Note:</td>
+			<td><input name='notes' type='text' value='{{ req.notes }}' size='150'/></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td>URL:</td>
-			<td><input  name='url' type='text' value='{{ req.url }}' size='150'/></td>
+			<td><input name='url' type='text' value='{{ req.url }}' size='150'/></td>
 		</tr>
 		<tr>
 			<td></td>

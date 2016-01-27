@@ -96,6 +96,7 @@ class ConsoleController(Controller):
 		arrival = self.request.get('arriveTime')
 		departure = self.request.get('leaveTime')
 		URL = self.request.get('url')
+		notes = self.request.get('notes')
 		if trainId and trainType and fromStation and toStation and arrival and departure and URL != 'None':
 			newSurvey = self.myModel.findTrainDescrById(trainId)
 			newSurvey.trainId = trainId
@@ -107,5 +108,6 @@ class ConsoleController(Controller):
 			newSurvey.date = datetime.datetime.today()
 			newSurvey.status = 'enabled'
 			newSurvey.url = URL
+			newSurvey.notes = notes
 			newSurvey.put()
 		self.getViewAction()

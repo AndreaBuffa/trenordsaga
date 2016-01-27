@@ -17,6 +17,7 @@ class Train(messages.Message):
 	arriveTime = messages.StringField(5)
 	leaveTime = messages.StringField(6)
 	surveyedFrom = messages.StringField(7)
+	notes = messages.StringField(8)
 
 class TrainList(messages.Message):
 	"""Collection of train objects"""
@@ -78,7 +79,8 @@ class DicoverApi(remote.Service):
 				endStation = trainDescr.endStation,
 				arriveTime = trainDescr.arriveTime,
 				leaveTime = trainDescr.leaveTime,
-				surveyedFrom = str(trainDescr.date)))
+				surveyedFrom = str(trainDescr.date),
+				notes = trainDescr.notes))
 
 		return ret
 

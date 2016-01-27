@@ -1,3 +1,4 @@
+{% autoescape off %}
 var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
@@ -35,7 +36,7 @@ MYAPP.View.Surveys = function(proto) {
     that.draw = function(_params, _lineChartData, _columnChartData) {
         var columnChart, columnChartDataTable, columnChartOpt, divIdList,
         divCtrlList = [],lineChart, lineChartDataTable, lineChartOptions,
-        tableChart;
+        tableChart, trainDescr;
         if (_params && _lineChartData && _columnChartData) {
             params = _params;
             lineChartData = _lineChartData;
@@ -62,9 +63,16 @@ MYAPP.View.Surveys = function(proto) {
             console.log('Surveys, chartsLibReady is false');
             return;
         }
-        if (lineChartData.rows.length === 0 || columnChartData.rows.length === 0) {
+        if (!lineChartData.rows || !columnChartData.rows ||
+             lineChartData.rows.length === 0 || columnChartData.rows.length === 0) {
             divCtrlList[divIdx.noSurvayMsg].setAttribute('style', 'display: block;');
             divCtrlList[divIdx.chart1].setAttribute('style', 'display: none;');
+            trainDescr = model.getTrainDescr(params.trainId);
+            divCtrlList[divIdx.noSurvayMsg].innerHTML = "<p>{{ nls.nosurvey }}</p>";
+            if (trainDescr && trainDescr.notes) {
+                divCtrlList[divIdx.noSurvayMsg].innerHTML += "<h2>&nbsp;</h2><i>" +
+                    trainDescr.notes + "</i>";
+            }
             return;
         }
 
@@ -148,3 +156,4 @@ MYAPP.View.Surveys = function(proto) {
 
     return that.init();
 }
+{% endautoescape %}
