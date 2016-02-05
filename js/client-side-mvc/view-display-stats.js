@@ -2,17 +2,19 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TrainStats = function(proto) {
-    var anchor = proto.anchor;
-	var filter = "all";
-	var myModel = proto.model;
-	var status = "loading";
-	var surveyedFrom = "";
-	var that = COMM.Observer(proto);
-	var trainId = 0;
+    var anchor = proto.anchor, filter = "all", myModel = proto.model,
+    status = "loading", surveyedFrom = "", that, trainId = 0;
+	that = COMM.Observer(proto);
+    that = COMM.GChartsLibInit(that);
+    that = COMM.DrawOnResize(that);
 
 	that.update = function(params) {
 		if (!params)
 			return 0;
+
+        myModel.getStatsGraphData(params.trainId, function(stats) {
+            that.drawGraph(stats);
+        });
 
 		if (trainId !== params.trainId || filter !== params.dayFilter) {
 			status = trainId !== params.trainId ? "tranIdChanged" : "filterChanged";
@@ -22,12 +24,12 @@ MYAPP.View.TrainStats = function(proto) {
 			myModel.getTrainStats(params.trainId, params.dayFilter, function(stats) {
 				stats = stats || [];
 				stats.sort(function(a, b) {
-						if (a.stationName > b.stationName)
-							return 1;
-						if (a.stationName < b.stationName)
-							return -1;
-						return 0;
-					});
+                    if (a.stationName > b.stationName)
+                        return 1;
+                    if (a.stationName < b.stationName)
+                        return -1;
+                    return 0;
+                });
 				status = "ready";
 				that.draw(stats);
 			});
@@ -113,7 +115,6 @@ MYAPP.View.TrainStats = function(proto) {
 			for (var i = 0; i < stats.length; i++) {
 				var stop = stats[i];
 				var dataTr = document.createElement('tr');
-				//element.classList.add('row');
 				var dataTd1 = document.createElement('td');
 				dataTd1.innerHTML = stop.stationName;
 				var dataTd2 = document.createElement('td');
@@ -124,8 +125,28 @@ MYAPP.View.TrainStats = function(proto) {
 			}
 		}
 	}
+
+    that.drawGraph = function(stats) {
+        var chart, graphDiv, dataTable, options;
+        graphDiv = document.querySelector('#statsGraph');
+        if (!graphDiv) {
+            graphDiv = document.createElement('div');
+            graphDiv.setAttribute('id', 'statsGraph');
+            document.querySelector('#' + proto.divId).appendChild(graphDiv);
+        }
+        dataTable = new google.visualization.DataTable(stats);
+        //params.trainId
+        options = {
+            title: '{{nls.trainNum}} ',
+            legend: {position: 'top',
+                     textStyle: { bold: false}},
+            tooltip: {trigger: 'selection'}
+        };
+        chart = new google.visualization.LineChart(graphDiv);
+        chart.draw(dataTable, options);
+    }
+
 	that.trigger = function(eventName, params) {
-		// COMM.event.modelReady
 		switch(eventName) {
 			case COMM.event.trainChanged:
 				this.update(params);

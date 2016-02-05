@@ -40,6 +40,8 @@ class TrainStop(ndb.Model):
 	dayOffTot = ndb.IntegerProperty(indexed = True)
 	"""True/false If the datasource provides a certain value for this station or not"""
 	certainty = ndb.BooleanProperty(indexed = False)
+	""" n-th stop for a this trainId """
+	index = ndb.IntegerProperty(indexed = True)
 
 	def put(self):
 		self.workDayDelays = sorted(self.workDayDelays,

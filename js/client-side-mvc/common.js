@@ -35,10 +35,6 @@ COMM.isArray = function(myArray) {
 };
 
 COMM.Observer = function(that) {
-    if (!that) {
-        console.log("that observer is NULL");
-        return;
-    }
     that.trigger = function(eventName, params) {
         console.log("Implement me...");
     };
@@ -46,10 +42,6 @@ COMM.Observer = function(that) {
 };
 
 COMM.Notifier = function (that) {
-    if (!that) {
-        console.log("that Notifier is NULL");
-        return;
-    }
     that.observerList = {};
     that.addObserver = function(eventName, observer) {
         //check observer type
@@ -80,6 +72,36 @@ COMM.event = {
     tabChanged: "tabChanged",
     scrollUp: "scrollUp"
 };
+
+COMM.GChartsLibInit = function(that) {
+    var chartsLibReady = false;
+    that.init = function() {
+        var head, script = document.createElement("script");
+        script.setAttribute('async', 'async');
+        script.setAttribute('src', 'https://www.google.com/jsapi');
+        script.onload = function() {
+            google.load("visualization", "1", {packages: ["corechart", "table"],
+                                               callback: function() {
+                                                       chartsLibReady = true;
+                                                   }
+                                               });
+        }
+        head = document.getElementsByTagName('head')[0];
+        head.appendChild(script);
+        return that;
+    }
+    that.getChartsLibReady = function() {
+        return chartsLibReady;
+    }
+    return that.init();
+}
+
+COMM.DrawOnResize = function(that) {
+    $(window).resize(function(){
+        that.draw();
+    });
+    return that;
+}
 
 COMM.getTrainIcon = function(trainType) {
     if (trainType === 'Frecciarossa') {

@@ -14,6 +14,7 @@ import time
 MAX_ATTEMPS = 3
 
 def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
+
 	trainDescr = TrainDescr.query(TrainDescr.trainId == trainId).get()
 	if not trainDescr:
 		logging.debug('retrieve_schedule: cannot retrieve Train Descriptor %s!',
@@ -46,7 +47,8 @@ def retrieve_schedule(trainId, attemps=MAX_ATTEMPS):
 			results = query.fetch()
 			for record in results:
 				stops[record.name] = record
-			utils.common.createTrainStop([timeSchedule], stops)
+
+			utils.common.createTrainStop(timeSchedule, stops)
 			for key, stop in stops.iteritems():
 				stop.put()
 		except IOError:

@@ -79,7 +79,7 @@ class ScheduleApi(remote.Service):
 		tmpDate = [];
 		if not utils.common.buildDate(request.year, request.month,
 		                              request.day, tmpDate):
-		        return ret
+			return ret
 
 		myFactory = DataStore()
 		myDataModel = myFactory.createDataProvider()

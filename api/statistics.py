@@ -10,10 +10,12 @@ class Stop(messages.Message):
 	stationName = messages.StringField(1)
 	median = messages.FloatField(2)
 
-
 class StopCollection(messages.Message):
 	"""Collection of train Stop."""
 	items = messages.MessageField(Stop, 1, repeated=True)
+
+class StatsGraph(messages.Message):
+	median = messages.StringField(1)
 
 
 @endpoints.api(name='statistics', version='v1')
@@ -45,8 +47,8 @@ class StatisticsApi(remote.Service):
 		else:
 			return ret
 		for trainStop in results:
-			ret.items.append(Stop(stationName=trainStop.name,
-				median=trainStop.getMedian(workDay, dayOff)))
+			ret.items.append(Stop(stationName = trainStop.name,
+                                  median = trainStop.getMedian(workDay, dayOff)))
 		return ret
 
 	NAME_RESOURCE = endpoints.ResourceContainer(
@@ -61,3 +63,24 @@ class StatisticsApi(remote.Service):
 		#except (IndexError, TypeError):
 		#	raise endpoints.NotFoundException('Greeting %s not found.' %
 		#		(request.name,))
+
+	ID_RESOURCE = endpoints.ResourceContainer(
+		message_types.VoidMessage,
+		trainid=messages.StringField(1, variant=messages.Variant.STRING))
+	@endpoints.method(ID_RESOURCE, StatsGraph,
+		path='stats/{trainid}', http_method='GET',
+		name='trains.getStatsGraphData')
+	def stats_list(self, request):
+		from view.formatter import *
+		myFactory = DataStore()
+		myDataModel = myFactory.createDataProvider()
+		stopList = myDataModel.findAllTrainStopById(request.trainid)
+		dataTable = []
+		for trainStop in stopList:
+			dataTable.append([trainStop.name, trainStop.getMedian(True, False),
+				trainStop.getMedian(False, True), trainStop.getMedian(True, True)])
+
+		ret = StatsGraph()
+		myFormatter = Formatter()
+		ret.median = myFormatter.ToGMultiLineChartJSon(dataTable)
+		return ret

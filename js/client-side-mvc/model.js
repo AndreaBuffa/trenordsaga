@@ -126,6 +126,22 @@ MYAPP.Model = function() {
         });
     }
 
+    that.getStatsGraphData = function(trainId, callback) {
+        var params = {'trainid': trainId};
+        gapi.client.statistics.trains.getStatsGraphData(params).execute(
+            function(resp) {
+                var chartData = {};
+                //@todo check the return code
+                if (!resp.code) {
+                    if (resp.median) {
+                        chartData = JSON.parse(resp.median);
+                    }
+                    callback(chartData);
+                }
+            }
+        );
+    }
+
     that.getSurveyDataSource = function(params, callback) {
         gapi.client.discover.trains.getDataSource(params).execute(
             function(resp) {

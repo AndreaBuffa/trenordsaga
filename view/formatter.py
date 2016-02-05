@@ -129,3 +129,24 @@ class Formatter:
 						{label: "Ritardo in minuti", pattern: "", type: "number"}],
 				rows: [%s ]}""" % myBuffer
 		return myBuffer
+
+	''' Returns a Google Multi line chart datatable'''
+	def ToGMultiLineChartJSon(self, data):
+		buffer = b""
+		for row in data:
+			label = True
+			for value in row:
+				if label:
+					buffer = b'%s%s {"c": [{"v": "%s", "f": null}' % (buffer, ',' if len(buffer) else '', value)
+					label = False
+				else:
+					buffer = b'%s, {"v": %d, "f": null}' % (buffer, value)
+			buffer = buffer + ']}'
+
+		buffer = b"""{"cols": [{"label": "stop", "pattern": "", "type": "string"},
+				        {"label": "%s", "pattern": "", "type": "number"},
+				        {"label": "%s", "pattern": "", "type": "number"},
+				        {"label": "%s", "pattern": "", "type": "number"}],
+                      "rows": [%s]
+                     }""" % ('Ritardo Mediano', 'Feriale', 'Festivo', buffer)
+		return buffer

@@ -3,13 +3,14 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.Surveys = function(proto) {
-    var chartsLibReady = false, columnChartData, divIdx, model, params,
-	lineChartData, status, that;
+    var columnChartData, divIdx, model, params, lineChartData, status, that;
     divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5,
         noSurvayMsg: 6};
     model = proto.model;
     status = '';
     that = COMM.Observer(proto);
+    that = COMM.GChartsLibInit(that);
+    that = COMM.DrawOnResize(that);
 
     that.trigger = function(eventName, param) {
         switch(eventName) {
@@ -59,7 +60,7 @@ MYAPP.View.Surveys = function(proto) {
             divCtrlList[divIdx.chart1].innerHTML = "loading..";
             return;
         }
-        if (!chartsLibReady) {
+        if (!that.getChartsLibReady()) {
             console.log('Surveys, chartsLibReady is false');
             return;
         }
@@ -133,25 +134,6 @@ MYAPP.View.Surveys = function(proto) {
             tmp.setAttribute('style', 'display: none;');
         };
         status = 'hidden';
-    }
-
-    that.init = function() {
-        var head, script = document.createElement("script");
-        script.setAttribute('async', 'async');
-        script.setAttribute('src', 'https://www.google.com/jsapi');
-        script.onload = function() {
-            google.load("visualization", "1", {packages: ["corechart", "table"],
-                                               callback: function() {
-                                                       chartsLibReady = true;
-                                                   }
-                                               });
-        }
-        head = document.getElementsByTagName('head')[0];
-        head.appendChild(script);
-        $(window).resize(function(){
-            that.draw();
-        });
-        return that;
     }
 
     return that.init();
