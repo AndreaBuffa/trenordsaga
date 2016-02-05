@@ -12,8 +12,8 @@ MYAPP.View.TrainStats = function(proto) {
 		if (!params)
 			return 0;
 
-        myModel.getStatsGraphData(params.trainId, function(stats) {
-            that.drawGraph(stats);
+        myModel.getStats(params.trainId, function(dataTable) {
+            that.drawGraph(dataTable);
         });
 
 		if (trainId !== params.trainId || filter !== params.dayFilter) {
@@ -21,6 +21,7 @@ MYAPP.View.TrainStats = function(proto) {
 			trainId = params.trainId;
 			filter = params.dayFilter;
 			surveyedFrom = params.surveyedFrom;
+/*
 			myModel.getTrainStats(params.trainId, params.dayFilter, function(stats) {
 				stats = stats || [];
 				stats.sort(function(a, b) {
@@ -33,6 +34,7 @@ MYAPP.View.TrainStats = function(proto) {
 				status = "ready";
 				that.draw(stats);
 			});
+*/
             //@todo delete me
 			this.draw();
 		}
@@ -132,6 +134,7 @@ MYAPP.View.TrainStats = function(proto) {
         if (!graphDiv) {
             graphDiv = document.createElement('div');
             graphDiv.setAttribute('id', 'statsGraph');
+            graphDiv.setAttribute('class', 'lineChart');
             document.querySelector('#' + proto.divId).appendChild(graphDiv);
         }
         dataTable = new google.visualization.DataTable(stats);

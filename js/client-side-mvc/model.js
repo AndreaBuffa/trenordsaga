@@ -126,17 +126,20 @@ MYAPP.Model = function() {
         });
     }
 
-    that.getStatsGraphData = function(trainId, callback) {
+    that.getStats = function(trainId, callback) {
         var params = {'trainid': trainId};
-        gapi.client.statistics.trains.getStatsGraphData(params).execute(
+        gapi.client.statistics.trains.getStats(params).execute(
             function(resp) {
-                var chartData = {};
+                var chartData = {}, stopList = {};
                 //@todo check the return code
                 if (!resp.code) {
-                    if (resp.median) {
-                        chartData = JSON.parse(resp.median);
+                    if (resp.graphData) {
+                        chartData = JSON.parse(resp.graphData);
                     }
-                    callback(chartData);
+                    if (resp.graphData) {
+                        stopList = resp.stopList;
+                    }
+                    callback(chartData, stopList);
                 }
             }
         );

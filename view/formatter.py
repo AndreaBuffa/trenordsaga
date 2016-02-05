@@ -148,5 +148,5 @@ class Formatter:
 				        {"label": "%s", "pattern": "", "type": "number"},
 				        {"label": "%s", "pattern": "", "type": "number"}],
                       "rows": [%s]
-                     }""" % ('Ritardo Mediano', 'Feriale', 'Festivo', buffer)
+                     }""" % ('Feriali', 'Festivi', 'Entrambi', buffer)
 		return buffer

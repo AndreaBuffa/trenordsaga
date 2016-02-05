@@ -32,3 +32,8 @@ indexes:
   - name: type
   - name: leaveStation
   - name: leaveTime
+
+- kind: TrainStop
+  properties:
+  - name: trainid
+  - name: index
