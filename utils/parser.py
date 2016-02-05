@@ -8,9 +8,10 @@ class ScheduleParser:
 	def __init__(self, stringToParse=""):
 		self.theString = stringToParse
 
-	def AddStation(self, name, certainty, expectedTime, currentTime, delay):
+	def AddStation(self, name, certainty, expectedTime, currentTime, delay,
+	               suppressed):
 		station = {}
-		#print "%s, %d, %d, %d, %d" % (name, certainty, expectedTime, currentTime, delay)
+		print "%s, %d, %d, %d, %d, %d" % (name, certainty, expectedTime, currentTime, delay, suppressed)
 		station['name'] = name.title()
 		station['certainty'] = certainty
 		station['sched_h'] = expectedTime / 60
@@ -23,6 +24,7 @@ class ScheduleParser:
 			station['real_h'] = estimation / 60
 			station['real_m'] = estimation % 60
 		station['delay_m'] = delay
+		station['suppressed'] = suppressed
 		self.stations.append(station.copy())
 		#print station
 
@@ -32,6 +34,7 @@ class ScheduleParser:
 		expectedTime = 0
 		currentTime = 0
 		delay = 0
+		suppressed = 0
 		stationName = ""
 		for token in self.theString.split('<'):
 			#print "(%s)" % (token)
@@ -39,7 +42,8 @@ class ScheduleParser:
 			stationMatch = pattern.search(token)
 			if stationMatch != None:
 				if lookForTime:
-					self.AddStation(stationName, 0, expectedTime, 0, delay)
+					self.AddStation(stationName, 0, expectedTime, 0, delay,
+					                suppressed)
 					expectedTime = 0
 				stationName = stationMatch.group(1)
 				lookForTime = 1
@@ -53,9 +57,16 @@ class ScheduleParser:
 						currentTime = int(time.group(1)) * 60 + int(time.group(2))
 						delay = currentTime - expectedTime
 						#buffer = "%s|%s=%s%02d:%02d" % (buffer, stationName, "-" if currentTime < expectedTime else "" , abs(delay) / 60, abs(delay) % 60)
-						self.AddStation(stationName, 1, expectedTime, currentTime, delay)
+						self.AddStation(stationName, 1, expectedTime,
+						                currentTime, delay, suppressed)
 						expectedTime = 0
 						lookForTime = 0
+						suppressed = 0
+				else:
+					pattern = re.compile('Fermata soppressa')
+					if pattern.search(token):
+						suppressed = 1
+
 
 		return self.stations
 
