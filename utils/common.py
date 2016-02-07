@@ -7,9 +7,9 @@ def createTrainStop(record, stops):
     if not record:
         return
     myParser = ScheduleParser(record.timings)
-    timeSchedule = myParser.GetTimings()
+    parsedStopList = myParser.GetTimings()
     idx = 0
-    for entry in timeSchedule:
+    for entry in parsedStopList:
         if not stops.has_key(entry['name']):
             station = TrainStop()
             station.name = entry['name']
@@ -21,7 +21,6 @@ def createTrainStop(record, stops):
             station.dayOffTot = 0
             station.workDayDelays = []
             station.dayOffDelays = []
-            station.index = idx
             stops[entry['name']] = station
         delay = entry['delay_m'] if entry['delay_m'] > 0 else 0
         if isWorkDay(record.date) == True:
@@ -33,8 +32,7 @@ def createTrainStop(record, stops):
             stops[entry['name']].dayOffTot += delay
             updateDelayCounter(stops[entry['name']].dayOffDelays, delay)
         stops[entry['name']].certainty = True if entry['certainty'] else False
-        if stops[entry['name']].index == None:
-            stops[entry['name']].index = idx
+        stops[entry['name']].index = idx
         idx += 1
 
 def isWorkDay(theDate):
