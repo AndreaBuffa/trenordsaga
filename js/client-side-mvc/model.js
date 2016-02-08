@@ -137,7 +137,7 @@ MYAPP.Model = function() {
                         chartData = JSON.parse(resp.graphData);
                     }
                     if (resp.graphData) {
-                        stopList = resp.stopList;
+                        stopList = resp.stopList.items;
                     }
                     callback(chartData, stopList);
                 }

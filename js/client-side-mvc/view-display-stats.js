@@ -2,8 +2,8 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TrainStats = function(proto) {
-    var anchor = proto.anchor, filter = "all", myModel = proto.model,
-    status = "loading", surveyedFrom = "", that, trainId = 0;
+    var anchor = proto.anchor, graphData, filter = "all", myModel = proto.model,
+    rowData, status = "loading", surveyedFrom = "", that, trainId = 0;
 	that = COMM.Observer(proto);
     that = COMM.GChartsLibInit(that);
     that = COMM.DrawOnResize(that);
@@ -12,15 +12,16 @@ MYAPP.View.TrainStats = function(proto) {
 		if (!params)
 			return 0;
 
-        myModel.getStats(params.trainId, function(dataTable) {
-            that.drawGraph(dataTable);
-        });
-
 		if (trainId !== params.trainId || filter !== params.dayFilter) {
 			status = trainId !== params.trainId ? "tranIdChanged" : "filterChanged";
 			trainId = params.trainId;
 			filter = params.dayFilter;
 			surveyedFrom = params.surveyedFrom;
+			status = "ready";
+
+			myModel.getStats(params.trainId, function(graphData, rowData) {
+				that.draw(graphData, rowData);
+			});
 /*
 			myModel.getTrainStats(params.trainId, params.dayFilter, function(stats) {
 				stats = stats || [];
@@ -31,15 +32,23 @@ MYAPP.View.TrainStats = function(proto) {
                         return -1;
                     return 0;
                 });
-				status = "ready";
+				
 				that.draw(stats);
 			});
 */
-            //@todo delete me
-			this.draw();
 		}
 	}
-	that.draw = function(stats) {
+
+	that.draw = function(_graphData, _rowData) {
+		if (_graphData && _rowData) {
+			graphData = _graphData;
+			rowData = _rowData;
+		}
+		that.drawGraph(graphData);
+		that.drawTable(rowData);
+	}
+
+	that.drawTable = function(stats) {
 		var container = document.querySelector('#trainStats');
 		var statsList = null;
 		if (container) {
@@ -120,7 +129,17 @@ MYAPP.View.TrainStats = function(proto) {
 				var dataTd1 = document.createElement('td');
 				dataTd1.innerHTML = stop.stationName;
 				var dataTd2 = document.createElement('td');
-				dataTd2.innerHTML = stop.median;
+				switch (filter) {
+					case "workDay":
+						dataTd2.innerHTML = stop.weekdayMedian;
+						break;
+					case "dayOff":
+						dataTd2.innerHTML = stop.festiveMedian;
+						break;
+					case "all":
+						dataTd2.innerHTML = stop.allMedian;
+						break;
+				}
 				dataTr.appendChild(dataTd1);
 				dataTr.appendChild(dataTd2);
 				tbody.appendChild(dataTr);
@@ -148,6 +167,8 @@ MYAPP.View.TrainStats = function(proto) {
         chart = new google.visualization.LineChart(graphDiv);
         chart.draw(dataTable, options);
     }
+
+
 
 	that.trigger = function(eventName, params) {
 		switch(eventName) {
