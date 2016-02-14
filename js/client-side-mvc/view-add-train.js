@@ -2,15 +2,17 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.SearchTrain = function(proto) {
-    var anchor, dataset, myModel, status, writeTable, that;
+    var anchor, dataset, myModel, status, statusList, writeTable, that;
+    statusList = {'loading': 0, 'ready': 1, 'showResults': 2};
     anchor = proto.anchor;
     dataset = [];
     myModel = proto.model;
-    status = "disabled";
+    status = statusList.loading;
     that = COMM.Observer(proto);
 
     writeTable = function () {
-        var attributes, button, dataTd, dataTr, labels, table, tbody, th, thead, trHead;
+        var attributes, button, dataTd, dataTr, labels, table, tbody, th, thead,
+        trHead;
 
         attributes = ['type', 'key', 'leaveTime', 'leaveStation', 'endStation',
                       'arriveTime'];
@@ -70,7 +72,7 @@ MYAPP.View.SearchTrain = function(proto) {
 
     that.trigger = function(eventName, params) {
         if (eventName === COMM.event.modelReady) {
-            status = 'collapsed';
+            status = statusList.ready;
             this.update();
         } else {
             log.console("Not listening to " + eventName);
@@ -135,30 +137,23 @@ MYAPP.View.SearchTrain = function(proto) {
             }
             myModel.trainLookUp(params, function(res) {
                 res = res || [];
-                status = 'showResults';
+                status = statusList.showResults;
                 that.update(res);
             });
         });
         form.appendChild(button);
 
 
-        if (status === 'disabled') {
+        if (status === statusList.loading) {
             return;
         }
-        if (status === 'collapsed') {
+        if (status === statusList.ready) {
             link = document.createElement('a');
-            link.innerHTML = 'Cercalo <u>qui</u>';
-            link.addEventListener('click', function () {
-                    if (formDiv.style.display === 'none') {
-                        formDiv.style.display = 'block';
-                    } else {
-                        formDiv.style.display = 'none';
-                    }
-                });
+            link.innerHTML = 'Stazione di partenza:';
             container.appendChild(link);
             container.appendChild(formDiv);
         }
-        if (status === "showResults") {
+        if (status === statusList.showResults) {
             results =  document.querySelector('#results');
             //container.appendChild(COMM.writeTable(['Treno', 'Op'], dataset,
             //                      ['key', 'leaveTime', 'leaveStation', 'endStation', 'arriveTime', 'isSurveyed']));
