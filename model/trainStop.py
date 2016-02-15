@@ -24,9 +24,9 @@ class TrainStop(ndb.Model):
 	"""Models a generic station"""
 	trainid = ndb.StringProperty(indexed = True)
 	name = ndb.StringProperty(indexed = True)
-	"""the number of surveys taken during a weekday """
+	"""the number of surveys taken during the weekdays """
 	workDaySurveys = ndb.IntegerProperty(indexed = False)
-	"""the number of surveys taken during a weekend or a day off """
+	"""the number of surveys taken during on sunday or on a day off """
 	dayOffSurveys = ndb.IntegerProperty(indexed = False)
 	"""List of DelayCounter, (1 min, 10 times), (2 mins, 14 times).. ordered by delay"""
 	workDayDelays = ndb.StructuredProperty(DelayCounter, repeated = True, indexed = False)
@@ -142,7 +142,7 @@ class TrainStop(ndb.Model):
 		counter = index = 0
 		for sample in samples:
 			counter += sample.counter
-			logging.debug('%s: sampleIndex %d counter %d index %d', self.name, sampleIndex, counter, index)
+			#logging.debug('%s: sampleIndex %d counter %d index %d', self.name, sampleIndex, counter, index)
 			if counter >= sampleIndex:
 				if isEven:
 					if counter - sampleIndex> 1:

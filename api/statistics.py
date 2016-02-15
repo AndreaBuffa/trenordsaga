@@ -78,7 +78,7 @@ class StatisticsApi(remote.Service):
 			weekDayMed = trainStop.getMedian(True, False)
 			festiveMed = trainStop.getMedian(False, True)
 			allMed = trainStop.getMedian(True, True)
-			dataTable.append([trainStop.name, weekDayMed, festiveMed, allMed])
+			dataTable.append([trainStop.name, weekDayMed, festiveMed])
 			stats.stopList.items.append(
 				Stop(
 					stationName = trainStop.name,
