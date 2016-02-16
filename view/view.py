@@ -133,7 +133,8 @@ class ScheduleViewer(View):
 			stops = self.myModel.findAllTrainStopById(self.trainId)
 			delayDict = {}
 			for trainStop in stops:
-				delayDict[trainStop.name] = trainStop.getMedian(True, True)
+				delayDict[trainStop.name] = trainStop.getMedianValue(
+					trainStop.getDelayList(True, True))
 
 			stationsByDelayJS = myFormatter.ToColumnChartJSon(timeSchedule,
 			                                                  delayDict,

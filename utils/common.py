@@ -4,36 +4,29 @@ from model.trainStop import *
 from parser import *
 
 def createTrainStop(record, stops):
-    if not record:
-        return
-    myParser = ScheduleParser(record.timings)
-    parsedStopList = myParser.GetTimings()
-    idx = 0
-    for entry in parsedStopList:
-        if not stops.has_key(entry['name']):
-            station = TrainStop()
-            station.name = entry['name']
-            station.trainid = record.trainId
-            station.startdate = record.date
-            station.workDaySurveys = 0
-            station.dayOffSurveys = 0
-            station.workDayTot = 0
-            station.dayOffTot = 0
-            station.workDayDelays = []
-            station.dayOffDelays = []
-            stops[entry['name']] = station
-        delay = entry['delay_m'] if entry['delay_m'] > 0 else 0
-        if isWorkDay(record.date) == True:
-            stops[entry['name']].workDaySurveys += 1
-            stops[entry['name']].workDayTot += delay
-            updateDelayCounter(stops[entry['name']].workDayDelays, delay)
-        else:
-            stops[entry['name']].dayOffSurveys += 1
-            stops[entry['name']].dayOffTot += delay
-            updateDelayCounter(stops[entry['name']].dayOffDelays, delay)
-        stops[entry['name']].certainty = True if entry['certainty'] else False
-        stops[entry['name']].index = idx
-        idx += 1
+	if not record:
+		return
+	myParser = ScheduleParser(record.timings)
+	parsedStopList = myParser.GetTimings()
+	idx = 0
+	for entry in parsedStopList:
+		if not stops.has_key(entry['name']):
+			station = TrainStop()
+			station.name = entry['name']
+			station.trainid = record.trainId
+			station.startdate = record.date
+			station.workDaySurveys = 0
+			station.dayOffSurveys = 0
+			station.workDayTot = 0
+			station.dayOffTot = 0
+			station.workDayDelays = []
+			station.dayOffDelays = []
+			stops[entry['name']] = station
+		delay = entry['delay_m'] if entry['delay_m'] > 0 else 0
+		stops[entry['name']].updateDelayCounter(delay, isWorkDay(record.date))
+		stops[entry['name']].certainty = True if entry['certainty'] else False
+		stops[entry['name']].index = idx
+		idx += 1
 
 def isWorkDay(theDate):
 	if theDate.weekday() > 4:

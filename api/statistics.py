@@ -11,6 +11,12 @@ class Stop(messages.Message):
 	weekdayMedian = messages.FloatField(2)
 	festiveMedian = messages.FloatField(3)
 	allMedian = messages.FloatField(4)
+	weekdaySamples = messages.IntegerField(5, repeated=True)
+	weekdayCounters = messages.IntegerField(6, repeated=True)
+	festiveSamples = messages.IntegerField(7, repeated=True)
+	festiveCounters = messages.IntegerField(8, repeated=True)
+	allSamples = messages.IntegerField(9, repeated=True)
+	allCounters = messages.IntegerField(10, repeated=True)
 
 class StopCollection(messages.Message):
 	"""Collection of train Stop."""
@@ -75,16 +81,28 @@ class StatisticsApi(remote.Service):
 		stats = Stats()
 		stats.stopList = StopCollection()
 		for trainStop in stopList:
-			weekDayMed = trainStop.getMedian(True, False)
-			festiveMed = trainStop.getMedian(False, True)
-			allMed = trainStop.getMedian(True, True)
+			weekDaySamples = trainStop.getDelayList(True, False)
+			weekDayMed = trainStop.getMedianValue(weekDaySamples)
+
+			festiveSamples = trainStop.getDelayList(False, True)
+			festiveMed = trainStop.getMedianValue(festiveSamples)
+
+			samples = trainStop.getDelayList(True, True)
+			allMed = trainStop.getMedianValue(samples)
+
 			dataTable.append([trainStop.name, weekDayMed, festiveMed])
 			stats.stopList.items.append(
 				Stop(
 					stationName = trainStop.name,
 					weekdayMedian = weekDayMed,
 					festiveMedian = festiveMed,
-					allMedian = allMed
+					allMedian = trainStop.getMedianValue(samples),
+					weekdaySamples = map(lambda delayCounter: delayCounter.delayInMinutes, weekDaySamples),
+					weekdayCounters = map(lambda delayCounter: delayCounter.counter, weekDaySamples),
+					festiveSamples = map(lambda delayCounter: delayCounter.delayInMinutes, festiveSamples),
+					festiveCounters = map(lambda delayCounter: delayCounter.counter, festiveSamples),
+					allSamples = map(lambda delayCounter: delayCounter.delayInMinutes, samples),
+					allCounters = map(lambda delayCounter: delayCounter.counter, samples),
 				))
 
 		myFormatter = Formatter()

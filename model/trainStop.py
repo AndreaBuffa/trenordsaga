@@ -1,10 +1,11 @@
 from google.appengine.ext import ndb
 import logging
 
-''' for each delay delayInMinutes, counter is the number of time this delay happend'''
+''' for each delay delayInMinutes, counter is the number of time this delay
+	happened'''
 class DelayCounter(ndb.Model):
-  delayInMinutes = ndb.IntegerProperty()
-  counter = ndb.IntegerProperty()
+	delayInMinutes = ndb.IntegerProperty()
+	counter = ndb.IntegerProperty()
 
 ''' routine for incrementing the counter of a particular delay-in-minutes'''
 def updateDelayCounter(delayList, _delayInMinutes):
@@ -50,33 +51,19 @@ class TrainStop(ndb.Model):
 			key=lambda delayCounter: delayCounter.delayInMinutes)
 		ndb.Model.put(self)
 
-	def updateDelayCounter(self, _delayInMinutes):
-		entries = filter(lambda delayCounter: delayCounter.delayInMinutes == _delayInMinutes,
-			self.delaysList)
-		if len(entries) == 1:
-			entries[0].counter += 1
-		elif len(entries) == 0:
-			newEntry = DelayCounter()
-			newEntry.delayInMinutes = _delayInMinutes
-			newEntry.counter = 1
-			self.delaysList.append(newEntry)
-		elif len(entries) > 1:
-			logging.debug('Unexpected multiple entries for delay %d', _delayInMinutes)
-
-	def getMedian(self, workDay=True, dayOff=True):
+	def getDelayList(self, workDay=True, dayOff=True):
 		numWorkDays = len(self.workDayDelays)
 		numDaysOff = len(self.dayOffDelays)
 		if (numWorkDays == 0) and (numDaysOff == 0):
-			return 0.0
-		# choose the samples, dayOff/ working day/ both
-		samples = []
+			return DelayCounterList()
 		if (dayOff and workDay):
-			# merge two sorted lists, workDayDelays and dayOffDelays
 			if numWorkDays == 0 and numDaysOff > 0:
-				samples = self.dayOffDelays
+				return self.dayOffDelays
 			elif numWorkDays > 0 and numDaysOff == 0:
-				samples = self.workDayDelays
+				return self.workDayDelays
 			else:
+				# merge two sorted lists, workDayDelays and dayOffDelays
+				sample = DelayCounterList()
 				dayOffIndex = workDayIndex = 0
 				workDayTail = dayOffTail = False
 				while not workDayTail or not dayOffTail:
@@ -121,23 +108,23 @@ class TrainStop(ndb.Model):
 							dayOffIndex += 1
 						else:
 							dayOffTail = True
-			numSamples = self.workDaySurveys + self.dayOffSurveys
-			isEven = (numSamples % 2 == 0)
 
+				return samples
 		else:
 			if workDay:
-				samples = self.workDayDelays
-				numSamples = self.workDaySurveys
-				isEven = (self.workDaySurveys % 2 == 0)
+				return self.workDayDelays
 			if dayOff:
-				samples = self.dayOffDelays
-				numSamples = self.dayOffSurveys
-				isEven = (self.dayOffSurveys % 2 == 0)
-		# compute median sample index
+				return self.dayOffDelays
+
+	def getMedianValue(self, samples):
+		counter = 0
+		for sample in samples:
+			counter += sample.counter
+		isEven = (counter % 2 == 0)
 		if isEven:
-			sampleIndex = numSamples / 2 - 1
+			sampleIndex = counter / 2 - 1
 		else:
-			sampleIndex = (numSamples + 1) / 2 - 1
+			sampleIndex = (counter + 1) / 2 - 1
 		# traversing samples list in order to get the median index
 		counter = index = 0
 		for sample in samples:
@@ -153,3 +140,25 @@ class TrainStop(ndb.Model):
 					return float(sample.delayInMinutes)
 			index += 1
 		return 0.0
+
+	''' @todo use a dictionary '''
+	def updateDelayCounter(self, delay, isFestive):
+		entries = filter(lambda delayCounter: delayCounter.delayInMinutes == delay,
+			self.dayOffDelays if isFestive else self.workDayDelays )
+		if len(entries) == 1:
+			entries[0].counter += 1
+		elif len(entries) == 0:
+			newEntry = DelayCounter()
+			newEntry.delayInMinutes = delay
+			newEntry.counter = 1
+			self.delaysList.append(newEntry)
+			if isFestive:
+				self.dayOffDelays.append(newEntry)
+				self.dayOffSurveys += 1
+				self.dayOffTot += delay
+			else:
+				self.workDayDelays.append(newEntry)
+				self.workDaySurveys += 1
+				self.workDayTot += delay
+		elif len(entries) > 1:
+			logging.debug('Unexpected multiple entries for delay %d', delay)
