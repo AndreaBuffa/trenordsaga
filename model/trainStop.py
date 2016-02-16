@@ -7,20 +7,6 @@ class DelayCounter(ndb.Model):
 	delayInMinutes = ndb.IntegerProperty()
 	counter = ndb.IntegerProperty()
 
-''' routine for incrementing the counter of a particular delay-in-minutes'''
-def updateDelayCounter(delayList, _delayInMinutes):
-	entries = filter(lambda delayCounter: delayCounter.delayInMinutes == _delayInMinutes,
-		delayList)
-	if len(entries) == 1:
-		entries[0].counter += 1
-	elif len(entries) == 0:
-		newEntry = DelayCounter()
-		newEntry.delayInMinutes = _delayInMinutes
-		newEntry.counter = 1
-		delayList.append(newEntry)
-	elif len(entries) > 1:
-		logging.debug('Unexpected multiple entries for delay %d', _delayInMinutes)
-
 class TrainStop(ndb.Model):
 	"""Models a generic station"""
 	trainid = ndb.StringProperty(indexed = True)
@@ -55,7 +41,7 @@ class TrainStop(ndb.Model):
 		numWorkDays = len(self.workDayDelays)
 		numDaysOff = len(self.dayOffDelays)
 		if (numWorkDays == 0) and (numDaysOff == 0):
-			return DelayCounterList()
+			return []
 		if (dayOff and workDay):
 			if numWorkDays == 0 and numDaysOff > 0:
 				return self.dayOffDelays
@@ -63,7 +49,7 @@ class TrainStop(ndb.Model):
 				return self.workDayDelays
 			else:
 				# merge two sorted lists, workDayDelays and dayOffDelays
-				sample = DelayCounterList()
+				samples = []
 				dayOffIndex = workDayIndex = 0
 				workDayTail = dayOffTail = False
 				while not workDayTail or not dayOffTail:

@@ -23,13 +23,13 @@ def createTrainStop(record, stops):
 			station.dayOffDelays = []
 			stops[entry['name']] = station
 		delay = entry['delay_m'] if entry['delay_m'] > 0 else 0
-		stops[entry['name']].updateDelayCounter(delay, isWorkDay(record.date))
+		stops[entry['name']].updateDelayCounter(delay, isFestive(record.date))
 		stops[entry['name']].certainty = True if entry['certainty'] else False
 		stops[entry['name']].index = idx
 		idx += 1
 
-def isWorkDay(theDate):
-	if theDate.weekday() > 4:
+def isFestive(theDate):
+	if theDate.weekday() > 5:
 		return False
 	for t in (date(theDate.year,  1,  1), "Capodanno"), \
 		(date(theDate.year,  1,  6), "Epifania"), \
