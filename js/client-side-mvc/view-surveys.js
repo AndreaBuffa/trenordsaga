@@ -64,8 +64,9 @@ MYAPP.View.Surveys = function(proto) {
             console.log('Surveys, chartsLibReady is false');
             return;
         }
-        if (!lineChartData.rows || !columnChartData.rows ||
-             lineChartData.rows.length === 0 || columnChartData.rows.length === 0) {
+//        if (!lineChartData.rows && !columnChartData.rows &&
+//             lineChartData.rows.length === 0 && columnChartData.rows.length === 0) {
+        if (!lineChartData.rows || lineChartData.rows.length === 0) {
             divCtrlList[divIdx.noSurvayMsg].setAttribute('style', 'display: block;');
             divCtrlList[divIdx.chart1].setAttribute('style', 'display: none;');
             trainDescr = model.getTrainDescr(params.trainId);

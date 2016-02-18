@@ -1132,7 +1132,7 @@ ul#tab li.active {
 }
 
 .lineChart, .columnChart {
-	height: 500px;
+	height: 400px;
 }
 
 .tableChart, .statsTable {

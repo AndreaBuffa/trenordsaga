@@ -74,24 +74,28 @@ COMM.event = {
 };
 
 COMM.GChartsLibInit = function(that) {
-    var chartsLibReady = false;
+    var scriptIdLib = 'gjslibs', libReady = false;
     that.init = function() {
         var head, script = document.createElement("script");
+        script.setAttribute('id', scriptIdLib);
         script.setAttribute('async', 'async');
         script.setAttribute('src', 'https://www.google.com/jsapi');
         script.onload = function() {
             google.load("visualization", "1", {packages: ["corechart", "table"],
-                                               callback: function() {
-                                                       chartsLibReady = true;
-                                                   }
+                                               callback:
+                                                    function() {
+                                                       libReady = true;
+                                                    }
                                                });
         }
-        head = document.getElementsByTagName('head')[0];
-        head.appendChild(script);
+        if (!document.getElementById(scriptIdLib)) {
+            head = document.getElementsByTagName('head')[0];
+            head.appendChild(script);
+        }
         return that;
     }
     that.getChartsLibReady = function() {
-        return chartsLibReady;
+        return libReady;
     }
     return that.init();
 }
