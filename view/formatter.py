@@ -70,6 +70,9 @@ class Formatter:
 		myBuffer = b"";
 		for entry in timeSchedule:
 			delay = 0
+			if not delayDict.has_key(entry['name']):
+				# might generate a flag for displaying an extra stop done
+				continue
 			median = delayDict[entry['name']]
 			if entry['delay_m'] >= 0:
 				delay = entry['delay_m']
