@@ -13,3 +13,14 @@ Features:
 - built on top of the Google Cloud Platform using webapp2.
 - use third-party HTML/CSS template.
 
+API REST
+
+- GET api/surveys/v1/list
+- GET api/surveys/v1/survey/{trainId}/{year}/{month}/{day}
+- GET api/surveys/v1/source/{trainId}/2016/02/17
+- GET api/surveys/v1/search/{fromStation}/{toStation}/{when}/{timeRange}
+- POST api/surveys/v1/survey/add/{fromStation}/{toStation}/{when}/{timeRange}
+- GET api/surveys/v1/stats/{trainId}
+
+
+

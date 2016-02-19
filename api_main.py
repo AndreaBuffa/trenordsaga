@@ -1,7 +1,5 @@
 import endpoints
-from api.statistics import *
-from api.schedule import *
-from api.discover import *
+from api.surveys import *
 package = 'main_api'
 
-handle = endpoints.api_server([StatisticsApi, ScheduleApi, DicoverApi])
+handle = endpoints.api_server([SurveysApi])

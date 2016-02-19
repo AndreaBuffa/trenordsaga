@@ -83,7 +83,7 @@ class GAEDatastore(DataProvider):
 		trainDescrRec.trainId = survey.num
 		trainDescrRec.type = survey.trainType
 		trainDescrRec.leaveStation = survey.fromStation
-		trainDescrRec.endStation = survey.toStation
+		trainDescrRec.endStation = survey.to
 		trainDescrRec.arriveTime = survey.arrive
 		trainDescrRec.leaveTime = survey.leave
 		#trainDescrRec.date =

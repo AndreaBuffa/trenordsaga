@@ -22,7 +22,7 @@ MYAPP.Model = function() {
         if (status !== 'ready')
             return;
         if (trainList.length == 0) {
-            gapi.client.discover.trains.listSurveyedTrain().execute(
+            gapi.client.surveys.getList().execute(
                 function(resp) {
                     if (!resp.code) {
                         resp.items = resp.items || [];
@@ -54,29 +54,13 @@ MYAPP.Model = function() {
         return null;
     }
 
-    that.getTrainStats = function(trainId, filter, callback) {
-        var params = {'trainid': trainId, 'dayFilter': 'all'};
-        if (filter !== 'all' && filter !== 'dayOff' && filter !== 'workDay') {
-            console.log("Model: Wrong filter passed.");
-        } else {
-            params.dayFilter = filter;
-        }
-        gapi.client.statistics.trains.listStop(params).execute(
-            function(resp) {
-                if (!resp.code) {
-                    resp.items = resp.items || [];
-                    callback(resp.items);
-                }
-            });
-    };
-
     that.trainLookUp = function(params, callback) {
         var date = new Date(), formatDate;
         formatDate = [date.getFullYear(), '-', date.getMonth() + 1,
                       '-', date.getDate()].join("");
         params.when = formatDate;
 
-        gapi.client.discover.trains.searchFromTo(params).execute(
+        gapi.client.surveys.search(params).execute(
             function(resp) {
                 if (!resp.code) {
                     resp.items = resp.items || [];
@@ -89,10 +73,10 @@ MYAPP.Model = function() {
 
         var args = {'num': params.num, 'trainType': params.type,
                       'fromStation': params.from,
-                      'toStation': params.to, 'leave': params.leave,
+                      'to': params.to, 'leave': params.leave,
                       'arrive': params.arrive};
 
-        gapi.client.discover.trains.addSurvey(args).execute(function(resp) {
+        gapi.client.surveys.addSurvey(args).execute(function(resp) {
             //@todo check the return code
             if (!resp.code) {
                 callback(true);
@@ -112,7 +96,7 @@ MYAPP.Model = function() {
         params.year = date[0];
         params.month = date[1];
         params.day = date[2];
-        gapi.client.schedule.trains.getSurveyGraphData(params).execute(
+        gapi.client.surveys.getSurvey(params).execute(
             function(resp) {
                 var columnChartData = {}, lineChartData = {};
                 //@todo check the return code
@@ -128,7 +112,7 @@ MYAPP.Model = function() {
 
     that.getStats = function(trainId, callback) {
         var params = {'trainid': trainId};
-        gapi.client.statistics.trains.getStats(params).execute(
+        gapi.client.surveys.getStats(params).execute(
             function(resp) {
                 var chartData = {}, stopList = {};
                 //@todo check the return code
@@ -146,7 +130,7 @@ MYAPP.Model = function() {
     }
 
     that.getSurveyDataSource = function(params, callback) {
-        gapi.client.discover.trains.getDataSource(params).execute(
+        gapi.client.surveys.getSource(params).execute(
             function(resp) {
                 //@todo check the return code
                 if (!resp.code) {
