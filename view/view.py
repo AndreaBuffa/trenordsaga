@@ -88,7 +88,8 @@ class OnePageAppView(StaticView):
 							 {'nls': langSupport.getEntries()})
 				self.embedJS('survey-app-new.js', {})
 			else:
-				self.embedJS('view-display-stats.js', {})
+				self.embedJS('view-display-stats.js',
+				             {'nls': langSupport.getEntries()})
 				self.embedJS('stats-app.js', {})
 
 		self.embedJS('api-endpoint.js', {})

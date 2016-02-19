@@ -3,21 +3,21 @@ MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TrainStats = function(that) {
     var anchor = that.anchor, graphData, filter = "all", myModel = that.model,
-    rowData, status = "loading", surveyedFrom = "", trainId = 0;
+    params, rowData, status = "loading";
     that = COMM.Observer(that);
     that = COMM.GChartsLibInit(that);
     that = COMM.GChartsLibInit(that);
     that = COMM.DrawOnResize(that);
 
-    that.update = function(params) {
-        if (!params)
+    that.update = function(_params) {
+        if (!_params)
             return 0;
+        if (!params) {
+            params = _params;
+        }
 
-        if (trainId !== params.trainId || filter !== params.dayFilter) {
-            status = trainId !== params.trainId ? "tranIdChanged" : "filterChanged";
-            trainId = params.trainId;
-            filter = params.dayFilter;
-            surveyedFrom = params.surveyedFrom;
+        if (params.trainId !== _params.trainId || params.filter !== _params.dayFilter) {
+            params = _params;
             status = "ready";
 
             myModel.getStats(params.trainId, function(graphData, rowData) {
@@ -54,7 +54,7 @@ MYAPP.View.TrainStats = function(that) {
             container.innerHTML = '<ul id="tabs"><li id="all" class="active">tutte</li>\
                 <li id="workDay">feriali</li><li id="dayOff">festivi</li></ul>';
             var paragraph = document.createElement('p');
-            paragraph.innerHTML = 'Statistiche a partire dal ' + surveyedFrom + ':';
+            paragraph.innerHTML = 'Statistiche a partire dal ' + params.surveyedFrom + ':';
             container.appendChild(paragraph);
             statsList = document.createElement('div');
             statsList.setAttribute('id', 'statsList');
@@ -65,7 +65,7 @@ MYAPP.View.TrainStats = function(that) {
                 if (status !== "ready") {
                     return;
                 }
-                that.update({'trainId': trainId,
+                that.update({'trainId': params.trainId,
                         'dayFilter': this.id});
 
                 for(var i=0; i < this.parentElement.childElementCount; i++) {
@@ -146,7 +146,8 @@ MYAPP.View.TrainStats = function(that) {
         dataTable = new google.visualization.DataTable(stats);
         //params.trainId
         options = {
-            title: '{{nls.trainNum}} ',
+            title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
+                   ' {{nls.been_surveyed}} ' + params.surveyedFrom,
             legend: {position: 'top',
                      textStyle: { bold: false}},
             tooltip: {trigger: 'selection'}
