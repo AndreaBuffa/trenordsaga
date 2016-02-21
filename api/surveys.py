@@ -109,18 +109,14 @@ class SurveysApi(remote.Service):
 		if buffer:
 			myParser = ScheduleParser(buffer)
 			survey = myParser.GetTimings()
-			myFormatter = Formatter()
-			ret.scheduled_real = myFormatter.ToLineChartJSon(survey)
+			ret.scheduled_real = toLineChartJSon(survey)
 
 			stops = myDataModel.findAllTrainStopById(request.trainid)
 			delayDict = {}
 			for trainStop in stops:
 				delayDict[trainStop.name] = trainStop.getMedianValue(
 					trainStop.getDelayList(True, True))
-
-			ret.real_median = myFormatter.ToColumnChartJSon(survey,
-			                                                delayDict,
-			                                                tmpDate[0])
+			ret.real_median = toColumnChartJSon(survey, delayDict, tmpDate[0])
 		return ret
 
 	@endpoints.method(ID_RESOURCE, DataSourceContainer,
@@ -283,8 +279,7 @@ class SurveysApi(remote.Service):
 					allCounters = map(lambda delayCounter: delayCounter.counter, samples),
 				))
 
-		from view.formatter import *
-		myFormatter = Formatter()
-		stats.graphData = myFormatter.ToGMultiLineChartJSon(dataTable)
+		from view.formatter import toGMultiLineChartJSon
+		stats.graphData = toGMultiLineChartJSon(dataTable)
 
 		return stats

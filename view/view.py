@@ -1,6 +1,5 @@
 import os
 from google.appengine.ext.webapp import template
-from formatter import *
 from utils.parser import ScheduleParser
 from nls.nls import *
 import webapp2
@@ -119,8 +118,8 @@ class ScheduleViewer(View):
 		if buffer:
 			myParser = ScheduleParser(buffer)
 			timeSchedule = myParser.GetTimings()
-			myFormatter = Formatter()
-			chartData = myFormatter.ToLineChartJSon(timeSchedule)
+			from formatter import toLineChartJSon
+			chartData = toLineChartJSon(timeSchedule)
 
 			stationsByDelay = sorted(timeSchedule,
 				key=lambda station: station['delay_m'],
@@ -136,10 +135,9 @@ class ScheduleViewer(View):
 			for trainStop in stops:
 				delayDict[trainStop.name] = trainStop.getMedianValue(
 					trainStop.getDelayList(True, True))
-
-			stationsByDelayJS = myFormatter.ToColumnChartJSon(timeSchedule,
-			                                                  delayDict,
-			                                                  self.theDate)
+			from formatter import toColumnChartJSon
+			stationsByDelayJS = toColumnChartJSon(timeSchedule,
+			                                      delayDict, self.theDate)
 
 		trainDescr = self.myModel.findTrainDescrById(self.trainId)
 		trainType = leaveTime = startSurveyDate = '';

@@ -11,7 +11,7 @@ class ScheduleParser:
 	def AddStation(self, name, certainty, expectedTime, currentTime, delay,
 	               suppressed):
 		station = {}
-		print "%s, %d, %d, %d, %d, %d" % (name, certainty, expectedTime, currentTime, delay, suppressed)
+		#print "%s, %d, %d, %d, %d, %d" % (name, certainty, expectedTime, currentTime, delay, suppressed)
 		station['name'] = name.title()
 		station['certainty'] = certainty
 		station['sched_h'] = expectedTime / 60
