@@ -1,7 +1,7 @@
 // requires the global myModel
 function init() {
-	var apiRoot = 'https://disco-parsec-749.appspot.com/_ah/api';
-	//var apiRoot = 'http://localhost:8080/_ah/api';
+	var apiRoot = window.location.origin + '/_ah/api'
+	//var apiRoot = 'https://disco-parsec-749.appspot.com/_ah/api';
 	var apisToLoad;
 	var APIReady = function(tmp) {
 		if (--apisToLoad == 0) {

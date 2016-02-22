@@ -45,6 +45,7 @@ class ScheduleParser:
 					self.AddStation(stationName, 0, expectedTime, 0, delay,
 					                suppressed)
 					expectedTime = 0
+					suppressed = 0
 				stationName = stationMatch.group(1)
 				lookForTime = 1
 			if lookForTime:
