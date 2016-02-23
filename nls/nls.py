@@ -151,7 +151,7 @@ class NLS(object):
 					'en-US': 'left at',
 					'it-IT': 'partito alle'}
 		self.entries['left_day'] = {
-					'en-US': '',
+					'en-US': 'on',
 					'it-IT': 'del'}
 		self.entries['choose_type'] = {
 					'en-US': 'Choose the train type:',

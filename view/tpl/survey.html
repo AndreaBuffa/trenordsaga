@@ -1,31 +1,11 @@
 <section class="wrapper">
 	<section class="container">
-		<section>
-				<div class="row">
-					<div class="6u 12u(small)">
-						<h3>{{ nls.trainNum }} {{ trainId }}, {{ nls.survey }} {{ date|safe|escape }}</h3>
-						<p>{{ nls.on_time_stops }}</p>
-{% if onTimeStations %}
-						<ul>
-	{% for station in onTimeStations %}
-							<li>{{ station.name }}</li>
-	{% endfor %}
-						</ul>
-{% else %}
-						<u>{{ nls.none }}</u>
-{% endif %}
-					</div>
-				</div>
-		</section>
-</section>
-<section class="wrapper">
-	<section class="container">
 		<header id="nosurvey" class="major" style="display: none;">
 			<h2>&nbsp;</h2>
 			<p>{{ nls.nosurvey }}</p>
 		</header>
 		<header id="trend" class="major" style="display: none;">
-			<h2>&nbsp;</h2>
+			<h2>{{ nls.for_example }}</h2>
 			<p>{{ nls.trend }}</p>
 		</header>
 	</section>
@@ -48,7 +28,7 @@
 <section>
        <header class="major">
                <h2>&nbsp;</h2>
-               <a href="dev" class="button big">{{ nls.query_the_oracle }}</a>
+               <a href="surveys" class="button big">{{ nls.query_the_oracle }}</a>
        </header>
 </section>
 
@@ -68,6 +48,10 @@
 	};
 	var modelStub = Model();
 	var surveys = MYAPP.View.Surveys({'divList': divList, 'model': modelStub});
-	surveys.trigger(COMM.event.dateChanged, {'type': 'S9', 'trainId': 24224, 'selectedDate': {{ date|safe|escape }}});
+	surveys.trigger(COMM.event.dateChanged,
+	                {'type': '{{ trainType }}', 
+	                'trainId': {{ trainId }},
+	                'leaveTime': '{{ leaveTime }}',
+	                'selectedDate': '{{ date|safe|escape }}'});
 </script>
 

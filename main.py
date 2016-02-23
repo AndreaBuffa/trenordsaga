@@ -31,7 +31,7 @@ class FrontEndFactory(AppFactory):
 			return StaticApp(request, response)
 		elif re.compile('^\/stats').search(request.path):
 			return ClientEndpoint(request, response)
-		elif re.compile('^\/dev').search(request.path):
+		elif re.compile('^\/surveys').search(request.path):
 			return ClientEndpoint(request, response)
 		elif re.compile('^\/search').search(request.path):
 			return ClientEndpoint(request, response)
@@ -61,12 +61,12 @@ class MVC:
 class DynamicApp(MVC):
 	""" Provides a common synchronous client/server app """
 	def getController(self):
-		controller = DayController(self.request, self.response)
+		controller = Controller(self.request, self.response)
 		return controller
 
 	def getView(self):
 		if not self.myView:
-			self.myView = ScheduleViewer(self.getModel(), {})
+			self.myView = HomePageView(self.getModel(), {})
 		return self.myView
 
 	def getModel(self):
@@ -107,11 +107,10 @@ class AdminApp(DynamicApp):
 
 
 app = webapp2.WSGIApplication([
-	(r'/survey', HandleRequest),
+	(r'/surveys', HandleRequest),
 	(r'/console', HandleRequest),
 	(r'/about', HandleRequest),
 	(r'/stats', HandleRequest),
-	(r'/dev', HandleRequest),
 	(r'/search', HandleRequest),
 	(r'/', HandleRequest)
 ])

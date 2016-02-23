@@ -64,16 +64,6 @@ class DummyController(Controller):
 		self.response.headers['Content-Type'] = 'text/html;'
 		self.response.out.write(self.myView.render(self.isMobileClient()))
 
-class DayController(Controller):
-
-	def post(self):
-		try:
-			theDate = datetime.datetime.strptime(self.request.get("datetime"), "%Y-%m-%d").date()
-		except ValueError:
-			theDate = self.getLastDatetime()
-		trainId = self.request.get("trainid")
-		self.myView.showBanner = False;
-		self.getViewAction(theDate, trainId)
 
 class ConsoleController(Controller):
 

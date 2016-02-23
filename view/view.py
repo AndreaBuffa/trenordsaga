@@ -81,7 +81,7 @@ class OnePageAppView(StaticView):
 			self.embedJS('view-num-picker.js', {'nls': langSupport.getEntries()})
 			self.embedJS('view-search.js', {})
 
-			if re.compile('^\/dev').search(self.request.path):
+			if re.compile('^\/surveys').search(self.request.path):
 				self.embedJS('view-date-picker.js', {'nls': langSupport.getEntries()})
 				self.embedJS('view-surveys.js',
 							 {'nls': langSupport.getEntries()})
@@ -96,7 +96,7 @@ class OnePageAppView(StaticView):
 
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': False})
-		if re.compile('^\/dev').search(self.request.path):
+		if re.compile('^\/surveys').search(self.request.path):
 			self.renderTpl('survey-new.html', {'nls': langSupport.getEntries()})
 		elif re.compile('^\/search').search(self.request.path):
 			self.renderTpl('search.html', {'nls': langSupport.getEntries()})
@@ -105,7 +105,7 @@ class OnePageAppView(StaticView):
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 
 
-class ScheduleViewer(View):
+class HomePageView(View):
 	trainId = None
 	theDate = None
 
@@ -149,12 +149,6 @@ class ScheduleViewer(View):
 		niceDate = self.theDate.strftime(langSupport.get('date_format'))
 		self.renderTpl('surveyHead.html', {
 		               'nls': langSupport.getEntries(),
-		               'stations': chartData,
-		               'date': niceDate,
-		               'trainNum': self.trainId,
-		               'trainType': trainType,
-		               'leaveTime' : leaveTime,
-		               'stationsByDelay': stationsByDelayJS,
 		               'renderForMobile': self.renderForMobile})
 
 		self.renderTpl('bodyHeader.html', {
@@ -177,7 +171,9 @@ class ScheduleViewer(View):
 		                   'stationsByDelay': stationsByDelayJS,
 		                   'stations': chartData,
 			               'date': niceDate,
-			               'trainId': self.trainId})
+			               'trainId': self.trainId,
+			               'trainType': trainType,
+		                   'leaveTime' : leaveTime})
 		else:
 			self.renderTpl('nosurvey.html', {
 			               'nls': langSupport.getEntries(),
