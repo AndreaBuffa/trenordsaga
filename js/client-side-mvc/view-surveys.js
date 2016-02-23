@@ -3,45 +3,62 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.Surveys = function(proto) {
-    var columnChartData, divIdx, model, params, lineChartData, status, that;
+    var columnChartData, divIdx, model, params, lineChartData, status, statusList,
+    that;
     divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5,
         noSurvayMsg: 6};
     model = proto.model;
+    statusList = {'hidden': 0, 'ready': 1, 'loading': 2};
     status = '';
     that = COMM.Observer(proto);
-    that = COMM.GChartsLibInit(that);
     that = COMM.DrawOnResize(that);
 
-    that.trigger = function(eventName, param) {
+    that.trigger = function(eventName, _params) {
         switch(eventName) {
-            case COMM.event.dateChanged:
-                this.update(param);
-                status = 'loading';
+            case COMM.event.libLoaded:
                 that.draw();
             break;
+            case COMM.event.dateChanged:
+                this.update(_params);
+                if (status === '') {
+                    status = 'loading';
+                    that.draw();
+                }
+            break;
             case COMM.event.tabChanged:
-                if (param.visible === false) {
+                if (_params.visible === false) {
                     that.hide();
                 }
             break;
         }
     };
 
-    that.update = function(param) {
-        model.getSurveyGraphData(param, function(lineChartData, columnChartData) {
-            status = 'ready';
-            that.draw(param, lineChartData, columnChartData);
-        });
+    that = COMM.GChartsLibInit(that,
+        function() {
+            that.trigger(COMM.event.libLoaded);
+    });
+
+    that.update = function(_params) {
+        if (_params) {
+            params = _params;
+        }
+        model.getSurveyGraphData(_params,
+            function(_lineChartData, _columnChartData) {
+                if (_lineChartData && _columnChartData) {
+                    lineChartData = _lineChartData;
+                    columnChartData = _columnChartData;
+                }
+                status = 'ready';
+                that.draw();
+            });
     };
 
-    that.draw = function(_params, _lineChartData, _columnChartData) {
+    that.draw = function() {
         var columnChart, columnChartDataTable, columnChartOpt, divIdList,
         divCtrlList = [],lineChart, lineChartDataTable, lineChartOptions,
         tableChart, trainDescr;
-        if (_params && _lineChartData && _columnChartData) {
-            params = _params;
-            lineChartData = _lineChartData;
-            columnChartData = _columnChartData;
+        if (status === '' || status === 'hidden') {
+            return;
         }
         divIdList = proto.divList;
         for (var i = 0; i < divIdList.length; i++) {
@@ -52,9 +69,6 @@ MYAPP.View.Surveys = function(proto) {
                 return;
             }
         };
-        if (status === 'hidden') {
-            return;
-        }
         if (status === 'loading') {
             divCtrlList[divIdx.chart1].setAttribute('style', 'display: block;');
             divCtrlList[divIdx.chart1].innerHTML = "loading..";
@@ -89,6 +103,7 @@ MYAPP.View.Surveys = function(proto) {
                      textStyle: { bold: false}},
             tooltip: {trigger: 'selection'}
         };
+        divCtrlList[divIdx.chart1].setAttribute('style', 'display: block;');
         lineChart = new google.visualization.LineChart(divCtrlList[divIdx.chart1]);
         lineChart.draw(lineChartDataTable, lineChartOptions);
         lineChart.setSelection([{

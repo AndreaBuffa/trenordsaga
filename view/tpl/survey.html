@@ -17,25 +17,57 @@
 					</div>
 				</div>
 		</section>
-		<section>
-			<header class="major">
-				<h2>&nbsp;</h2>
-			<p>{{ nls.trend }}</p>
-			</header>
-			<div id="timings" style="height: 500px;"></div>
-		</section>
-		<section>
-			<header class="major">
-				<h2>&nbsp;</h2>
-			<p>{{ nls.ordered_by_delay }}</p>
-			</header>
-			<div id="stationsByDelay" style="height: 500px;"></div>
-		</section>
-		<section>
-			<header class="major">
-				<h2>&nbsp;</h2>
-				<a href="dev" class="button big">{{ nls.query_the_oracle }}</a>
-			</header>
-		</section>
-	</section>
 </section>
+<section class="wrapper">
+	<section class="container">
+		<header id="nosurvey" class="major" style="display: none;">
+			<h2>&nbsp;</h2>
+			<p>{{ nls.nosurvey }}</p>
+		</header>
+		<header id="trend" class="major" style="display: none;">
+			<h2>&nbsp;</h2>
+			<p>{{ nls.trend }}</p>
+		</header>
+	</section>
+		<div id="survey" class="lineChart" style="display: none;"></div>
+	<section>
+		<header id="compareHeader" class="major" style="display: none;">
+			<h2>&nbsp;</h2>
+			<p>{{ nls.ordered_by_delay }}</p>
+		</header>
+	</section>
+		<div id="compare" class="columnChart" style="display: none;"></div>
+	<section>
+		<header id="compareTableHeader" class="major" style="display: none;">
+			<h2>&nbsp;</h2>
+			<p>{{ nls.table_resume }}</p>
+		</header>
+	</section>
+		<div id="table_div" class="tableChart" style="display: none;"></div>
+</section>
+<section>
+       <header class="major">
+               <h2>&nbsp;</h2>
+               <a href="dev" class="button big">{{ nls.query_the_oracle }}</a>
+       </header>
+</section>
+
+<script type="text/Javascript">
+	var divList = ['trend', 'survey', 'compareHeader', 'compare', 'compareTableHeader', 'table_div', 'nosurvey'];
+	var Model = function() {
+		var that = {};
+		that.getTrainDescr = function(trainId) {
+			return {};
+		}
+		that.getSurveyGraphData = function(params, callback) {
+			var columnChartData = {{ stationsByDelay|safe|escape }},
+			lineChartData = {{ stations|safe|escape }};
+			callback(lineChartData, columnChartData);
+		};
+		return that;
+	};
+	var modelStub = Model();
+	var surveys = MYAPP.View.Surveys({'divList': divList, 'model': modelStub});
+	surveys.trigger(COMM.event.dateChanged, {'type': 'S9', 'trainId': 24224, 'selectedDate': {{ date|safe|escape }}});
+</script>
+

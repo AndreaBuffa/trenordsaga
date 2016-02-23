@@ -5,8 +5,7 @@ MYAPP.View.TrainStats = function(that) {
     var anchor = that.anchor, graphData, filter = "all", myModel = that.model,
     params, rowData, status = "loading";
     that = COMM.Observer(that);
-    that = COMM.GChartsLibInit(that);
-    that = COMM.GChartsLibInit(that);
+    that = COMM.GChartsLibInit(that, function(){});
     that = COMM.DrawOnResize(that);
 
     that.update = function(_params) {

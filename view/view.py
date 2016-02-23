@@ -165,11 +165,17 @@ class ScheduleViewer(View):
 			self.renderTpl('banner.html', {
 			               'nls': langSupport.getEntries()
 			               })
+		self.pageBuffer += '<script type="text/Javascript">'
+		self.embedJS('common.js', {'nls': langSupport.getEntries()})
+		self.embedJS('view-surveys.js', {'nls': langSupport.getEntries()})
+		self.pageBuffer += '</script>'
 
 		if buffer:
 			self.renderTpl('survey.html', {
 			               'nls': langSupport.getEntries(),
 			               'onTimeStations': onTimeStations,
+		                   'stationsByDelay': stationsByDelayJS,
+		                   'stations': chartData,
 			               'date': niceDate,
 			               'trainId': self.trainId})
 		else:
@@ -177,12 +183,6 @@ class ScheduleViewer(View):
 			               'nls': langSupport.getEntries(),
 			               'date': self.theDate,
 			               'trainId': self.trainId})
-
-		self.pageBuffer += '<script type="text/Javascript">'
-		self.embedJS('survey-app.js', {
-		             'currDate': self.theDate,
-		             'minDate': startSurveyDate})
-		self.pageBuffer += '</script>'
 
 		self.renderTpl('footer.html', {'nls': langSupport.getEntries()})
 

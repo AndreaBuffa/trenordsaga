@@ -69,11 +69,12 @@ COMM.event = {
     trainChanged: "trainChanged",
     dateChanged: "dateChanged",
     docReady: "docReady",
+    libLoaded: "libLoaded",
     tabChanged: "tabChanged",
     scrollUp: "scrollUp"
 };
 
-COMM.GChartsLibInit = function(that) {
+COMM.GChartsLibInit = function(that, _callback) {
     var scriptIdLib = 'gjslibs', libReady = false;
     that.init = function() {
         var head, script = document.createElement("script");
@@ -85,6 +86,7 @@ COMM.GChartsLibInit = function(that) {
                                                callback:
                                                     function() {
                                                        libReady = true;
+                                                        _callback();
                                                     }
                                                });
         }
