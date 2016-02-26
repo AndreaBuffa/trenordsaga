@@ -1,5 +1,3 @@
-from dataProvider import *
-
 class DataProviderFactory:
 	""" follows the abstract class patterns """
 	def createDataProvider(self):
@@ -7,4 +5,5 @@ class DataProviderFactory:
 
 class DataStore(DataProviderFactory):
 	def createDataProvider(self):
+		from dataProvider import GAEDatastore
 		return GAEDatastore()
