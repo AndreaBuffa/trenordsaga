@@ -119,6 +119,19 @@ COMM.getTrainIcon = function(trainType) {
     }
 }
 
+COMM.DateFormat = function(currentDate) {
+        var match = [];
+        if ('{{nls.flag}}' === 'it-IT') {
+            match = currentDate.match(/^(\d{4,})\-(\d+)\-(\d+)$/);
+            if (match == null || match.length < 3) {
+                console.log("DateFormat, Invalid dateformat");
+            }
+            match.shift();
+            return match.reverse().join("-");
+        }
+    return currentDate;
+}
+
 COMM.MenuLiBuilder = function(that) {
     if (!that) {
         console.log("that MenuLiBuilder is NULL");
@@ -131,16 +144,7 @@ COMM.MenuLiBuilder = function(that) {
         return COMM.trainIcon + trainNum;
     };
     that.getCalendarLi = function(currDate) {
-        var match = [];
-        if ('{{nls.flag}}' === 'it-IT') {
-            match = currDate.match(/^(\d{4,})\-(\d{2,})\-(\d{2,})$/);
-            if (match == null || match.length < 3) {
-                console.log("MenuLiBuilder, Invalid dateformat");
-            }
-            match.shift();
-            return COMM.calendarIcon + match.reverse().join("-") ;
-        }
-        return COMM.calendarIcon + currDate;
+        return COMM.calendarIcon + COMM.DateFormat(currDate);
     };
     return that;
 }
@@ -177,6 +181,14 @@ COMM.ScrollUpDispatcher = function(that) {
         return that;
     }   
     return that.init();
+}
+
+COMM.getYestardayDateString = function() {
+    var day, month, today = new Date();
+    month = today.getMonth() + 1;
+    day =  today.getDay() - 1;
+    return today.getFullYear() + "-" + ( month < 10 ? "0" + month: month) + "-"
+        + (day < 10 ? "0" + day: day);
 }
 
 COMM.writeTable = function(labels, dataset, attributes) {

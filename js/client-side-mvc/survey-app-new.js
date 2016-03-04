@@ -5,20 +5,47 @@ searchDiv = 'search';
 var divList = ['trend', 'survey', 'compareHeader', 'compare', 'compareTableHeader',
 'table_div', 'nosurvey'];
 
+var mediator = (function() {
+    var date, that = {};
+    date = COMM.getYestardayDateString();
+
+    that = COMM.Notifier(COMM.Observer(that));
+    that.trigger = function(eventName, param) {
+        switch(eventName) {
+            case COMM.event.typeChanged:
+                param.selectedDate = date;
+                this.notify(COMM.event.typeChanged, param);
+            break;
+            case COMM.event.trainChanged:
+                param.selectedDate = date;
+                this.notify(COMM.event.trainChanged, param);
+            break;
+            case COMM.event.dateChanged:
+                date = param.selectedDate;
+                this.notify(COMM.event.dateChanged, param);
+            break;
+        }
+    }
+    return that;
+}());
 
 var typePicker = MYAPP.View.TypePicker({'divId': trainTypeDiv,
                                         'model': model});
 model.addObserver(COMM.event.modelReady, typePicker);
+typePicker.addObserver(COMM.event.typeChanged, mediator);
 
 var numPicker = MYAPP.View.NumPicker({'divId': trainNumDiv, 'model': model});
 model.addObserver(COMM.event.modelReady, numPicker);
-typePicker.addObserver(COMM.event.typeChanged, numPicker);
+mediator.addObserver(COMM.event.typeChanged, numPicker);
+numPicker.addObserver(COMM.event.trainChanged, mediator);
 
 var datePicker = MYAPP.View.DatePicker({'divId': dateDiv});
-numPicker.addObserver(COMM.event.trainChanged, datePicker);
+datePicker.addObserver(COMM.event.dateChanged, mediator);
+mediator.addObserver(COMM.event.trainChanged, datePicker);
 
 var surveys = MYAPP.View.Surveys({'divList': divList, 'model': model});
-datePicker.addObserver(COMM.event.dateChanged, surveys);
+mediator.addObserver(COMM.event.trainChanged, surveys);
+mediator.addObserver(COMM.event.dateChanged, surveys);
 
 var readyDispatcher = COMM.DocReadyDispatcher({});
 readyDispatcher.addObserver(COMM.event.docReady, typePicker);
@@ -34,13 +61,13 @@ tabView.fillTabHeader(0, COMM.lineIcon);
 tabView.fillTabContent(0, trainTypeDiv);
 tabView.fillTabHeader(1, COMM.trainIcon);
 tabView.fillTabContent(1, trainNumDiv);
-tabView.fillTabHeader(2, COMM.calendarIcon);
+var liBuilder = COMM.MenuLiBuilder({});
+tabView.fillTabHeader(2, liBuilder.getCalendarLi(COMM.getYestardayDateString()));
 tabView.fillTabContent(2, dateDiv);
 model.addObserver(COMM.event.modelReady, tabView);
 tabView.addObserver(COMM.event.tabChanged, surveys);
 
 var wizard = COMM.Observer({});
-var liBuilder = COMM.MenuLiBuilder({});
 wizard.trigger = function(eventName, params) {
     var innerHTML;
     switch (eventName) {

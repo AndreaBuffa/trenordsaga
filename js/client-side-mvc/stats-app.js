@@ -17,9 +17,9 @@ model.addObserver(COMM.event.modelReady, trainStats);
 numPicker.addObserver(COMM.event.trainChanged, trainStats);
 
 var picker = MYAPP.View.TabView({'divId': '#nav'});
-picker.fillTabHeader(0, '');
+picker.fillTabHeader(0, COMM.lineIcon);
 picker.fillTabContent(0, trainTypeDiv);
-picker.fillTabHeader(1, '');
+picker.fillTabHeader(1, COMM.trainIcon);
 picker.fillTabContent(1, trainNumDiv);
 model.addObserver(COMM.event.modelReady, picker);
 picker.addObserver(COMM.event.tabChanged, trainStats);

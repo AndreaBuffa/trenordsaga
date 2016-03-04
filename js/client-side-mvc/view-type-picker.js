@@ -2,10 +2,11 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TypePicker = function(proto) {
-/*  @todo check state
-*/
-    var anchor, myModel, status, that;
-    anchor = proto.anchor;
+    var myModel, status, that;
+    if (!proto) {
+        console.log("TypePicker, please give me an object");
+        return;
+    }
     myModel = proto.model;
     status = "";
     that = COMM.Observer(proto);

@@ -2,8 +2,45 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TrainStats = function(that) {
-    var anchor = that.anchor, graphData, filter = "all", myModel = that.model,
+    var anchor = that.anchor, drawTableFun, graphData, myModel = that.model,
     params, rowData, status = "loading";
+    drawTableFun = function(_stats) {
+        var table = document.createElement('table');
+        var thead = document.createElement('thead');
+        var trHead = document.createElement('tr');
+        var th1 = document.createElement('th');
+        th1.innerHTML = 'Stazione';
+        var th2 = document.createElement('th');
+        th2.innerHTML = 'Ritardo mediano in minuti';
+        trHead.appendChild(th1);
+        trHead.appendChild(th2);
+        thead.appendChild(trHead);
+        table.appendChild(thead);
+        var tbody = document.createElement('tbody');
+        table.appendChild(tbody);
+        for (var i = 0; i < _stats.length; i++) {
+            var stop = _stats[i];
+            var dataTr = document.createElement('tr');
+            var dataTd1 = document.createElement('td');
+            dataTd1.innerHTML = stop.stationName;
+            var dataTd2 = document.createElement('td');
+            switch (params.dayFilter) {
+                case "workDay":
+                    dataTd2.innerHTML = stop.weekdayMedian;
+                    break;
+                case "dayOff":
+                    dataTd2.innerHTML = stop.festiveMedian;
+                    break;
+                case "all":
+                    dataTd2.innerHTML = stop.allMedian;
+                    break;
+            }
+            dataTr.appendChild(dataTd1);
+            dataTr.appendChild(dataTd2);
+            tbody.appendChild(dataTr);
+        }
+        return table;
+    }
     that = COMM.Observer(that);
     that = COMM.GChartsLibInit(that, function(){});
     that = COMM.DrawOnResize(that);
@@ -35,8 +72,8 @@ MYAPP.View.TrainStats = function(that) {
     }
 
     that.drawTable = function(stats) {
-        var container = document.querySelector('#trainStats');
-        var statsList = null;
+        var container = document.querySelector('#trainStats'), drawTable, statsList = null;
+
         if (container) {
             statsList = document.querySelector('#statsList');
             while (statsList.hasChildNodes()) {
@@ -95,41 +132,7 @@ MYAPP.View.TrainStats = function(that) {
             element.innerHTML = "Loading...";
             statsList.appendChild(element);
         } else {
-            var table = document.createElement('table');
-            statsList.appendChild(table);
-            var thead = document.createElement('thead');
-            var trHead = document.createElement('tr');
-            var th1 = document.createElement('th');
-            th1.innerHTML = 'Stazione';
-            var th2 = document.createElement('th');
-            th2.innerHTML = 'Ritardo mediano in minuti';
-            trHead.appendChild(th1);
-            trHead.appendChild(th2);
-            thead.appendChild(trHead);
-            table.appendChild(thead);
-            var tbody = document.createElement('tbody');
-            table.appendChild(tbody);
-            for (var i = 0; i < stats.length; i++) {
-                var stop = stats[i];
-                var dataTr = document.createElement('tr');
-                var dataTd1 = document.createElement('td');
-                dataTd1.innerHTML = stop.stationName;
-                var dataTd2 = document.createElement('td');
-                switch (filter) {
-                    case "workDay":
-                        dataTd2.innerHTML = stop.weekdayMedian;
-                        break;
-                    case "dayOff":
-                        dataTd2.innerHTML = stop.festiveMedian;
-                        break;
-                    case "all":
-                        dataTd2.innerHTML = stop.allMedian;
-                        break;
-                }
-                dataTr.appendChild(dataTd1);
-                dataTr.appendChild(dataTd2);
-                tbody.appendChild(dataTr);
-            }
+            statsList.appendChild(drawTableFun(stats));
         }
     }
 
@@ -147,6 +150,7 @@ MYAPP.View.TrainStats = function(that) {
         options = {
             title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
                    ' {{nls.been_surveyed}} ' + params.surveyedFrom,
+            chartArea: {'width': '85%'},
             legend: {position: 'top',
                      textStyle: { bold: false}},
             tooltip: {trigger: 'selection'}

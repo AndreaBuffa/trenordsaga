@@ -3,13 +3,13 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.Surveys = function(proto) {
-    var columnChartData, divIdx, model, params, lineChartData, status, statusList,
+    var columnChartData, divIdx, model, params, lineChartData, status, stateId,
     that;
     divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5,
         noSurvayMsg: 6};
     model = proto.model;
-    statusList = {'hidden': 0, 'ready': 1, 'loading': 2};
-    status = '';
+    stateId = {'hidden': 0, 'ready': 1, 'loading': 2};
+    status = stateId.hidden;
     that = COMM.Observer(proto);
     that = COMM.DrawOnResize(that);
 
@@ -18,10 +18,11 @@ MYAPP.View.Surveys = function(proto) {
             case COMM.event.libLoaded:
                 that.draw();
             break;
+            case COMM.event.trainChanged:
             case COMM.event.dateChanged:
                 this.update(_params);
-                if (status === '') {
-                    status = 'loading';
+                if (status === stateId.hidden) {
+                    status = stateId.loading;
                     that.draw();
                 }
             break;
@@ -48,16 +49,16 @@ MYAPP.View.Surveys = function(proto) {
                     lineChartData = _lineChartData;
                     columnChartData = _columnChartData;
                 }
-                status = 'ready';
+                status = stateId.ready;
                 that.draw();
             });
     };
 
     that.draw = function() {
-        var columnChart, columnChartDataTable, columnChartOpt, divIdList,
-        divCtrlList = [],lineChart, lineChartDataTable, lineChartOptions,
-        tableChart, trainDescr;
-        if (status === '' || status === 'hidden') {
+        var columnChart, columnChartDataTable, columnChartOpt, dateFormatted,
+        divIdList, divCtrlList = [], lineChart, lineChartDataTable,
+        lineChartOptions, tableChart, trainDescr;
+        if (status === '' || status === stateId.hidden) {
             return;
         }
         divIdList = proto.divList;
@@ -69,7 +70,7 @@ MYAPP.View.Surveys = function(proto) {
                 return;
             }
         };
-        if (status === 'loading') {
+        if (status === stateId.loading) {
             divCtrlList[divIdx.chart1].setAttribute('style', 'display: block;');
             divCtrlList[divIdx.chart1].innerHTML = "loading..";
             return;
@@ -91,13 +92,14 @@ MYAPP.View.Surveys = function(proto) {
             }
             return;
         }
-
+        dateFormatted = COMM.DateFormat(params.selectedDate);
         divCtrlList[divIdx.hd1].setAttribute('style', 'display: block;');
         lineChartDataTable = new google.visualization.DataTable(lineChartData);
         lineChartOptions = {
             title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
                    ' {{nls.left}} ' + params.leaveTime + ' {{nls.left_day}} ' +
-                   params.selectedDate,
+                   dateFormatted,
+            chartArea: {'width': '85%'},
             curveType: 'function',
             legend: {position: 'top',
                      textStyle: { bold: false}},
@@ -116,9 +118,10 @@ MYAPP.View.Surveys = function(proto) {
                 format: '',
                 title: '{{ nls.delay_in_minutes }}'
             },
+            chartArea: {'width': '90%'},
             title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
                    ' {{nls.left}} ' + params.leaveTime + ' {{nls.left_day}} ' +
-                   params.selectedDate,
+                   dateFormatted,
             legend: {position: 'top'},
             colors: ['#dc3912', '#33ac71'],
             tooltip: {trigger: 'selection'}
@@ -149,7 +152,7 @@ MYAPP.View.Surveys = function(proto) {
             }
             tmp.setAttribute('style', 'display: none;');
         };
-        status = 'hidden';
+        status = stateId.hidden;
     }
 
     return that.init();
