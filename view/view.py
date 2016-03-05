@@ -146,7 +146,6 @@ class HomePageView(View):
 			leaveTime = trainDescr.leaveTime
 			startSurveyDate = trainDescr.getIsoFormatDate()
 
-		niceDate = self.theDate.strftime(langSupport.get('date_format'))
 		self.renderTpl('surveyHead.html', {
 		               'nls': langSupport.getEntries(),
 		               'renderForMobile': self.renderForMobile})
@@ -170,7 +169,7 @@ class HomePageView(View):
 			               'onTimeStations': onTimeStations,
 		                   'stationsByDelay': stationsByDelayJS,
 		                   'stations': chartData,
-			               'date': niceDate,
+			               'date': self.theDate.strftime('%Y-%m-%d'),
 			               'trainId': self.trainId,
 			               'trainType': trainType,
 		                   'leaveTime' : leaveTime})

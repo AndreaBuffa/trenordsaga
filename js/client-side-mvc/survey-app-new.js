@@ -81,7 +81,7 @@ wizard.trigger = function(eventName, params) {
             tabView.setTabFocus(-1);
             break;
         case COMM.event.dateChanged:
-            tabView.fillTabHeader(2, liBuilder.getCalendarLi(params.selectedDate));
+            tabView.fillTabHeader(2, liBuilder.getCalendarLi(COMM.toISOString(params.selectedDate)));
             tabView.setTabFocus(-1);
             break;
     }

@@ -145,8 +145,8 @@ class NLS(object):
 					'en-US': 'Here an example:',
 					'it-IT': 'Ecco un esempio:'}
 		self.entries['date_format'] = {
-					'en-US': '%Y/%m/%d',
-					'it-IT': '%d/%m/%Y'}
+					'en-US': '%Y-%m-%d',
+					'it-IT': '%d-%m-%Y'}
 		self.entries['left'] = {
 					'en-US': 'left at',
 					'it-IT': 'partito alle'}
