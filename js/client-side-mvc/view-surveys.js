@@ -92,7 +92,7 @@ MYAPP.View.Surveys = function(proto) {
             }
             return;
         }
-        dateFormatted = COMM.DateFormat(params.selectedDate);
+        dateFormatted = COMM.toISOString(params.selectedDate);
         divCtrlList[divIdx.hd1].setAttribute('style', 'display: block;');
         lineChartDataTable = new google.visualization.DataTable(lineChartData);
         lineChartOptions = {

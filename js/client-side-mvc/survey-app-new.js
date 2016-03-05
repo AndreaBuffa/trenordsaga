@@ -4,10 +4,9 @@ var trainTypeDiv = 'type', trainNumDiv = 'trainNum', dateDiv = 'date',
 searchDiv = 'search';
 var divList = ['trend', 'survey', 'compareHeader', 'compare', 'compareTableHeader',
 'table_div', 'nosurvey'];
-
+var date = COMM.getYesterdayDate();
 var mediator = (function() {
-    var date, that = {};
-    date = COMM.getYestardayDateString();
+    var that = {};
 
     that = COMM.Notifier(COMM.Observer(that));
     that.trigger = function(eventName, param) {
@@ -62,7 +61,7 @@ tabView.fillTabContent(0, trainTypeDiv);
 tabView.fillTabHeader(1, COMM.trainIcon);
 tabView.fillTabContent(1, trainNumDiv);
 var liBuilder = COMM.MenuLiBuilder({});
-tabView.fillTabHeader(2, liBuilder.getCalendarLi(COMM.getYestardayDateString()));
+tabView.fillTabHeader(2, liBuilder.getCalendarLi(COMM.toISOString(date)));
 tabView.fillTabContent(2, dateDiv);
 model.addObserver(COMM.event.modelReady, tabView);
 tabView.addObserver(COMM.event.tabChanged, surveys);
@@ -79,7 +78,7 @@ wizard.trigger = function(eventName, params) {
             break;
         case COMM.event.trainChanged:
             tabView.fillTabHeader(1, liBuilder.getTrainNumLi(params.trainId));
-            tabView.setTabFocus(2);
+            tabView.setTabFocus(-1);
             break;
         case COMM.event.dateChanged:
             tabView.fillTabHeader(2, liBuilder.getCalendarLi(params.selectedDate));

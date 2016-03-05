@@ -119,17 +119,26 @@ COMM.getTrainIcon = function(trainType) {
     }
 }
 
-COMM.DateFormat = function(currentDate) {
-        var match = [];
-        if ('{{nls.flag}}' === 'it-IT') {
-            match = currentDate.match(/^(\d{4,})\-(\d+)\-(\d+)$/);
-            if (match == null || match.length < 3) {
-                console.log("DateFormat, Invalid dateformat");
-            }
-            match.shift();
-            return match.reverse().join("-");
-        }
-    return currentDate;
+COMM.toISOString = function(currentDate) {
+    var match = [];
+    match = currentDate.match(/^(\d{4,})\-(\d+)\-(\d+)/);
+    if (match == null || match.length < 3) {
+        console.log("DateFormat, Invalid dateformat");
+    }
+    if ('{{nls.flag}}' === 'it-IT') {
+        match.shift();
+        return match.reverse().join("-");
+    } else {
+        return match[0];
+    }
+}
+
+COMM.getYesterdayDate = function() {
+    var yesterday, today = new Date();
+    yesterday = new Date(today.getFullYear(), today.getMonth(),
+                         today.getDay() - 1);
+
+    return yesterday.toISOString().substring(0,10);
 }
 
 COMM.MenuLiBuilder = function(that) {
@@ -144,7 +153,7 @@ COMM.MenuLiBuilder = function(that) {
         return COMM.trainIcon + trainNum;
     };
     that.getCalendarLi = function(currDate) {
-        return COMM.calendarIcon + COMM.DateFormat(currDate);
+        return COMM.calendarIcon + currDate;
     };
     return that;
 }
@@ -181,14 +190,6 @@ COMM.ScrollUpDispatcher = function(that) {
         return that;
     }   
     return that.init();
-}
-
-COMM.getYestardayDateString = function() {
-    var day, month, today = new Date();
-    month = today.getMonth() + 1;
-    day =  today.getDay() - 1;
-    return today.getFullYear() + "-" + ( month < 10 ? "0" + month: month) + "-"
-        + (day < 10 ? "0" + day: day);
 }
 
 COMM.writeTable = function(labels, dataset, attributes) {
