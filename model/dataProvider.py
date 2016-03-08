@@ -82,6 +82,7 @@ class GAEDatastore(DataProvider):
 		return ""
 
 	def putNewSurvey(self, survey):
+		from trainDescr import TrainDescr
 		trainDescrRec = TrainDescr()
 		trainDescrRec.trainId = survey.num
 		trainDescrRec.type = survey.trainType

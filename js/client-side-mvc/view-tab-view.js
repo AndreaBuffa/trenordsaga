@@ -2,32 +2,45 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TabView = function(proto) {
-    var headers, contents, liCtrlArray, that, clickHandler = function() {
-        var contentCtrl, j, liCtrl;
-        for(var i = 0,j = 0; i < this.parentElement.childElementCount; i++) {
+    var headers, contents, liCtrlArray, that, clickHandler;
+    clickHandler = function() {
+        var active = false, contentCtrl, liCtrl;
+        for(var i = 0, j = 0; i < this.parentElement.childElementCount; i++) {
             liCtrl = this.parentElement.children[i];
             if (!liCtrl.dataset.managed) {
                 continue;
             }
             if (liCtrl === this) {
-                liCtrl.classList.add('active');
-                contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
-                if (contentCtrl) {
-                    contentCtrl.style.display = 'table';
-                    that.notify(COMM.event.tabChanged, {'visible': true});
+                for (var k = 0; k < liCtrl.classList.length; k++) {
+                    if (liCtrl.classList[k] === 'active') {
+                        active = true;
+                        break;
+                    }
+                }
+                contentCtrl = document.getElementById(liCtrl.dataset.contentid);
+                if (active) {
+                    liCtrl.classList.remove('active');
+                    if (contentCtrl) {
+                        contentCtrl.style.display = 'none';
+                    }
+                } else {
+                    liCtrl.classList.add('active');
+                    if (contentCtrl) {
+                        contentCtrl.style.display = 'table';
+                    }
                 }
             } else {
                 liCtrl.classList.remove('active');
-                contentCtrl = document.querySelector('#' + liCtrl.dataset.contentid);
+                contentCtrl = document.getElementById(liCtrl.dataset.contentid);
                 if (contentCtrl) {
                     contentCtrl.style.display = 'none';
-                    that.notify(COMM.event.tabChanged, {'visible': false});
                 }
             }
             liCtrl.innerHTML = headers[j];
             j++;
             liCtrl.classList.add('pickerLi');
         }
+        that.notify(COMM.event.tabChanged, {'visible': active});
     };
     liCtrlArray = new Array();
     status = "loading";
@@ -52,10 +65,18 @@ MYAPP.View.TabView = function(proto) {
         } else {
             if (idx === -1) {
                 for(var i = 0; i < liCtrlArray.length; i++) {
-                    contentCtrl = document.querySelector('#' + liCtrlArray[i].dataset.contentid);
+                    contentCtrl = document.getElementById(liCtrlArray[i].dataset.contentid);
                     if (contentCtrl)
                         contentCtrl.style.display = 'none';
                     liCtrlArray[i].innerHTML = headers[i];
+                }
+                var container = document.querySelector(proto.divId);
+                var ul = container.getElementsByTagName('ul')[0];
+                for(var i = 0; i < ul.childElementCount; i++) {
+                    if (!ul.children[i].dataset.managed) {
+                        continue;
+                    }
+                    ul.children[i].classList.remove('active');
                 }
             } else {
                 console.log('TabView, cannot set focus for index (' + idx + ')');
@@ -83,18 +104,11 @@ MYAPP.View.TabView = function(proto) {
             console.log("TabView, cannot fin the div where to draw" + proto.divId);
             return;
         }
-        //mainDiv = document.createElement('div');
-        //container.appendChild(mainDiv);
 
         ul = container.getElementsByTagName('ul')[0];
-        //mainDiv.appendChild(ul);
         for(var i = 0; i < headers.length; i++) {
             li = document.createElement('li');
             liCtrlArray.push(li);
-            //li.setAttribute('class', 'tabView');
-            //li.setAttribute('style', 'width: ' + width + '%;');
-            //li.setAttribute('style', 'width: ' + (i === 0 ? '120px;': width + '%;'));
-            //li.appendChild(headers[i]);
             if (i < contents.length) {
                 li.setAttribute('data-contentid', contents[i]);
                 li.setAttribute('data-managed', 'yes');

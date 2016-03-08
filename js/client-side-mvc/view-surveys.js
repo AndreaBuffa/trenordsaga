@@ -3,8 +3,8 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.Surveys = function(proto) {
-    var columnChartData, divIdx, model, params, lineChartData, status, stateId,
-    that;
+    var columnChartData, divIdx, displayMemento = [], model, params, lineChartData,
+    status, stateId, that;
     divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5,
         noSurvayMsg: 6};
     model = proto.model;
@@ -27,9 +27,7 @@ MYAPP.View.Surveys = function(proto) {
                 }
             break;
             case COMM.event.tabChanged:
-                if (_params.visible === false) {
-                    that.hide();
-                }
+                that.toggleDisplay(_params.visible);
             break;
         }
     };
@@ -58,7 +56,7 @@ MYAPP.View.Surveys = function(proto) {
         var columnChart, columnChartDataTable, columnChartOpt, dateFormatted,
         divIdList, divCtrlList = [], lineChart, lineChartDataTable,
         lineChartOptions, tableChart, trainDescr;
-        if (status === '' || status === stateId.hidden) {
+        if (status === stateId.hidden) {
             return;
         }
         divIdList = proto.divList;
@@ -142,17 +140,25 @@ MYAPP.View.Surveys = function(proto) {
                         {showRowNumber: true, width: '100%', height: '100%'});
     }
 
-    that.hide = function() {
-        var tmp, divIdList = proto.divList;
+    that.toggleDisplay = function(visible) {
+        var tmp, divIdList = proto.divList, statusList;
+        if (!visible) {
+            displayMemento = [];
+        }
         for (var i = 0; i < divIdList.length; i++) {
             tmp = document.getElementById(divIdList[i]);
             if (!tmp) {
                 console.log('Surveys, cannot find div(' + divList[i] +')');
                 return;
             }
-            tmp.setAttribute('style', 'display: none;');
+            if (visible) {
+                tmp.setAttribute('style', displayMemento[i]);
+            } else {
+                displayMemento.push(tmp.getAttribute('style'));
+                tmp.setAttribute('style', 'display: none;');
+            }
         };
-        status = stateId.hidden;
+        status = visible === true ? stateId.ready: stateId.hidden;
     }
 
     return that.init();

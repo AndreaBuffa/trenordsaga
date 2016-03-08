@@ -17,9 +17,9 @@ API REST
 
 - GET api/surveys/v1/list
 - GET api/surveys/v1/survey/{trainId}/{year}/{month}/{day}
-- GET api/surveys/v1/source/{trainId}/2016/02/17
+- GET api/surveys/v1/source/{trainId}/{year}/{month}/{day}
 - GET api/surveys/v1/search/{fromStation}/{toStation}/{when}/{timeRange}
-- POST api/surveys/v1/survey/add/{fromStation}/{toStation}/{when}/{timeRange}
+- POST api/surveys/v1/survey/add/{num}/{type}/{from}/{to}/{leave}/{arrive}
 - GET api/surveys/v1/stats/{trainId}
 
 

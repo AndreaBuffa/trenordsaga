@@ -222,7 +222,6 @@ class SurveysApi(remote.Service):
 		leave=messages.StringField(5, variant=messages.Variant.STRING),
 		arrive=messages.StringField(6, variant=messages.Variant.STRING))
 	@endpoints.method(ID_RESOURCE, message_types.VoidMessage,
-		path='survey/add/{num}/{trainType}/{fromStation}/{to}/{leave}/{arrive}',
 		http_method='POST',
 		name='addSurvey')
 	def add_survey(self, request):
