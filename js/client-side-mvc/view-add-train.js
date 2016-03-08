@@ -14,7 +14,7 @@ MYAPP.View.SearchTrain = function(proto) {
         var attributes, button, dataTd, dataTr, labels, table, tbody, th, thead,
         trHead;
 
-        attributes = ['type', 'key', 'leaveTime', 'leaveStation', 'endStation',
+        attributes = ['type', 'trainId', 'leaveTime', 'leaveStation', 'endStation',
                       'arriveTime'];
         labels = ['Treno', 'Op'];
         table = document.createElement('table');
@@ -40,7 +40,7 @@ MYAPP.View.SearchTrain = function(proto) {
             dataTr.appendChild(dataTd);
             dataTd = document.createElement('td');
             button = document.createElement('input');
-            button.setAttribute('data-num', dataset[i]['key']);
+            button.setAttribute('data-num', dataset[i]['trainId']);
             button.setAttribute('data-type', dataset[i]['type']);
             button.setAttribute('data-from', dataset[i]['leaveStation']);
             button.setAttribute('data-to', dataset[i]['endStation']);
@@ -155,8 +155,6 @@ MYAPP.View.SearchTrain = function(proto) {
         }
         if (status === statusList.showResults) {
             results =  document.querySelector('#results');
-            //container.appendChild(COMM.writeTable(['Treno', 'Op'], dataset,
-            //                      ['key', 'leaveTime', 'leaveStation', 'endStation', 'arriveTime', 'isSurveyed']));
 
             if (results) {
                 while (results.hasChildNodes()) {
