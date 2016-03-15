@@ -1,9 +1,7 @@
 import os
 from google.appengine.ext.webapp import template
-from utils.parser import ScheduleParser
 from nls.nls import *
 import webapp2
-import re
 
 TPL_PATH = "/tpl/"
 JS_PATH = "/../js/client-side-mvc/"
@@ -72,6 +70,7 @@ class OnePageAppView(StaticView):
 		self.pageBuffer += '<script type="text/Javascript">'
 		self.embedJS('common.js', {'nls': langSupport.getEntries()})
 		self.embedJS('model.js', {})
+		import re
 		if re.compile('^\/search').search(self.request.path):
 			self.embedJS('view-add-train.js', {})
 			self.embedJS('add-train-app.js', {})
@@ -116,6 +115,7 @@ class HomePageView(View):
 		pieJS = ""
 		buffer = self.myModel.retrieveSourcePage(self.trainId, self.theDate)
 		if buffer:
+			from utils.parser import ScheduleParser
 			myParser = ScheduleParser(buffer)
 			timeSchedule = myParser.GetTimings()
 			from formatter import toLineChartJSon
