@@ -134,9 +134,8 @@ COMM.toISOString = function(currentDate) {
 }
 
 COMM.getYesterdayDate = function() {
-    var yesterday, today = new Date();
-    yesterday = new Date(today.getFullYear(), today.getMonth(),
-                         today.getDate() - 1);
+    var yesterday = new Date(), today = new Date();
+    yesterday.setDate(today.getDate() - 1);
 
     return yesterday.toISOString().substring(0,10);
 }

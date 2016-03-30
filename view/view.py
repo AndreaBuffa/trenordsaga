@@ -84,7 +84,7 @@ class OnePageAppView(StaticView):
 				self.embedJS('view-date-picker.js', {'nls': langSupport.getEntries()})
 				self.embedJS('view-surveys.js',
 							 {'nls': langSupport.getEntries()})
-				self.embedJS('survey-app-new.js', {})
+				self.embedJS('survey-app.js', {})
 			else:
 				self.embedJS('view-display-stats.js',
 				             {'nls': langSupport.getEntries()})
@@ -96,7 +96,7 @@ class OnePageAppView(StaticView):
 		self.renderTpl('bodyHeader.html', {'nls': langSupport.getEntries(),
 			'landingClass': False})
 		if re.compile('^\/surveys').search(self.request.path):
-			self.renderTpl('survey-new.html', {'nls': langSupport.getEntries()})
+			self.renderTpl('survey.html', {'nls': langSupport.getEntries()})
 		elif re.compile('^\/search').search(self.request.path):
 			self.renderTpl('search.html', {'nls': langSupport.getEntries()})
 		else:
@@ -164,7 +164,7 @@ class HomePageView(View):
 		self.pageBuffer += '</script>'
 
 		if buffer:
-			self.renderTpl('survey.html', {
+			self.renderTpl('survey-home.html', {
 			               'nls': langSupport.getEntries(),
 			               'onTimeStations': onTimeStations,
 		                   'stationsByDelay': stationsByDelayJS,
