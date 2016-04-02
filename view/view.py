@@ -70,10 +70,12 @@ class OnePageAppView(StaticView):
 			'renderForMobile': self.renderForMobile})
 
 		self.pageBuffer += '<script type="text/Javascript">'
+		self.pageBuffer += 'var urlParams = {};';
 		if self.trainId and self.theDate:
-			self.pageBuffer += 'var urlParams = {trainId:'+self.trainId+',selectedDate: "'+self.theDate+'", trainType:"S9"};';
-		else:
-			self.pageBuffer += 'var urlParams = {};';
+			trainDescr = self.myModel.findTrainDescrById(self.trainId);
+			if trainDescr:
+				self.pageBuffer += 'urlParams = {trainId:'+self.trainId+',selectedDate: "'+self.theDate+'", trainType:"S9"};';
+
 		self.embedJS('common.js', {'nls': langSupport.getEntries()})
 		self.embedJS('model.js', {})
 		import re

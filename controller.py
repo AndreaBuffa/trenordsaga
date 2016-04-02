@@ -52,13 +52,19 @@ class Controller():
 Used for static/endpoint pages generation
 Requests may include query stringss parameters
 '''
-class DummyController(Controller):
+class QueryStringController(Controller):
 
 	def get(self):
-		trainId = self.request.get('trainId')
-		currDate = self.request.get('date')
+		trainId = self.request.get('trainId', None)
+		currDate = self.request.get('date', None)
+		if currDate:
+			try:
+				datetime.datetime.strptime(currDate, "%Y-%m-%d").date()
+			except ValueError:
+				return webapp2.redirect('/')
+		if trainId and not is_number(trainId):
+			return webapp2.redirect('/')
 		self.getViewAction(currDate, trainId)
-
 
 class ConsoleController(Controller):
 
@@ -96,3 +102,10 @@ class ConsoleController(Controller):
 			newSurvey.notes = notes
 			newSurvey.put()
 		self.getViewAction()
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False

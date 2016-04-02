@@ -74,9 +74,9 @@ class DynamicApp(MVC):
 		return myFactory.createDataProvider()
 
 class StaticApp(MVC):
-	""" Provides a static content. Model is None. """
+	""" Provides a static content. Model is None. Can manage query-string"""
 	def getController(self):
-		controller = DummyController(self.request, self.response)
+		controller = QueryStringController(self.request, self.response)
 		return controller
 
 	def getView(self):
@@ -91,8 +91,12 @@ class ClientEndpoint(StaticApp):
 	""" Provides a client endpoint for querying the server API"""
 	def getView(self):
 		if not self.myView:
-			self.myView = OnePageAppView(None, self.request)
+			self.myView = OnePageAppView(self.getModel(), self.request)
 		return self.myView
+
+	def getModel(self):
+		myFactory = DataStore()
+		return myFactory.createDataProvider()
 
 class AdminApp(DynamicApp):
 

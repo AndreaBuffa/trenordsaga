@@ -6,22 +6,22 @@ var divList = ['trend', 'survey', 'compareHeader', 'compare', 'compareTableHeade
 'table_div', 'nosurvey'];
 var date = COMM.getYesterdayDate();
 var mediator = (function() {
-    var that = {};
-
+    var currSettings = {}, that = {};
+    currSettings.selectedDate = date;
     that = COMM.Notifier(COMM.Observer(that));
     that.trigger = function(eventName, param) {
         switch(eventName) {
             case COMM.event.typeChanged:
-                param.selectedDate = date;
-                this.notify(COMM.event.typeChanged, param);
+                currSettings.trainType = param.trainType;
+                this.notify(COMM.event.typeChanged, currSettings);
             break;
             case COMM.event.trainChanged:
-                param.selectedDate = date;
-                this.notify(COMM.event.trainChanged, param);
+                currSettings.trainId = param.trainId;
+                this.notify(COMM.event.trainChanged, currSettings);
             break;
             case COMM.event.dateChanged:
-                date = param.selectedDate;
-                this.notify(COMM.event.dateChanged, param);
+                currSettings.selectedDate = param.selectedDate;
+                this.notify(COMM.event.dateChanged, currSettings);
             break;
         }
     }
@@ -101,4 +101,5 @@ if (urlParams.trainId) {
     numPicker.setState(urlParams);
     numPicker.notify(COMM.event.trainChanged, urlParams);
     datePicker.setState(urlParams);
+    datePicker.notify(COMM.event.dateChanged, urlParams);
 }
