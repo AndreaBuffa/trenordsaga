@@ -13,6 +13,8 @@ class View:
 	pageBuffer = b""
 	tplPath = ""
 	jsPath = ""
+	trainId = None
+	theDate = None
 
 	def __init__(self, aModel, request):
 		self.myModel = aModel
@@ -68,6 +70,10 @@ class OnePageAppView(StaticView):
 			'renderForMobile': self.renderForMobile})
 
 		self.pageBuffer += '<script type="text/Javascript">'
+		if self.trainId and self.theDate:
+			self.pageBuffer += 'var urlParams = {trainId:'+self.trainId+',selectedDate: "'+self.theDate+'", trainType:"S9"};';
+		else:
+			self.pageBuffer += 'var urlParams = {};';
 		self.embedJS('common.js', {'nls': langSupport.getEntries()})
 		self.embedJS('model.js', {})
 		import re

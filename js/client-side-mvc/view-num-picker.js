@@ -2,27 +2,25 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.NumPicker = function(proto) {
-    var myModel, currType, status, that;
+    var myModel, status, that;
     myModel = proto.model;
     status = "loading";
-    that = COMM.Notifier(COMM.Observer(proto));
+    that = COMM.Notifier(COMM.Observer(COMM.State(proto)));
 
-    that.trigger = function(eventName, params) {
+    that.trigger = function(eventName, _params) {
         switch(eventName) {
             case COMM.event.modelReady:
-                status = "ready";
-                return;
             case COMM.event.typeChanged:
-                if (status !== "ready") {
-                    return;
-                }
-                currType = params.trainType;
+            break;
         }
-        this.update();
+        this.update(_params);
     };
 
-    that.update = function() {
-        myModel.getTrainList({'trainType': currType}, function(trainList) {
+    that.update = function(_params) {
+        if (_params) {
+            that.setState(_params);
+        }
+        myModel.getTrainList(that.getState(), function(trainList) {
             trainList = trainList || [];
             status = "ready";
             that.draw(trainList);
@@ -150,4 +148,4 @@ MYAPP.View.NumPicker = function(proto) {
     };
 
     return that;
-}
+};

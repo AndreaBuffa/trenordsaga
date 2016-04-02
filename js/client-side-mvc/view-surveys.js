@@ -3,7 +3,7 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.Surveys = function(proto) {
-    var columnChartData, divIdx, displayMemento = [], model, params, lineChartData,
+    var columnChartData, divIdx, displayMemento = [], model, params = {}, lineChartData,
     status, stateId, that;
     divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5,
         noSurvayMsg: 6};
@@ -15,7 +15,10 @@ MYAPP.View.Surveys = function(proto) {
 
     that.trigger = function(eventName, _params) {
         switch(eventName) {
+            case COMM.event.docReady:
+            case COMM.event.modelReady:
             case COMM.event.libLoaded:
+                that.update();
                 that.draw();
             break;
             case COMM.event.trainChanged:
@@ -41,7 +44,8 @@ MYAPP.View.Surveys = function(proto) {
         if (_params) {
             params = _params;
         }
-        model.getSurveyGraphData(_params,
+
+        model.getSurveyGraphData(params,
             function(_lineChartData, _columnChartData) {
                 if (_lineChartData && _columnChartData) {
                     lineChartData = _lineChartData;
@@ -70,7 +74,7 @@ MYAPP.View.Surveys = function(proto) {
         };
         if (status === stateId.loading) {
             divCtrlList[divIdx.chart1].setAttribute('style', 'display: block;');
-            divCtrlList[divIdx.chart1].innerHTML = "loading..";
+            divCtrlList[divIdx.chart1].innerHTML = ".......loading..";
             return;
         }
         if (!that.getChartsLibReady()) {

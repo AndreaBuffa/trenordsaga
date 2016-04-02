@@ -9,7 +9,7 @@ MYAPP.View.TypePicker = function(proto) {
     }
     myModel = proto.model;
     status = "";
-    that = COMM.Observer(proto);
+    that = COMM.Observer(COMM.State(proto));
     that = COMM.Notifier(that);
 
     that.trigger = function(eventName, params) {
@@ -72,4 +72,4 @@ MYAPP.View.TypePicker = function(proto) {
         }
     };
     return that;
-}
+};

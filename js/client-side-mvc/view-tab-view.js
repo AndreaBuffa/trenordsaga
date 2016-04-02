@@ -2,7 +2,7 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TabView = function(proto) {
-    var headers, contents, liCtrlArray, that, clickHandler;
+    var contents, headers, idx, liCtrlArray, that, clickHandler;
     clickHandler = function() {
         var active = false, contentCtrl, liCtrl;
         for(var i = 0, j = 0; i < this.parentElement.childElementCount; i++) {
@@ -49,13 +49,23 @@ MYAPP.View.TabView = function(proto) {
     that = COMM.Notifier(that);
 
     that.trigger = function(eventName, params) {
-        status = "ready";
-        this.draw();
-        this.setTabFocus(0);
-    }
+        switch(eventName) {
+            case COMM.event.docReady:
+                status = "ready";
+                this.draw();
+                this.setTabFocus();
+            break;
+        }
+    };
 
-    that.setTabFocus = function(idx) {
-        var contentCtrl;
+    that.setTabFocus = function(_idx) {
+        var container, contentCtrl, ul;
+        if (_idx) {
+            idx = _idx;
+        }
+        if (status === "loading") {
+            return;
+        }
         if (idx >= 0 && idx < liCtrlArray.length) {
             if (liCtrlArray[idx]) {
                 clickHandler.bind(liCtrlArray[idx])();
@@ -70,29 +80,31 @@ MYAPP.View.TabView = function(proto) {
                         contentCtrl.style.display = 'none';
                     liCtrlArray[i].innerHTML = headers[i];
                 }
-                var container = document.querySelector(proto.divId);
-                var ul = container.getElementsByTagName('ul')[0];
-                for(var i = 0; i < ul.childElementCount; i++) {
-                    if (!ul.children[i].dataset.managed) {
-                        continue;
+                container = document.querySelector(proto.divId);
+                if (container) {
+                    ul = container.getElementsByTagName('ul')[0];
+                    for(var i = 0; i < ul.childElementCount; i++) {
+                        if (!ul.children[i].dataset.managed) {
+                            continue;
+                        }
+                        ul.children[i].classList.remove('active');
                     }
-                    ul.children[i].classList.remove('active');
+                    return;
                 }
-            } else {
-                console.log('TabView, cannot set focus for index (' + idx + ')');
             }
+            console.log('TabView, cannot set focus for index (' + idx + ')');
         }
-    }
+    };
 
     headers = new Array();
     contents = new Array();
-    that.fillTabHeader = function(idx, content) {
-        headers[idx] = content;
-    }
+    that.fillTabHeader = function(_idx, content) {
+        headers[_idx] = content;
+    };
 
-    that.fillTabContent = function(idx, divId) {
-        contents[idx] = divId;
-    }
+    that.fillTabContent = function(_idx, divId) {
+        contents[_idx] = divId;
+    };
 
     that.draw = function() {
         var container, headLi, mainDiv, li, ul;
@@ -135,6 +147,6 @@ MYAPP.View.TabView = function(proto) {
                 }
             }
         }
-    }
+    };
     return that;
-}
+};

@@ -5,13 +5,14 @@ MYAPP.View.DatePicker = function(proto) {
     var currDate, params, status, that;
     params = {};
     status = "loading";
-    that = COMM.Notifier(COMM.Observer(proto));
+    that = COMM.Notifier(COMM.Observer(COMM.State(proto)));
 
     that.trigger = function(eventName, eventParams) {
         switch(eventName) {
             case COMM.event.trainChanged:
                 if (status === "loading") {
                     console.log("Datepicker,(" + eventName + ") received but I'm still loading");
+                    return;
                 }
                 params = eventParams;
                 /* Italian initialisation for the jQuery UI date picker plugin. */
@@ -88,7 +89,7 @@ MYAPP.View.DatePicker = function(proto) {
                 }
             });
         }
-    }
+    };
 
     that.init = function() {
         var head, script = document.createElement("script");
@@ -100,7 +101,7 @@ MYAPP.View.DatePicker = function(proto) {
         head = document.getElementsByTagName('head')[0];
         head.appendChild(script);
         return that;
-    }
+    };
 
     return that.init();
-}
+};

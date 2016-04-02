@@ -85,6 +85,8 @@ MYAPP.Model = function() {
     };
 
     that.getSurveyGraphData = function(params, callback) {
+        if (status !== 'ready' || !params || !params.trainId)
+            return;
         var date = new Array();
         // some params name translations
         params.trainid = params.trainId;

@@ -31,20 +31,9 @@ class Controller():
 		self.myView.trainId = trainId
 		self.response.out.write(self.myView.render(self.isMobileClient()))
 
-	def get(self, year="", month="", day=""):
-		if year and month and day:
-			try:
-				theDate = datetime.datetime.strptime(year+"-"+month+"-"+day, "%Y-%m-%d").date()
-			except ValueError:
-				theDate = self.getLastDatetime()
-		else:
-			theDate = self.getLastDatetime()
-
-		if re.compile('^\/(\w)+').search(self.request.path):
-			self.myView.showBanner = False;
-		else:
-			self.myView.showBanner = True;
-		self.getViewAction(theDate, SHOWCASE_TRAIN)
+	def get(self):
+		self.myView.showBanner = True;
+		self.getViewAction(self.getLastDatetime(), SHOWCASE_TRAIN)
 
 	def getLastDatetime(self):
 		if datetime.datetime.now().time() > datetime.time(23,05,0):
@@ -60,13 +49,15 @@ class Controller():
 		pass
 
 '''
-Used for static pages generation
+Used for static/endpoint pages generation
+Requests may include query stringss parameters
 '''
 class DummyController(Controller):
 
 	def get(self):
-		self.response.headers['Content-Type'] = 'text/html;'
-		self.response.out.write(self.myView.render(self.isMobileClient()))
+		trainId = self.request.get('trainId')
+		currDate = self.request.get('date')
+		self.getViewAction(currDate, trainId)
 
 
 class ConsoleController(Controller):

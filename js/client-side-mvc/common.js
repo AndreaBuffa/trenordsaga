@@ -74,6 +74,21 @@ COMM.event = {
     scrollUp: "scrollUp"
 };
 
+COMM.State = function(proto) {
+    if (!proto) {
+        console.log("State: I need an object");
+    }
+    proto.params = {trainId: 0, selectedDate: '', trainType: ''};
+    proto.getState = function() {
+        //return a Memento
+        return proto.params;
+    }
+    proto.setState = function(_params) {
+        proto.params = _params;
+    }
+    return proto;
+}
+
 COMM.GChartsLibInit = function(that, _callback) {
     var scriptIdLib = 'gjslibs', libReady = false;
     that.init = function() {

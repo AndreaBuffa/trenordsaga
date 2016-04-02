@@ -40,7 +40,7 @@ MYAPP.View.TrainStats = function(that) {
             tbody.appendChild(dataTr);
         }
         return table;
-    }
+    };
     that = COMM.Observer(that);
     that = COMM.GChartsLibInit(that, function(){});
     that = COMM.DrawOnResize(that);
@@ -60,7 +60,7 @@ MYAPP.View.TrainStats = function(that) {
                 that.draw(graphData, rowData);
             });
         }
-    }
+    };
 
     that.draw = function(_graphData, _rowData) {
         if (_graphData && _rowData) {
@@ -69,7 +69,7 @@ MYAPP.View.TrainStats = function(that) {
         }
         that.drawGraph(graphData);
         that.drawTable(rowData);
-    }
+    };
 
     that.drawTable = function(stats) {
         var container = document.querySelector('#trainStats'), drawTable, statsList = null;
@@ -134,7 +134,7 @@ MYAPP.View.TrainStats = function(that) {
         } else {
             statsList.appendChild(drawTableFun(stats));
         }
-    }
+    };
 
     that.drawGraph = function(stats) {
         var chart, graphDiv, dataTable, options;
@@ -157,9 +157,7 @@ MYAPP.View.TrainStats = function(that) {
         };
         chart = new google.visualization.LineChart(graphDiv);
         chart.draw(dataTable, options);
-    }
-
-
+    };
 
     that.trigger = function(eventName, params) {
         switch(eventName) {
@@ -172,7 +170,7 @@ MYAPP.View.TrainStats = function(that) {
                 }
             break;
         }
-    }
+    };
 
     that.hide = function() {
         var container = document.querySelector('#' + that.divId);
@@ -181,7 +179,7 @@ MYAPP.View.TrainStats = function(that) {
             return;
         }
         container.setAttribute('style', 'display: none;');
-    }
+    };
 
     return that;
-}
+};

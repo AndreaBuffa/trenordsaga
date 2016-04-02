@@ -45,6 +45,7 @@ mediator.addObserver(COMM.event.trainChanged, datePicker);
 var surveys = MYAPP.View.Surveys({'divList': divList, 'model': model});
 mediator.addObserver(COMM.event.trainChanged, surveys);
 mediator.addObserver(COMM.event.dateChanged, surveys);
+model.addObserver(COMM.event.modelReady, surveys);
 
 var readyDispatcher = COMM.DocReadyDispatcher({});
 readyDispatcher.addObserver(COMM.event.docReady, typePicker);
@@ -56,6 +57,8 @@ readyDispatcher.addObserver(COMM.event.docReady, searchTrain);
 model.addObserver(COMM.event.modelReady, searchTrain);
 
 var tabView = MYAPP.View.TabView({'divId': '#nav'});
+readyDispatcher.addObserver(COMM.event.docReady, tabView);
+
 tabView.fillTabHeader(0, COMM.lineIcon);
 tabView.fillTabContent(0, trainTypeDiv);
 tabView.fillTabHeader(1, COMM.trainIcon);
@@ -89,3 +92,13 @@ wizard.trigger = function(eventName, params) {
 typePicker.addObserver(COMM.event.typeChanged, wizard);
 numPicker.addObserver(COMM.event.trainChanged, wizard);
 datePicker.addObserver(COMM.event.dateChanged, wizard);
+if (urlParams.trainId) {
+    wizard.trigger(COMM.event.typeChanged, urlParams);
+    wizard.trigger(COMM.event.trainChanged, urlParams);
+    wizard.trigger(COMM.event.dateChanged, urlParams);
+    typePicker.setState(urlParams);
+    typePicker.notify(COMM.event.typeChanged, urlParams);
+    numPicker.setState(urlParams);
+    numPicker.notify(COMM.event.trainChanged, urlParams);
+    datePicker.setState(urlParams);
+}
