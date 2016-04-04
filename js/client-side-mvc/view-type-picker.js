@@ -26,7 +26,7 @@ MYAPP.View.TypePicker = function(proto) {
     };
 
     that.update = function() {
-        myModel.getTrainList({}, function(trainList) {
+        myModel.getTrainTypeList({}, function(trainList) {
             trainList = trainList || [];
             that.draw(trainList);
         });

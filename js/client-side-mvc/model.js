@@ -18,7 +18,7 @@ MYAPP.Model = function() {
 		}
     };
 
-    that.getTrainList = function(params, callback) {
+    that.getTrainTypeList = function(params, callback) {
         if (status !== 'ready')
             return;
         if (trainList.length == 0) {
@@ -31,17 +31,32 @@ MYAPP.Model = function() {
                     }
                 });
         } else {
-            if (params.trainType) {
-                var tmp = new Array();
-                for (var i = 0; i < trainList.length; i++) {
-                    if (params.trainType === trainList[i].type) {
-                        tmp.push(trainList[i]);
+            callback(trainList);
+        }
+    };
+
+    that.getTrainList = function(params, callback) {
+        if (status !== 'ready')
+            return;
+        if (trainList.length == 0) {
+            gapi.client.surveys.getList().execute(
+                function(resp) {
+                    if (!resp.code) {
+                        resp.items = resp.items || [];
+                        trainList = resp.items;
                     }
+                });
+        }
+        if (params.trainType) {
+            var tmp = new Array();
+            for (var i = 0; i < trainList.length; i++) {
+                if (params.trainType === trainList[i].type) {
+                    tmp.push(trainList[i]);
                 }
-                callback(tmp);
-            } else {
-                callback(trainList);
             }
+            callback(tmp);
+        } else {
+            callback(trainList);
         }
     };
 

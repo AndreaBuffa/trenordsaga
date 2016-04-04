@@ -68,6 +68,7 @@ tabView.fillTabHeader(2, liBuilder.getCalendarLi(COMM.toISOString(date)));
 tabView.fillTabContent(2, dateDiv);
 model.addObserver(COMM.event.modelReady, tabView);
 tabView.addObserver(COMM.event.tabChanged, surveys);
+tabView.addObserver(COMM.event.tabChanged, numPicker);
 
 var wizard = COMM.Observer({});
 wizard.trigger = function(eventName, params) {

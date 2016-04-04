@@ -11,9 +11,11 @@ MYAPP.View.NumPicker = function(proto) {
         switch(eventName) {
             case COMM.event.modelReady:
             case COMM.event.typeChanged:
+                this.update(_params);
             break;
+            case COMM.event.tabChanged:
+                 this.update();
         }
-        this.update(_params);
     };
 
     that.update = function(_params) {
@@ -43,6 +45,9 @@ MYAPP.View.NumPicker = function(proto) {
         }
         if (status === "loading") {
             container.innerHTML = "Loading....";
+            return;
+        }
+        if (trainList.length === 0) {
             return;
         }
         label = document.createElement('div');
