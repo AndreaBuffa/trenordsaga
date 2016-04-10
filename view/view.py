@@ -70,11 +70,14 @@ class OnePageAppView(StaticView):
 			'renderForMobile': self.renderForMobile})
 
 		self.pageBuffer += '<script type="text/Javascript">'
+		#possible query string params generate a state param for the mediator
 		self.pageBuffer += 'var urlParams = {};';
 		if self.trainId and self.theDate:
 			trainDescr = self.myModel.findTrainDescrById(self.trainId);
 			if trainDescr:
-				self.pageBuffer += 'urlParams = {trainId:'+self.trainId+',selectedDate: "'+self.theDate+'", trainType:"S9"};';
+				self.pageBuffer += 'urlParams = {trainId:' + \
+				self.trainId + ',selectedDate: "' + self.theDate + \
+				'", trainType:"' + trainDescr.type + '"};';
 
 		self.embedJS('common.js', {'nls': langSupport.getEntries()})
 		self.embedJS('model.js', {})
