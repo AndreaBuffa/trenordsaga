@@ -17,6 +17,7 @@ var mediator = (function() {
             break;
             case COMM.event.trainChanged:
                 currSettings.trainId = param.trainId;
+                currSettings.leaveTime = param.leaveTime
                 this.notify(COMM.event.trainChanged, currSettings);
             break;
             case COMM.event.dateChanged:

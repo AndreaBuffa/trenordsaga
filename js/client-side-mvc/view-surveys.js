@@ -98,7 +98,7 @@ MYAPP.View.Surveys = function(proto) {
         divCtrlList[divIdx.hd1].setAttribute('style', 'display: block;');
         lineChartDataTable = new google.visualization.DataTable(lineChartData);
         lineChartOptions = {
-            title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
+            title: '{{nls.trainNum}} ' + params.trainType + ' ' + params.trainId +
                    ' {{nls.left}} ' + params.leaveTime + ' {{nls.left_day}} ' +
                    dateFormatted,
             chartArea: {'width': '85%'},
@@ -121,7 +121,7 @@ MYAPP.View.Surveys = function(proto) {
                 title: '{{ nls.delay_in_minutes }}'
             },
             chartArea: {'width': '90%'},
-            title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
+            title: '{{nls.trainNum}} ' + params.trainType + ' ' + params.trainId +
                    ' {{nls.left}} ' + params.leaveTime + ' {{nls.left_day}} ' +
                    dateFormatted,
             legend: {position: 'top'},

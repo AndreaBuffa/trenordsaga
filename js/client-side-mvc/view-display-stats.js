@@ -155,7 +155,7 @@ MYAPP.View.TrainStats = function(that) {
                      textStyle: { bold: false}},
             tooltip: {trigger: 'selection'}
         };
-        chart = new google.visualization.LineChart(graphDiv);
+        chart = new google.visualization.ColumnChart(graphDiv);
         chart.draw(dataTable, options);
     };
 
