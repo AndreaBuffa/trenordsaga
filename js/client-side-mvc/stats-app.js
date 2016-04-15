@@ -26,6 +26,7 @@ picker.addObserver(COMM.event.tabChanged, trainStats);
 
 var readyDispatcher = COMM.DocReadyDispatcher({});
 readyDispatcher.addObserver(COMM.event.docReady, typePicker);
+readyDispatcher.addObserver(COMM.event.docReady, picker);
 
 var eventDispatcher = COMM.Observer({});
 var liBuilder = COMM.MenuLiBuilder({});

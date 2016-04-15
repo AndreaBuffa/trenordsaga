@@ -5,36 +5,78 @@ MYAPP.View.TrainStats = function(that) {
     var anchor = that.anchor, drawTableFun, graphData, myModel = that.model,
     params, rowData, status = "loading";
     drawTableFun = function(_stats) {
-        var table = document.createElement('table');
-        var thead = document.createElement('thead');
-        var trHead = document.createElement('tr');
-        var th1 = document.createElement('th');
+        var chartDiv, columnChart, delays = [], counters = [], data, dataTd1,
+        dataTd2, dataTr, stop, table, tbody, th1, th2, thead;
+        table = document.createElement('table');
+        thead = document.createElement('thead');
+        trHead = document.createElement('tr');
+        th1 = document.createElement('th');
         th1.innerHTML = 'Stazione';
-        var th2 = document.createElement('th');
+        th2 = document.createElement('th');
         th2.innerHTML = 'Ritardo mediano in minuti';
         trHead.appendChild(th1);
         trHead.appendChild(th2);
         thead.appendChild(trHead);
         table.appendChild(thead);
-        var tbody = document.createElement('tbody');
+        tbody = document.createElement('tbody');
         table.appendChild(tbody);
         for (var i = 0; i < _stats.length; i++) {
-            var stop = _stats[i];
-            var dataTr = document.createElement('tr');
-            var dataTd1 = document.createElement('td');
+            stop = _stats[i];
+            dataTr = document.createElement('tr');
+            dataTd1 = document.createElement('td');
             dataTd1.innerHTML = stop.stationName;
-            var dataTd2 = document.createElement('td');
+            dataTd2 = document.createElement('td');
+            chartDiv = document.createElement('div');
+            dataTd2.appendChild(chartDiv);
+            data = new google.visualization.DataTable();
+            data.addColumn('string', 'delay');
+            data.addColumn('number', 'times happened');
             switch (params.dayFilter) {
                 case "workDay":
-                    dataTd2.innerHTML = stop.weekdayMedian;
+                    //dataTd2.innerHTML = stop.weekdayMedian;
+                    delays = stop.weekdaySamples;
+                    counters = stop.weekdayCounters;
                     break;
                 case "dayOff":
-                    dataTd2.innerHTML = stop.festiveMedian;
+                    //dataTd2.innerHTML = stop.festiveMedian;
+                    delays = stop.festiveSamples;
+                    counters = stop.festiveCounters;
                     break;
                 case "all":
-                    dataTd2.innerHTML = stop.allMedian;
+                    //dataTd2.innerHTML = stop.allMedian;
+                    delays = stop.allSamples;
+                    counters = stop.allCounters;
                     break;
             }
+            /*var dt = new google.visualization.DataTable({
+                cols: [{id: 'task', label: 'Task', type: 'string'},
+                       {id: 'hours', label: 'Hours per Day', type: 'number'}],
+                rows: [{c:[{v: 'Work'}, {v: 11}]},
+                       {c:[{v: 'Eat'}, {v: 2}]},
+                       {c:[{v: 'Commute'}, {v: 2}]},
+                       {c:[{v: 'Watch TV'}, {v:2}]},
+                       {c:[{v: 'Sleep'}, {v:7, f:'7.000'}]}]
+                }, 0.6);
+
+            data.addRows([
+              ['Work', 11],
+              ['Eat', 2],
+              ['Commute', 2],
+              ['Watch TV', 2],
+              ['Sleep', {v:7, f:'7.000'}]
+            ]);*/
+            for (var j = 0; j < delays.length; j++) {
+                data.insertRows(j, new Array([delays[j], parseInt(counters[j])]));
+            };
+            columnChart = new google.visualization.ColumnChart(chartDiv);
+            var samplesChartOpt = {
+                title: '{{nls.trainNum}} ' + params.trainType + ' ' + params.trainId +
+                   ' {{nls.left}} ' + params.leaveTime,
+                /*chartArea: {'width': '85%'},*/
+                legend: {position: 'top', textStyle: { bold: false}},
+                tooltip: {trigger: 'selection'}
+            };
+            columnChart.draw(data, samplesChartOpt);
             dataTr.appendChild(dataTd1);
             dataTr.appendChild(dataTd2);
             tbody.appendChild(dataTr);
@@ -148,7 +190,7 @@ MYAPP.View.TrainStats = function(that) {
         dataTable = new google.visualization.DataTable(stats);
         //params.trainId
         options = {
-            title: '{{nls.trainNum}} ' + params.type + ' ' + params.trainId +
+            title: '{{nls.trainNum}} ' + params.trainType + ' ' + params.trainId +
                    ' {{nls.been_surveyed}} ' + params.surveyedFrom,
             chartArea: {'width': '85%'},
             legend: {position: 'top',
