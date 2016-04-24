@@ -2,13 +2,21 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TrainStats = function(that) {
-    var anchor = that.anchor, drawTableFun, graphData, myModel = that.model,
-    params, rowData, status = "loading";
+    var anchor = that.anchor, drawTableFun, graphData, mode = 0, mean, median,
+    myModel = that.model, params, rowData,
+    status, stateId, tpl1 = "<div><table><thead><th colspan='2'>",
+    tpl2 = "</th></thead><tbody><tr><td>Moda</td><td>",
+    tpl3 = "&nbsp;minuti</td></tr><tr><td>Mediana</td><td>",
+    tpl4 = "&nbsp;minuti</td></tr><tr><td>Media</td><td>",
+    tpl5 = "&nbsp;minuti</td></tr></tbody></table></div>";
+    stateId = {'hidden': 0, 'ready': 1, 'loading': 2};
+    status = stateId.hidden;
     drawTableFun = function(_stats) {
-        var chartDiv, columnChart, delays = [], counters = [], data, dataTd1,
-        dataTd2, dataTr, stop, table, tbody, th1, th2, thead;
+        var accum = 0,chartDiv, columnChart, counter = 0, delay = 0, delays = [],
+        counters = [], data, dataTd1, dataTd2, dataTr, maxCounter = 0, stop,
+        table, tbody, th1, th2, thead, totCounter = 0;
         table = document.createElement('table');
-        thead = document.createElement('thead');
+        /*thead = document.createElement('thead');
         trHead = document.createElement('tr');
         th1 = document.createElement('th');
         th1.innerHTML = 'Stazione';
@@ -17,35 +25,34 @@ MYAPP.View.TrainStats = function(that) {
         trHead.appendChild(th1);
         trHead.appendChild(th2);
         thead.appendChild(trHead);
-        table.appendChild(thead);
+        table.appendChild(thead);*/
         tbody = document.createElement('tbody');
         table.appendChild(tbody);
         for (var i = 0; i < _stats.length; i++) {
             stop = _stats[i];
             dataTr = document.createElement('tr');
-            dataTd1 = document.createElement('td');
+            /*dataTd1 = document.createElement('td');
             dataTd1.innerHTML = stop.stationName;
+            dataTr.appendChild(dataTd1);*/
             dataTd2 = document.createElement('td');
             chartDiv = document.createElement('div');
             dataTd2.appendChild(chartDiv);
-            data = new google.visualization.DataTable();
-            data.addColumn('string', 'delay');
-            data.addColumn('number', 'times happened');
+
             switch (params.dayFilter) {
                 case "workDay":
-                    //dataTd2.innerHTML = stop.weekdayMedian;
                     delays = stop.weekdaySamples;
                     counters = stop.weekdayCounters;
+                    median = stop.weekdayMedian;
                     break;
                 case "dayOff":
-                    //dataTd2.innerHTML = stop.festiveMedian;
                     delays = stop.festiveSamples;
                     counters = stop.festiveCounters;
+                    median = stop.festiveMedian;
                     break;
                 case "all":
-                    //dataTd2.innerHTML = stop.allMedian;
                     delays = stop.allSamples;
                     counters = stop.allCounters;
+                    median = stop.allMedian;
                     break;
             }
             /*var dt = new google.visualization.DataTable({
@@ -65,21 +72,46 @@ MYAPP.View.TrainStats = function(that) {
               ['Watch TV', 2],
               ['Sleep', {v:7, f:'7.000'}]
             ]);*/
+
+            data = new google.visualization.DataTable();
+            data.addColumn('string', 'delay');
+            data.addColumn('number', '{{ nls.surveyed }}');
+
             for (var j = 0; j < delays.length; j++) {
-                data.insertRows(j, new Array([delays[j], parseInt(counters[j])]));
+                counter = parseInt(counters[j]);
+                delay = parseInt(delays[j]);
+                totCounter += counter;
+                accum += delay * counter;
+                if (counter > maxCounter) {
+                    maxCounter = counter;
+                    mode = delay;
+                }
             };
-            columnChart = new google.visualization.ColumnChart(chartDiv);
-            var samplesChartOpt = {
-                title: '{{nls.trainNum}} ' + params.trainType + ' ' + params.trainId +
-                   ' {{nls.left}} ' + params.leaveTime,
-                /*chartArea: {'width': '85%'},*/
-                legend: {position: 'top', textStyle: { bold: false}},
-                tooltip: {trigger: 'selection'}
+            for (var j = 0; j < delays.length; j++) {
+                counter = parseInt(counters[j]);
+                //f:(delays[j] < 2 ? delays[j] + '{{ nls.minute }}' : delays[j] + '{{ nls.minutes }}')
+                data.insertRows(j, new Array([
+                    delays[j],
+                    {v: counter, f: counter + ' volte su ' + totCounter}]));
             };
-            columnChart.draw(data, samplesChartOpt);
-            dataTr.appendChild(dataTd1);
+            mean = (totCounter === 0) ? 0 : Math.floor(accum / totCounter);
+            dataTd2.innerHTML = tpl1 + stop.stationName + tpl2 + mode + tpl3 +
+                stop.weekdayMedian + tpl4 + mean + tpl5;
+            test = document.createElement('div');
+            test.setAttribute('id', 'sampleChart');
+            dataTd2.appendChild(test);
             dataTr.appendChild(dataTd2);
             tbody.appendChild(dataTr);
+            columnChart = new google.visualization.ColumnChart(test);
+            var samplesChartOpt = {
+                title: '{{nls.trainNum}} ' + params.trainType + ' ' +
+                        params.trainId + ',' + params.leaveStations + params.leaveTime,
+                /*chartArea: {'width': '85%'},*/
+                legend: {position: 'top',
+                         textStyle: { bold: false}},
+                hAxis: {title: '{{ nls.surveyed_del }}'}
+            };
+            columnChart.draw(data, samplesChartOpt);
         }
         return table;
     };
@@ -96,7 +128,7 @@ MYAPP.View.TrainStats = function(that) {
 
         if (params.trainId !== _params.trainId || params.filter !== _params.dayFilter) {
             params = _params;
-            status = "ready";
+            status = stateId.ready;
 
             myModel.getStats(params.trainId, function(graphData, rowData) {
                 that.draw(graphData, rowData);
@@ -121,7 +153,7 @@ MYAPP.View.TrainStats = function(that) {
             while (statsList.hasChildNodes()) {
                 statsList.removeChild(statsList.lastChild);
             }
-            if (status === 'tranIdChanged') {
+            if (status === stateId.tranIdChanged) {
                 document.querySelector('#all').classList.add('active');
                 document.querySelector('#workDay').classList.remove('active');
                 document.querySelector('#dayOff').classList.remove('active');
@@ -140,7 +172,7 @@ MYAPP.View.TrainStats = function(that) {
             container.appendChild(statsList);
 
             var tabClickHandler = function() {
-                if (status !== "ready") {
+                if (status !== stateId.ready) {
                     return;
                 }
                 that.update({'trainId': params.trainId,
@@ -168,7 +200,7 @@ MYAPP.View.TrainStats = function(that) {
             console.log('TrainStats, cannot find the main div cont.' + that.divId);
             return;
         }
-        if (status !== "ready") {
+        if (status !== stateId.ready) {
             var element = document.createElement('div');
             element.classList.add('row');
             element.innerHTML = "Loading...";
@@ -201,26 +233,34 @@ MYAPP.View.TrainStats = function(that) {
         chart.draw(dataTable, options);
     };
 
-    that.trigger = function(eventName, params) {
+    that.trigger = function(eventName, _params) {
         switch(eventName) {
             case COMM.event.trainChanged:
-                this.update(params);
+                this.update(_params);
             break;
             case COMM.event.tabChanged:
-                if (params.visible === false) {
-                    //that.hide();
-                }
+                that.toggleDisplay(_params.visible);
             break;
         }
     };
 
-    that.hide = function() {
-        var container = document.querySelector('#' + that.divId);
-        if (!container) {
-            console.log('Stats, cannot find div(' + that.divId +')');
+    that.toggleDisplay = function(visible) {
+        var tmp, statusList;
+        if (!visible) {
+            displayMemento = [];
+        }
+        tmp = document.getElementById(that.divId);
+        if (!tmp) {
+            console.log('Stats, cannot find div(' + divList[i] +')');
             return;
         }
-        container.setAttribute('style', 'display: none;');
+        if (visible) {
+            tmp.setAttribute('style', displayMemento[i]);
+        } else {
+            displayMemento.push(tmp.getAttribute('style'));
+            tmp.setAttribute('style', 'display: none;');
+        }
+        status = visible === true ? stateId.ready: stateId.hidden;
     };
 
     return that;

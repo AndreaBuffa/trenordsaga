@@ -80,12 +80,12 @@ MYAPP.View.NumPicker = function(proto) {
             }
             linkControl = document.createElement('a');
             linkControl.setAttribute('id', train.trainId);
-            linkControl.setAttribute('data-type', train.type);
+            linkControl.setAttribute('data-traintype', train.type);
             linkControl.setAttribute('data-surveyedfrom', train.surveyedFrom);
             linkControl.setAttribute('data-leavetime', train.leaveTime);
             linkControl.addEventListener('click', function () {
                     that.notify(COMM.event.trainChanged, {'trainId': this.id,
-                        'type': this.dataset.type,
+                        'trainType': this.dataset.traintype,
                         'leaveTime': this.dataset.leavetime,
                         'dayFilter': 'all',
                         'surveyedFrom': this.dataset.surveyedfrom});
@@ -124,7 +124,7 @@ MYAPP.View.NumPicker = function(proto) {
 
             linkControl2.addEventListener('click', function () {
                     that.notify(COMM.event.trainChanged, {'trainId': this.id,
-                        'type': this.dataset.type,
+                        'trainType': this.dataset.traintype,
                         'leaveTime': this.dataset.leavetime,
                         'dayFilter': 'all',
                         'surveyedFrom': this.dataset.surveyedfrom});

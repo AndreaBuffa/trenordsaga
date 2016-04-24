@@ -165,6 +165,12 @@ class NLS(object):
 		self.entries['been_surveyed'] = {
 					'en-US': 'beeing surveyed since',
 					'it-IT': 'in osservazione dal'}
+		self.entries['surveyed_del'] = {
+					'en-US': 'surveyed delays',
+					'it-IT': 'ritardi osservati'}
+		self.entries['surveyed'] = {
+					'en-US': 'num of surveys',
+					'it-IT': 'numero di volte'}
 
 
 	def setLang(self, acceptLang):

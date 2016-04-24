@@ -163,7 +163,7 @@ MYAPP.View.Surveys = function(proto) {
             }
         };
         status = visible === true ? stateId.ready: stateId.hidden;
-    }
+    };
 
     return that.init();
 }
