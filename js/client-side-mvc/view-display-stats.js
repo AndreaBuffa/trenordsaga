@@ -12,7 +12,7 @@ MYAPP.View.TrainStats = function(that) {
     stateId = {'hidden': 0, 'ready': 1, 'loading': 2};
     status = stateId.hidden;
     drawTableFun = function(_stats) {
-        var accum = 0,chartDiv, columnChart, counter = 0, delay = 0, delays = [],
+        var accum = 0, chartDiv, columnChart, counter = 0, delay = 0, delays = [],
         counters = [], data, dataTd1, dataTd2, dataTr, maxCounter = 0, stop,
         table, tbody, th1, th2, thead, totCounter = 0;
         table = document.createElement('table');
@@ -76,7 +76,7 @@ MYAPP.View.TrainStats = function(that) {
             data = new google.visualization.DataTable();
             data.addColumn('string', 'delay');
             data.addColumn('number', '{{ nls.surveyed }}');
-
+            totCounter = accum = 0;
             for (var j = 0; j < delays.length; j++) {
                 counter = parseInt(counters[j]);
                 delay = parseInt(delays[j]);
@@ -96,7 +96,7 @@ MYAPP.View.TrainStats = function(that) {
             };
             mean = (totCounter === 0) ? 0 : Math.floor(accum / totCounter);
             dataTd2.innerHTML = tpl1 + stop.stationName + tpl2 + mode + tpl3 +
-                stop.weekdayMedian + tpl4 + mean + tpl5;
+                median + tpl4 + mean + tpl5;
             test = document.createElement('div');
             test.setAttribute('id', 'sampleChart');
             dataTd2.appendChild(test);
@@ -104,8 +104,8 @@ MYAPP.View.TrainStats = function(that) {
             tbody.appendChild(dataTr);
             columnChart = new google.visualization.ColumnChart(test);
             var samplesChartOpt = {
-                title: '{{nls.trainNum}} ' + params.trainType + ' ' +
-                        params.trainId + ',' + params.leaveStations + params.leaveTime,
+                title: stop.stationName + '({{nls.trainNum}} ' + params.trainType +
+                    ' ' + params.trainId + ')' + params.leaveTime,
                 /*chartArea: {'width': '85%'},*/
                 legend: {position: 'top',
                          textStyle: { bold: false}},
