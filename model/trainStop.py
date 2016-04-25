@@ -137,7 +137,6 @@ class TrainStop(ndb.Model):
 			newEntry = DelayCounter()
 			newEntry.delayInMinutes = delay
 			newEntry.counter = 1
-			self.delaysList.append(newEntry)
 			if isFestive:
 				self.dayOffDelays.append(newEntry)
 				self.dayOffSurveys += 1
