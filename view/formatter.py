@@ -31,7 +31,7 @@ def toLineChartJSon(timeSchedule):
 			certainty = 0
 		else:
 			certaintyBuf = "false"
-		annotation = "true" if entry['suppressed'] else "false"
+		annotation = '{"v": "", "f": "SOP"}' if entry['suppressed'] else "null"
 
 		delayBuf = b"%02d:%02d" % (entry['real_h'], entry['real_m'])
 		if entry['delay_m'] < 0:
@@ -47,8 +47,7 @@ def toLineChartJSon(timeSchedule):
 		buffer = b'%s%s{"c": [{"v": "%s", "f": null}, ' \
 			  '{"v": [%d,%d,0,0], "f":null}, ' \
 			  '{"v": [%d,%d,0,0], "f": "%s"}, ' \
-			  '{"v": %s, "f": ""}, ' \
-			  '{"v": %s, "f": "SOP"}]}' % \
+			  '{"v": %s, "f": ""}, %s]}' % \
 			  (buffer, ',' if len(buffer) else '',
 			   entry['name'], entry['sched_h'],
 			   entry['sched_m'], entry['real_h'],
@@ -58,7 +57,7 @@ def toLineChartJSon(timeSchedule):
 			     {"label": "%s", "pattern": "", "type": "timeofday"},
 			     {"label": "%s", "pattern": "", "type": "timeofday"},
 			     {"type": "boolean", "p": {"role": "certainty"}},
-			     {"type": "boolean", "p": {"role": "annotation"}}
+			     {"type": "string", "p": {"role": "annotation"}}
 			    ],
 		      "rows": [%s ]
 		     }""" % (langSupport.get("schedule"),
