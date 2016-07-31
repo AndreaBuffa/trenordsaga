@@ -90,6 +90,8 @@ class OnePageAppView(StaticView):
 			self.embedJS('view-type-picker.js', {'nls': langSupport.getEntries()})
 			self.embedJS('view-num-picker.js', {'nls': langSupport.getEntries()})
 			self.embedJS('view-search.js', {})
+			self.embedJS('view-display-stats.js',
+			             {'nls': langSupport.getEntries()})
 
 			if re.compile('^\/surveys').search(self.request.path):
 				self.embedJS('view-date-picker.js', {'nls': langSupport.getEntries()})
@@ -97,8 +99,6 @@ class OnePageAppView(StaticView):
 							 {'nls': langSupport.getEntries()})
 				self.embedJS('survey-app.js', {})
 			else:
-				self.embedJS('view-display-stats.js',
-				             {'nls': langSupport.getEntries()})
 				self.embedJS('stats-app.js', {})
 
 		self.embedJS('api-endpoint.js', {})

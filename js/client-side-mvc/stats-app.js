@@ -28,9 +28,9 @@ var readyDispatcher = COMM.DocReadyDispatcher({});
 readyDispatcher.addObserver(COMM.event.docReady, typePicker);
 readyDispatcher.addObserver(COMM.event.docReady, picker);
 
-var eventDispatcher = COMM.Observer({});
+var wizard = COMM.Observer({});
 var liBuilder = COMM.MenuLiBuilder({});
-eventDispatcher.trigger = function(eventName, params) {
+wizard.trigger = function(eventName, params) {
     switch (eventName) {
         case COMM.event.typeChanged:
             picker.fillTabHeader(0, liBuilder.getTypeLi(params.trainType));
@@ -44,6 +44,6 @@ eventDispatcher.trigger = function(eventName, params) {
     }
 }
 
-typePicker.addObserver(COMM.event.typeChanged, eventDispatcher);
-numPicker.addObserver(COMM.event.trainChanged, eventDispatcher);
+typePicker.addObserver(COMM.event.typeChanged, wizard);
+numPicker.addObserver(COMM.event.trainChanged, wizard);
 

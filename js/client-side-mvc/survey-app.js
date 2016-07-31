@@ -13,16 +13,17 @@ var mediator = (function() {
         switch(eventName) {
             case COMM.event.typeChanged:
                 currSettings.trainType = param.trainType;
-                this.notify(COMM.event.typeChanged, currSettings);
+                this.notify(eventName, currSettings);
             break;
             case COMM.event.trainChanged:
                 currSettings.trainId = param.trainId;
                 currSettings.leaveTime = param.leaveTime
-                this.notify(COMM.event.trainChanged, currSettings);
+                currSettings.surveyedFrom = param.surveyedFrom
+                this.notify(eventName, currSettings);
             break;
             case COMM.event.dateChanged:
                 currSettings.selectedDate = param.selectedDate;
-                this.notify(COMM.event.dateChanged, currSettings);
+                this.notify(eventName, currSettings);
             break;
         }
     }
@@ -48,6 +49,10 @@ mediator.addObserver(COMM.event.trainChanged, surveys);
 mediator.addObserver(COMM.event.dateChanged, surveys);
 model.addObserver(COMM.event.modelReady, surveys);
 
+var trainStats = MYAPP.View.TrainStats({'divId': 'stats', 'model': model});
+mediator.addObserver(COMM.event.trainChanged, trainStats);
+model.addObserver(COMM.event.modelReady, trainStats);
+
 var readyDispatcher = COMM.DocReadyDispatcher({});
 readyDispatcher.addObserver(COMM.event.docReady, typePicker);
 
@@ -69,6 +74,7 @@ tabView.fillTabHeader(2, liBuilder.getCalendarLi(COMM.toISOString(date)));
 tabView.fillTabContent(2, dateDiv);
 model.addObserver(COMM.event.modelReady, tabView);
 tabView.addObserver(COMM.event.tabChanged, surveys);
+tabView.addObserver(COMM.event.tabChanged, trainStats);
 tabView.addObserver(COMM.event.tabChanged, numPicker);
 
 var wizard = COMM.Observer({});

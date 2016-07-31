@@ -1,9 +1,9 @@
 var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
-MYAPP.View.TrainStats = function(that) {
-    var anchor = that.anchor, drawTableFun, graphData, mode = 0, mean, median,
-    myModel = that.model, params, rowData,
+MYAPP.View.TrainStats = function(trainStats) {
+    var anchor = trainStats.anchor, drawTableFun, graphData, mode = 0, mean, median,
+    myModel = trainStats.model, params = {}, rowData,
     status, stateId, tpl1 = "<div><table><thead><th colspan='2'>",
     tpl2 = "</th></thead><tbody><tr><td>Moda</td><td>",
     tpl3 = "&nbsp;minuti</td></tr><tr><td>Mediana</td><td>",
@@ -11,6 +11,7 @@ MYAPP.View.TrainStats = function(that) {
     tpl5 = "&nbsp;minuti</td></tr></tbody></table></div>";
     stateId = {'hidden': 0, 'ready': 1, 'loading': 2};
     status = stateId.hidden;
+    params.dayFilter = 'all';
     drawTableFun = function(_stats) {
         var accum = 0, chartDiv, columnChart, counter = 0, delay = 0, delays = [],
         counters = [], data, dataTd1, dataTd2, dataTr, maxCounter = 0, stop,
@@ -30,6 +31,7 @@ MYAPP.View.TrainStats = function(that) {
         table.appendChild(tbody);
         for (var i = 0; i < _stats.length; i++) {
             stop = _stats[i];
+            maxCounter = 0;
             dataTr = document.createElement('tr');
             /*dataTd1 = document.createElement('td');
             dataTd1.innerHTML = stop.stationName;
@@ -105,47 +107,55 @@ MYAPP.View.TrainStats = function(that) {
             columnChart = new google.visualization.ColumnChart(test);
             var samplesChartOpt = {
                 title: stop.stationName + '({{nls.trainNum}} ' + params.trainType +
-                    ' ' + params.trainId + ')' + params.leaveTime,
+                    ' ' + params.trainId + ')',
                 /*chartArea: {'width': '85%'},*/
+                vAxis: {
+                 title: 'Volte osservate'
+                },
                 legend: {position: 'top',
                          textStyle: { bold: false}},
-                hAxis: {title: '{{ nls.surveyed_del }}'}
+                hAxis: {title: '{{ nls.delay_in_minutes }}'}
             };
             columnChart.draw(data, samplesChartOpt);
         }
         return table;
     };
-    that = COMM.Observer(that);
-    that = COMM.GChartsLibInit(that, function(){});
-    that = COMM.DrawOnResize(that);
+    trainStats = COMM.Observer(trainStats);
+    trainStats = COMM.GChartsLibInit(trainStats, function(){});
+    trainStats = COMM.DrawOnResize(trainStats);
 
-    that.update = function(_params) {
+    trainStats.update = function(_params) {
         if (!_params)
             return 0;
-        if (!params) {
-            params = _params;
-        }
 
-        if (params.trainId !== _params.trainId || params.filter !== _params.dayFilter) {
-            params = _params;
+        if (params) {
+            params.trainId = _params.trainId ? _params.trainId : params.trainId;
+            params.dayFilter = _params.dayFilter ? _params.dayFilter : params.dayFilter;
+            params.trainType = _params.trainType ? _params.trainType : params.trainType;
+            params.surveyedFrom = _params.surveyedFrom ? _params.surveyedFrom :
+                params.surveyedFrom;
+            params.leaveTime= _params.leaveTime ? _params.leaveTime : params.leaveTime;
             status = stateId.ready;
 
             myModel.getStats(params.trainId, function(graphData, rowData) {
-                that.draw(graphData, rowData);
+                trainStats.draw(graphData, rowData);
             });
         }
     };
 
-    that.draw = function(_graphData, _rowData) {
+    trainStats.draw = function(_graphData, _rowData) {
         if (_graphData && _rowData) {
             graphData = _graphData;
             rowData = _rowData;
         }
-        that.drawGraph(graphData);
-        that.drawTable(rowData);
+        if (status === stateId.hidden) {
+            return;
+        }
+        trainStats.drawGraph(graphData);
+        trainStats.drawTable(rowData);
     };
 
-    that.drawTable = function(stats) {
+    trainStats.drawTable = function(stats) {
         var container = document.querySelector('#trainStats'), drawTable, statsList = null;
 
         if (container) {
@@ -175,7 +185,7 @@ MYAPP.View.TrainStats = function(that) {
                 if (status !== stateId.ready) {
                     return;
                 }
-                that.update({'trainId': params.trainId,
+                trainStats.update({'trainId': params.trainId,
                         'dayFilter': this.id});
 
                 for(var i=0; i < this.parentElement.childElementCount; i++) {
@@ -193,11 +203,11 @@ MYAPP.View.TrainStats = function(that) {
             var tmp = container.querySelector('#workDay');
             tmp.addEventListener('click', tabClickHandler);
         }
-        if (document.querySelector('#' + that.divId)) {
-            document.querySelector('#' + that.divId).appendChild(container);
-            document.querySelector('#' + that.divId).setAttribute('style', 'display: block;');
+        if (document.querySelector('#' + trainStats.divId)) {
+            document.querySelector('#' + trainStats.divId).appendChild(container);
+            document.querySelector('#' + trainStats.divId).setAttribute('style', 'display: block;');
         } else {
-            console.log('TrainStats, cannot find the main div cont.' + that.divId);
+            console.log('TrainStats, cannot find the main div cont.' + trainStats.divId);
             return;
         }
         if (status !== stateId.ready) {
@@ -210,46 +220,57 @@ MYAPP.View.TrainStats = function(that) {
         }
     };
 
-    that.drawGraph = function(stats) {
+    trainStats.drawGraph = function(stats) {
         var chart, graphDiv, dataTable, options;
         graphDiv = document.querySelector('#statsGraph');
         if (!graphDiv) {
             graphDiv = document.createElement('div');
             graphDiv.setAttribute('id', 'statsGraph');
             graphDiv.setAttribute('class', 'lineChart');
-            document.querySelector('#' + that.divId).appendChild(graphDiv);
+            document.querySelector('#' + trainStats.divId).appendChild(graphDiv);
         }
         dataTable = new google.visualization.DataTable(stats);
         //params.trainId
         options = {
+            vAxis: {
+                format: '',
+                title: '{{ nls.delay_in_minutes }}'
+            },
             title: '{{nls.trainNum}} ' + params.trainType + ' ' + params.trainId +
                    ' {{nls.been_surveyed}} ' + params.surveyedFrom,
-            chartArea: {'width': '85%'},
+            chartArea: {'width': '90%'},
             legend: {position: 'top',
                      textStyle: { bold: false}},
             tooltip: {trigger: 'selection'}
         };
         chart = new google.visualization.ColumnChart(graphDiv);
         chart.draw(dataTable, options);
+        graphDiv.setAttribute('style', 'display: block;');
     };
 
-    that.trigger = function(eventName, _params) {
+    trainStats.trigger = function(eventName, _params) {
         switch(eventName) {
+            case COMM.event.docReady:
+            case COMM.event.modelReady:
+            case COMM.event.libLoaded:
+                trainStats.update(_params);
+                trainStats.draw(_params);
+            break;
             case COMM.event.trainChanged:
-                this.update(_params);
+                trainStats.update(_params);
             break;
             case COMM.event.tabChanged:
-                that.toggleDisplay(_params.visible);
+                trainStats.toggleDisplay(_params.visible);
             break;
         }
     };
 
-    that.toggleDisplay = function(visible) {
+    trainStats.toggleDisplay = function(visible) {
         var tmp, statusList;
         if (!visible) {
             displayMemento = [];
         }
-        tmp = document.getElementById(that.divId);
+        tmp = document.getElementById(trainStats.divId);
         if (!tmp) {
             console.log('Stats, cannot find div(' + divList[i] +')');
             return;
@@ -263,5 +284,5 @@ MYAPP.View.TrainStats = function(that) {
         status = visible === true ? stateId.ready: stateId.hidden;
     };
 
-    return that;
+    return trainStats;
 };
