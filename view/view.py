@@ -90,7 +90,7 @@ class OnePageAppView(StaticView):
 			self.embedJS('view-type-picker.js', {'nls': langSupport.getEntries()})
 			self.embedJS('view-num-picker.js', {'nls': langSupport.getEntries()})
 			self.embedJS('view-search.js', {})
-			self.embedJS('view-display-stats.js',
+			self.embedJS('view-stats.js',
 			             {'nls': langSupport.getEntries()})
 
 			if re.compile('^\/surveys').search(self.request.path):

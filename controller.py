@@ -2,7 +2,7 @@ from model.dataProviderFactory import *
 from view.view import *
 import datetime
 
-SHOWCASE_TRAIN = "24114"
+SHOWCASE_TRAIN = "9504"
 
 class Controller():
 	myView = None
