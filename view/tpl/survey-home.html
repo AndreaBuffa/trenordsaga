@@ -48,8 +48,9 @@
 	};
 	var modelStub = Model();
 	var surveys = MYAPP.View.Surveys({'divList': divList, 'model': modelStub});
+	surveys.trigger(COMM.event.modelReady, {});
 	surveys.trigger(COMM.event.dateChanged,
-	                {'type': '{{ trainType }}', 
+	                {'trainType': '{{ trainType }}',
 	                'trainId': {{ trainId }},
 	                'leaveTime': '{{ leaveTime }}',
 	                'selectedDate': '{{ date|safe|escape }}'});
