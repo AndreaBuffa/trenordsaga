@@ -2,8 +2,8 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.TrainStats = function(trainStats) {
-    var anchor = trainStats.anchor, drawTableFun, graphData, mode = 0, mean, median,
-    myModel = trainStats.model, params = {}, rowData,
+    var anchor = trainStats.anchor, drawTableFun, graphData, mode = 0, modelReady,
+    mean, median, myModel = trainStats.model, params = {}, pendingReq, rowData,
     status, stateId, tpl1 = "<div><table><thead><th colspan='2'>",
     tpl2 = "</th></thead><tbody><tr><td>Moda</td><td>",
     tpl3 = "&nbsp;minuti</td></tr><tr><td>Mediana</td><td>",
@@ -121,43 +121,21 @@ MYAPP.View.TrainStats = function(trainStats) {
         return table;
     };
     trainStats = COMM.Observer(trainStats);
-    trainStats = COMM.GChartsLibInit(trainStats, function(){});
+    trainStats = COMM.GChartsLibInit(trainStats,
+        function() {
+            trainStats.trigger(COMM.event.libLoaded);
+    });
+    trainStats = COMM.RegisterForDocReady(trainStats,
+        function() {
+            trainStats.trigger(COMM.event.docReady);
+    });
     trainStats = COMM.DrawOnResize(trainStats);
 
-    trainStats.update = function(_params) {
-        if (!_params)
-            return 0;
-
-        if (params) {
-            params.trainId = _params.trainId ? _params.trainId : params.trainId;
-            params.dayFilter = _params.dayFilter ? _params.dayFilter : params.dayFilter;
-            params.trainType = _params.trainType ? _params.trainType : params.trainType;
-            params.surveyedFrom = _params.surveyedFrom ? _params.surveyedFrom :
-                params.surveyedFrom;
-            params.leaveTime= _params.leaveTime ? _params.leaveTime : params.leaveTime;
-            status = stateId.ready;
-
-            myModel.getStats(params.trainId, function(graphData, rowData) {
-                trainStats.draw(graphData, rowData);
-            });
-        }
-    };
-
-    trainStats.draw = function(_graphData, _rowData) {
-        if (_graphData && _rowData) {
-            graphData = _graphData;
-            rowData = _rowData;
-        }
-        if (status === stateId.hidden) {
+    trainStats.drawTable = function() {
+        var container = document.querySelector('#trainStats'), drawTable, statsList = null;
+        if (!rowData) {
             return;
         }
-        trainStats.drawGraph(graphData);
-        trainStats.drawTable(rowData);
-    };
-
-    trainStats.drawTable = function(stats) {
-        var container = document.querySelector('#trainStats'), drawTable, statsList = null;
-
         if (container) {
             statsList = document.querySelector('#statsList');
             while (statsList.hasChildNodes()) {
@@ -216,20 +194,23 @@ MYAPP.View.TrainStats = function(trainStats) {
             element.innerHTML = "Loading...";
             statsList.appendChild(element);
         } else {
-            statsList.appendChild(drawTableFun(stats));
+            statsList.appendChild(drawTableFun(rowData));
         }
     };
 
-    trainStats.drawGraph = function(stats) {
+    trainStats.drawGraph = function() {
         var chart, graphDiv, dataTable, options;
         graphDiv = document.querySelector('#statsGraph');
+        if (!graphData) {
+            return;
+        }
         if (!graphDiv) {
             graphDiv = document.createElement('div');
             graphDiv.setAttribute('id', 'statsGraph');
             graphDiv.setAttribute('class', 'lineChart');
             document.querySelector('#' + trainStats.divId).appendChild(graphDiv);
         }
-        dataTable = new google.visualization.DataTable(stats);
+        dataTable = new google.visualization.DataTable(graphData);
         //params.trainId
         options = {
             vAxis: {
@@ -248,23 +229,6 @@ MYAPP.View.TrainStats = function(trainStats) {
         graphDiv.setAttribute('style', 'display: block;');
     };
 
-    trainStats.trigger = function(eventName, _params) {
-        switch(eventName) {
-            case COMM.event.docReady:
-            case COMM.event.modelReady:
-            case COMM.event.libLoaded:
-                trainStats.update(_params);
-                trainStats.draw(_params);
-            break;
-            case COMM.event.trainChanged:
-                trainStats.update(_params);
-            break;
-            case COMM.event.tabChanged:
-                trainStats.toggleDisplay(_params.visible);
-            break;
-        }
-    };
-
     trainStats.toggleDisplay = function(visible) {
         var tmp, statusList;
         if (!visible) {
@@ -272,16 +236,67 @@ MYAPP.View.TrainStats = function(trainStats) {
         }
         tmp = document.getElementById(trainStats.divId);
         if (!tmp) {
-            console.log('Stats, cannot find div(' + divList[i] +')');
+            console.log('Stats, cannot find div(' + trainStats.divId +')');
             return;
         }
         if (visible) {
-            tmp.setAttribute('style', displayMemento[i]);
+            tmp.setAttribute('style', displayMemento[0]);
         } else {
             displayMemento.push(tmp.getAttribute('style'));
             tmp.setAttribute('style', 'display: none;');
         }
         status = visible === true ? stateId.ready: stateId.hidden;
+    };
+
+    trainStats.trigger = function(eventName, _params) {
+        switch(eventName) {
+            case COMM.event.modelReady:
+                modelReady = true;
+                trainStats.update(_params);
+                break;
+            case COMM.event.docReady:
+            case COMM.event.libLoaded:
+                trainStats.draw();
+                break;
+            case COMM.event.trainChanged:
+                trainStats.update(_params);
+                break;
+            case COMM.event.tabChanged:
+                trainStats.toggleDisplay(_params.visible);
+                break;
+        }
+    };
+
+    trainStats.draw = function(_graphData, _rowData) {
+        if (_graphData && _rowData) {
+            graphData = _graphData;
+            rowData = _rowData;
+        }
+        if (status === stateId.hidden) {
+            return;
+        }
+        if (trainStats.getDocReady() && trainStats.getChartsLibReady()) {
+            trainStats.drawGraph();
+            trainStats.drawTable();
+        }
+    };
+
+    trainStats.update = function(_params) {
+        if (_params) {
+            params.trainId = _params.trainId ? _params.trainId : params.trainId;
+            params.dayFilter = _params.dayFilter ? _params.dayFilter : params.dayFilter;
+            params.trainType = _params.trainType ? _params.trainType : params.trainType;
+            params.surveyedFrom = _params.surveyedFrom ? _params.surveyedFrom :
+                params.surveyedFrom;
+            params.leaveTime= _params.leaveTime ? _params.leaveTime : params.leaveTime;
+            status = stateId.ready;
+            //@todo check if anything changed
+        }
+        if (modelReady && params.trainId) {
+            myModel.getStats(params.trainId, function(graphData, rowData) {
+                trainStats.draw(graphData, rowData);
+            });
+        }
     };
 
     return trainStats;

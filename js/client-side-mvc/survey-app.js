@@ -54,6 +54,8 @@ mediator.addObserver(COMM.event.trainChanged, trainStats);
 model.addObserver(COMM.event.modelReady, trainStats);
 
 var readyDispatcher = COMM.DocReadyDispatcher({});
+//readyDispatcher.addObserver(COMM.event.docReady, surveys);
+//readyDispatcher.addObserver(COMM.event.docReady, trainStats);
 readyDispatcher.addObserver(COMM.event.docReady, typePicker);
 
 var scrollUpNotifier = COMM.ScrollUpDispatcher({});

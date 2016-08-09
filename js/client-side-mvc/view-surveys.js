@@ -3,8 +3,8 @@ var MYAPP = MYAPP || {};
 MYAPP.View = MYAPP.View || {};
 
 MYAPP.View.Surveys = function(proto) {
-    var columnChartData, divIdx, displayMemento = [], model, params = {}, lineChartData,
-    status, stateId, that;
+    var columnChartData, divIdx, displayMemento = [], model, modelReady,
+    params = {}, pendingReq, lineChartData, status, stateId, that;
     divIdx = {hd1: 0, chart1: 1, hd2: 2, chart2: 3, hd3: 4, chart3: 5,
         noSurvayMsg: 6};
     model = proto.model;
@@ -15,18 +15,29 @@ MYAPP.View.Surveys = function(proto) {
 
     that.trigger = function(eventName, _params) {
         switch(eventName) {
-            case COMM.event.docReady:
             case COMM.event.modelReady:
+                modelReady = true;
+            case COMM.event.docReady:
             case COMM.event.libLoaded:
-                that.update();
-                that.draw();
+                if (that.getDocReady() && that.getChartsLibReady() && modelReady) {
+                    if (pendingReq) {
+                        pendingReq = false;
+                        that.update();
+                        that.draw();
+                    }
+                }
             break;
             case COMM.event.trainChanged:
             case COMM.event.dateChanged:
                 this.update(_params);
-                if (status === stateId.hidden) {
-                    status = stateId.loading;
-                    that.draw();
+                if (that.getDocReady() && that.getChartsLibReady() && modelReady) {
+                    pendingReq = false;
+                    if (status === stateId.hidden) {
+                        status = stateId.loading;
+                        that.draw();
+                    }
+                } else {
+                    pendingReq = true;
                 }
             break;
             case COMM.event.tabChanged:
@@ -38,6 +49,11 @@ MYAPP.View.Surveys = function(proto) {
     that = COMM.GChartsLibInit(that,
         function() {
             that.trigger(COMM.event.libLoaded);
+    });
+
+    that = COMM.RegisterForDocReady(that,
+        function() {
+            that.trigger(COMM.event.docReady);
     });
 
     that.update = function(_params) {
@@ -60,6 +76,10 @@ MYAPP.View.Surveys = function(proto) {
         var columnChart, columnChartDataTable, columnChartOpt, dateFormatted,
         divIdList, divCtrlList = [], lineChart, lineChartDataTable,
         lineChartOptions, tableChart, trainDescr;
+        if (!that.getDocReady()) {
+            console.log('Surveys, doc is not ready');
+            return;
+        }
         if (status === stateId.hidden) {
             return;
         }

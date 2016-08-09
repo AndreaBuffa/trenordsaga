@@ -89,31 +89,62 @@ COMM.State = function(proto) {
     return proto;
 }
 
-COMM.GChartsLibInit = function(that, _callback) {
-    var scriptIdLib = 'gjslibs', libReady = false;
-    that.init = function() {
-        var head, script = document.createElement("script");
+var GChartScriptInst = (function() {
+    var callbackList = [], loaded = false;
+    var script, scriptIdLib = 'gjslibs';
+    if (!document.getElementById(scriptIdLib)) {
+        script = document.createElement("script");
         script.setAttribute('id', scriptIdLib);
         script.setAttribute('async', 'async');
         script.setAttribute('src', 'https://www.google.com/jsapi');
         script.onload = function() {
-            google.load("visualization", "1", {packages: ["corechart", "table"],
-                                               callback:
-                                                    function() {
-                                                       libReady = true;
-                                                        _callback();
-                                                    }
-                                               });
-        }
-        if (!document.getElementById(scriptIdLib)) {
-            head = document.getElementsByTagName('head')[0];
-            head.appendChild(script);
-        }
-        return that;
+            google.load("visualization", "1",
+                        {packages: ["corechart", "table"],
+                         callback: function() {
+                                       loaded = true;
+                                        for (var i = 0; i < callbackList.length; i++) {
+                                            callbackList[i]();
+                                        };
+                                    }
+                        });
+        };
+        head = document.getElementsByTagName('head')[0];
+        head.appendChild(script);
     }
+    return {
+        addCallback: function (_callback) {
+            if (loaded) {
+                _callback();
+            } else {
+                callbackList.push(_callback);
+            }
+        },
+        getLoaded: function() {
+            return loaded;
+        }
+    }
+})();
+
+COMM.GChartsLibInit = function(that, _callback) {
+    GChartScriptInst.addCallback(_callback);
     that.getChartsLibReady = function() {
-        return libReady;
+        return GChartScriptInst.getLoaded();
     }
+    return that;
+}
+
+COMM.RegisterForDocReady = function(that, _callback) {
+    var docReady = false;
+    that.init = function() {
+        $(document).ready(function() {
+            docReady = true;
+            _callback();
+        });
+        return that;
+    };
+    that.getDocReady = function() {
+        return docReady;
+    };
     return that.init();
 }
 
