@@ -91,11 +91,14 @@ wizard.trigger = function(eventName, params) {
             break;
         case COMM.event.trainChanged:
             tabView.fillTabHeader(1, liBuilder.getTrainNumLi(params.trainId));
+            //exit the wizard
             tabView.setTabFocus(-1);
             break;
         case COMM.event.dateChanged:
             tabView.fillTabHeader(2, liBuilder.getCalendarLi(COMM.toISOString(params.selectedDate)));
+            //exit the wizard
             tabView.setTabFocus(-1);
+            trainStats.toggleDisplay(true);
             break;
     }
 }

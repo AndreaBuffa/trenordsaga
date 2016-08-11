@@ -89,50 +89,6 @@ COMM.State = function(proto) {
     return proto;
 }
 
-var GChartScriptInst = (function() {
-    var callbackList = [], loaded = false;
-    var script, scriptIdLib = 'gjslibs';
-    if (!document.getElementById(scriptIdLib)) {
-        script = document.createElement("script");
-        script.setAttribute('id', scriptIdLib);
-        script.setAttribute('async', 'async');
-        script.setAttribute('src', 'https://www.google.com/jsapi');
-        script.onload = function() {
-            google.load("visualization", "1",
-                        {packages: ["corechart", "table"],
-                         callback: function() {
-                                       loaded = true;
-                                        for (var i = 0; i < callbackList.length; i++) {
-                                            callbackList[i]();
-                                        };
-                                    }
-                        });
-        };
-        head = document.getElementsByTagName('head')[0];
-        head.appendChild(script);
-    }
-    return {
-        addCallback: function (_callback) {
-            if (loaded) {
-                _callback();
-            } else {
-                callbackList.push(_callback);
-            }
-        },
-        getLoaded: function() {
-            return loaded;
-        }
-    }
-})();
-
-COMM.GChartsLibInit = function(that, _callback) {
-    GChartScriptInst.addCallback(_callback);
-    that.getChartsLibReady = function() {
-        return GChartScriptInst.getLoaded();
-    }
-    return that;
-}
-
 COMM.RegisterForDocReady = function(that, _callback) {
     var docReady = false;
     that.init = function() {
@@ -146,6 +102,55 @@ COMM.RegisterForDocReady = function(that, _callback) {
         return docReady;
     };
     return that.init();
+}
+
+var GChartScriptInst = (function() {
+    var callbackList = [], loaded = false;
+    var script, scriptIdLib = 'gjslibs';
+    var installScript = function() {
+        var head;
+        if (!document.getElementById(scriptIdLib)) {
+            script = document.createElement("script");
+            script.setAttribute('id', scriptIdLib);
+            script.setAttribute('async', 'async');
+            script.setAttribute('src', 'https://www.google.com/jsapi');
+            script.onload = function() {
+                google.load("visualization", "1",
+                            {packages: ["corechart", "table"],
+                             callback: function() {
+                                           loaded = true;
+                                            for (var i = 0; i < callbackList.length; i++) {
+                                                callbackList[i]();
+                                            };
+                                        }
+                            });
+            };
+            head = document.getElementsByTagName('head')[0];
+            head.appendChild(script);
+        }
+    };
+    var that = {
+        addCallback: function (_callback) {
+            if (loaded) {
+                _callback();
+            } else {
+                callbackList.push(_callback);
+            }
+        },
+        getLoaded: function() {
+            return loaded;
+        }
+    };
+    COMM.RegisterForDocReady(that, installScript);
+    return that;
+})();
+
+COMM.GChartsLibInit = function(that, _callback) {
+    GChartScriptInst.addCallback(_callback);
+    that.getChartsLibReady = function() {
+        return GChartScriptInst.getLoaded();
+    }
+    return that;
 }
 
 COMM.DrawOnResize = function(that) {

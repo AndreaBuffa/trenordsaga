@@ -17,27 +17,18 @@ MYAPP.View.Surveys = function(proto) {
         switch(eventName) {
             case COMM.event.modelReady:
                 modelReady = true;
+                this.update();
+                break;
             case COMM.event.docReady:
             case COMM.event.libLoaded:
-                if (that.getDocReady() && that.getChartsLibReady() && modelReady) {
-                    if (pendingReq) {
-                        pendingReq = false;
-                        that.update();
-                        that.draw();
-                    }
-                }
+                that.draw();
             break;
             case COMM.event.trainChanged:
             case COMM.event.dateChanged:
                 this.update(_params);
-                if (that.getDocReady() && that.getChartsLibReady() && modelReady) {
-                    pendingReq = false;
-                    if (status === stateId.hidden) {
-                        status = stateId.loading;
-                        that.draw();
-                    }
-                } else {
-                    pendingReq = true;
+                if (status === stateId.hidden) {
+                    status = stateId.loading;
+                    that.draw();
                 }
             break;
             case COMM.event.tabChanged:
@@ -76,6 +67,7 @@ MYAPP.View.Surveys = function(proto) {
         var columnChart, columnChartDataTable, columnChartOpt, dateFormatted,
         divIdList, divCtrlList = [], lineChart, lineChartDataTable,
         lineChartOptions, tableChart, trainDescr;
+        // DOM barrier: if no DOM, no progress bar either
         if (!that.getDocReady()) {
             console.log('Surveys, doc is not ready');
             return;
@@ -97,6 +89,7 @@ MYAPP.View.Surveys = function(proto) {
             divCtrlList[divIdx.chart1].innerHTML = ".......loading..";
             return;
         }
+        // Charts barrier: if no lib no charts, progresse bar at least
         if (!that.getChartsLibReady()) {
             console.log('Surveys, chartsLibReady is false');
             return;
