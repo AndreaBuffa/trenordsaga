@@ -37,7 +37,10 @@ class FrontEndFactory(AppFactory):
 			return ClientEndpoint(request, response)
 		elif re.compile('^\/console').search(request.path):
 			return AdminApp(request, response)
+		elif re.compile('^\/browse').search(request.path):
+			return BrowseApp(request, response)
 		else:
+			#homepage
 			return DynamicApp(request, response)
 
 class MVC:
@@ -76,12 +79,12 @@ class DynamicApp(MVC):
 class StaticApp(MVC):
 	""" Provides a static content. Model is None. Can manage query-string"""
 	def getController(self):
-		controller = QueryStringController(self.request, self.response)
+		controller = DummyController(self.request, self.response)
 		return controller
 
 	def getView(self):
 		if not self.myView:
-			self.myView = StaticView(self.getModel(), {})
+			self.myView = StaticView(None, {})
 		return self.myView
 
 	def getModel(self):
@@ -109,6 +112,18 @@ class AdminApp(DynamicApp):
 			self.myView = ConsoleView(self.getModel(), {})
 		return self.myView
 
+class BrowseApp(DynamicApp):
+
+	def getController(self):
+		controller = QueryStringController(self.request, self.response)
+		return controller
+
+	def getView(self):
+		if not self.myView:
+			self.myView = HomePageView(self.getModel(), {})
+			self.myView.showBanner = False;
+		return self.myView
+
 
 app = webapp2.WSGIApplication([
 	(r'/surveys', HandleRequest),
@@ -116,5 +131,6 @@ app = webapp2.WSGIApplication([
 	(r'/about', HandleRequest),
 	(r'/stats', HandleRequest),
 	(r'/search', HandleRequest),
+	(r'/browse', HandleRequest),
 	(r'/', HandleRequest)
 ])

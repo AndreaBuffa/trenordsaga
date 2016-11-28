@@ -48,20 +48,28 @@ class Controller():
 		#implement redirection o home
 		pass
 
+class DummyController(Controller):
+
+	def get(self):
+		trainId = self.request.get('trainId')
+		currDate = self.request.get('date')
+		self.getViewAction(currDate, trainId)
+
 '''
-Used for static/endpoint pages generation
-Requests may include query stringss parameters
+Used for dynamic query-strings-enabled-pages generation
+Requests may include 
 '''
 class QueryStringController(Controller):
 
 	def get(self):
 		trainId = self.request.get('trainId', None)
 		currDate = self.request.get('date', None)
-		if currDate:
-			try:
-				datetime.datetime.strptime(currDate, "%Y-%m-%d").date()
-			except ValueError:
-				return webapp2.redirect('/')
+		if not currDate:
+			return webapp2.redirect('/')
+		try:
+			currDate = datetime.datetime.strptime(currDate, "%Y-%m-%d").date()
+		except ValueError:
+			return webapp2.redirect('/')
 		if trainId and not is_number(trainId):
 			return webapp2.redirect('/')
 		self.getViewAction(currDate, trainId)
@@ -105,7 +113,7 @@ class ConsoleController(Controller):
 
 def is_number(s):
     try:
-        float(s)
+        int(s)
         return True
     except ValueError:
         return False

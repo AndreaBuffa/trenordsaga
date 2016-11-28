@@ -123,7 +123,7 @@ class HomePageView(View):
 		chartData = []
 		onTimeStations = []
 		stationsByDelayJS = ""
-		pieJS = ""
+
 		buffer = self.myModel.retrieveSourcePage(self.trainId, self.theDate)
 		if buffer:
 			from utils.parser import ScheduleParser
