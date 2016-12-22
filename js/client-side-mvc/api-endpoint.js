@@ -2,7 +2,7 @@
 function init() {
 	var apiRoot = 'https://disco-parsec-749.appspot.com/_ah/api';
 	if 	(window.location.origin == 'http://localhost:8080') {
-		//apiRoot = window.location.origin + '/_ah/api';
+		apiRoot = window.location.origin + '/_ah/api';
 	}
 	var apisToLoad;
 	var APIReady = function(tmp) {

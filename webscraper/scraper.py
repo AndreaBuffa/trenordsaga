@@ -78,6 +78,10 @@ def get_train_list(opener, url, fromStation, toStation, when, timeRange):
 		logging.debug('get_train_list: invalid date')
 		return ""
 
+	if not url:
+		logging.debug('get_train_list: service URL is null')
+		return ""
+
 	params = urllib.urlencode({'partenza': fromStation,
 				   'arrivo': toStation,
 				   'giorno': whenDate.day,
