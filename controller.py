@@ -51,9 +51,7 @@ class Controller():
 class DummyController(Controller):
 
 	def get(self):
-		trainId = self.request.get('trainId')
-		currDate = self.request.get('date')
-		self.getViewAction(currDate, trainId)
+		self.getViewAction(None, None)
 
 '''
 Used for dynamic query-strings-enabled-pages generation

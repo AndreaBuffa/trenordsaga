@@ -260,6 +260,7 @@ class SurveysApi(remote.Service):
 			festiveSamples = trainStop.getDelayList(False, True)
 			festiveMed = trainStop.getMedianValue(festiveSamples)
 
+	
 			samples = trainStop.getDelayList(True, True)
 			allMed = trainStop.getMedianValue(samples)
 

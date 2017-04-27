@@ -3,31 +3,31 @@ class DataProvider:
 	""" This the product of an abstract factory """
 
 	def retrieveSourcePage(self, trainId):
-		return ""
+		raise NotImplementedError
 
 	def findAllTrainStopById(self, trainId):
-		return ""
+		raise NotImplementedError
 
 	def findAllTrainDescr(self):
-		return ""
+		raise NotImplementedError
 
 	def findTrainDescrById(self, trainId):
-		return ""
+		raise NotImplementedError
 
 	def findAllTrainDescrByName(self, stationName):
-		return
+		raise NotImplementedError
 
 	def findAllTrainByMultipleId(self, keyList):
-		return
+		raise NotImplementedError
 
 	def getServiceURL(self, serviceName):
-		return
+		raise NotImplementedError
 
 	def putNewSurvey(self, survey):
-		return False;
+		raise NotImplementedError
 
 	def getNewSurvey(self):
-		return False;
+		raise NotImplementedError
 
 class GAEDatastore(DataProvider):
 	""" Use a Google App Engine Datastore """
