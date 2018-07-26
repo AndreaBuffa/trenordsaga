@@ -3,15 +3,16 @@ api_version: 1
 threadsafe: true
 libraries:
 - name: pycrypto
-  version: latest
-- name: endpoints
-  version: 1.0
+  version: 2.6
+- name: ssl
+  version: 2.7.11
 builtins:
 - deferred: on
 
 handlers:
 # API
-- url: /_ah/spi/.*
+#- url: /_ah/spi/.i*
+- url: /_ah/api/.*
   script: api_main.handle
 # Task Queue
 - url: /_ah/queue/deferred
