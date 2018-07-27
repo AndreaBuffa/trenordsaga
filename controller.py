@@ -20,10 +20,11 @@ class Controller():
 
 	def buildNLS(self):
 		key = 'Accept-Language'
-		if self.request.headers.has_key(key):
-			langSupport.setLang(self.request.headers[key])
-		else:
-			langSupport.setLang('')
+		if self.request.headers
+			if self.request.headers.has_key(key):
+				langSupport.setLang(self.request.headers[key])
+			else:
+				langSupport.setLang('')
 
 	def getViewAction(self, theDate, trainId):
 		self.response.headers['Content-Type'] = 'text/html;'
