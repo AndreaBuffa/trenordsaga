@@ -10,7 +10,7 @@ def createTrainStop(record, stops):
 	parsedStopList = myParser.GetTimings()
 	idx = 0
 	for entry in parsedStopList:
-		if not stops.has_key(entry['name']):
+		if not (entry['name'] in stops):
 			station = TrainStop()
 			station.name = entry['name']
 			station.trainid = record.trainId

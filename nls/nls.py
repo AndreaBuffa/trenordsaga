@@ -183,8 +183,8 @@ class NLS(object):
 	def get(self, entry):
 		if not entry:
 			return "ERROR-EMPTY-KEY"
-		if self.entries.has_key(entry):
-			if self.entries[entry].has_key(self.currLang):
+		if entry in self.entries:
+			if self.currLang in self.entries[entry]:
 				return self.entries[entry][self.currLang]
 			else:
 				if self.currLang != self.default:

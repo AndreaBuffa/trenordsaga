@@ -70,7 +70,7 @@ def toColumnChartJSon(timeSchedule, delayDict, currDate):
 	myBuffer = b"";
 	for entry in timeSchedule:
 		delay = 0
-		if not delayDict.has_key(entry['name']):
+		if not (entry['name'] in delayDict):
 			# might generate a flag for displaying an extra stop done
 			continue
 		median = delayDict[entry['name']]
@@ -110,7 +110,7 @@ def toPieChartJSon(timeSchedule):
 		delay = stop['delay_m']
 		if delay < 0:
 			delay = 0
-		if myTable.has_key(delay):
+		if (delay in myTable):
 			myTable[delay] += 1
 		else:
 			myTable[delay] = 1
